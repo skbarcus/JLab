@@ -1,0 +1,22 @@
+\frametitle{Rutherford Cross Section}
+\begin{itemize}
+        \item The differential cross section describes the \alert{likelihood of an electron interacting with a target}.
+           \begin{itemize}
+              \item[--] Measures the `size' of an interaction.
+              \item[--] Must be viewed within a detector's solid angle acceptance.
+           \end{itemize}
+        \item \alert{Rutherford Scattering}: Charged particle scattering off a nucleus \cite{Book:Povh}.
+      \end{itemize}
+
+\pause
+\begin{equation} \label{eq:rutherford_2}
+\left(\frac{d\sigma}{d\Omega}\right)_{Rutherford} = \frac{4Z^2\alpha^2\left(\hbar c\right)^2E'^2}{|qc|^4}
+\end{equation}
+
+\begin{itemize}
+\item<3-> Cross section falls off like \alert{$\frac{1}{q^4}$}.
+   \begin{itemize}
+              \item[--] Likelihood of electrons interacting with a target decreases rapidly with energy.
+           \end{itemize}
+\item<4-> Rutherford equation does not account for \alert{relativity}, \alert{spin}, or target \alert{recoil}.
+\end{itemize}

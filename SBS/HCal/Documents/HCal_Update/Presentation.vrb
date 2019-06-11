@@ -1,0 +1,15 @@
+\frametitle{Backup Slides}
+
+\begin{itemize}
+\item $^3$H consecutive $R_i$ separation distributions.
+\end{itemize}
+
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=1.\linewidth] {/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Ri_Sep_3H_n8_908.png}
+\end{center}
+\caption{
+{\bf{$^3$H $R_i$ Separation Distributions.}} }
+\label{fig:pid_pr}
+\end{figure}
+

@@ -1,0 +1,2777 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=phys,% 
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+\addbibresource{bib_Books.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{Extraction and Parametrization of Isobaric Trinucleon Elastic Cross Sections
+and Form Factors}
+\subtitle{}
+\date{March 18\textsuperscript{th} 2019}
+\author{Scott Barcus}
+\institute{The College of William $\&$ Mary, Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Table of contents}
+  	\begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+
+	\vspace{10mm}
+  	\setbeamertemplate{section in toc}[sections numbered]
+  	\tableofcontents[hideallsubsections]
+  
+  	\column{0.5\textwidth}
+		\vspace{0mm}
+		\begin{center}
+		\includegraphics[width=.5\linewidth]{wm_cypher_gold.png}
+		\end{center}
+		
+		\vspace{1mm}
+		\begin{center}
+		\includegraphics[width=1.0\linewidth]{JLab_logo_text_white1.jpg}
+		\end{center}
+		
+		\vspace{1mm}
+		\begin{center}
+		\includegraphics[width=.6\linewidth]{DOE_Logo.jpg}
+		\end{center}
+	
+\end{columns}
+  
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Brief Overview of JLab Work}
+  	\begin{columns}[T,onlytextwidth]
+  	\column{0.7\textwidth}
+
+	\vspace{-2mm}
+	\begin{itemize}
+		\item Graduate work at JLab since 2013.
+		\pause
+		\item SEOP of \alert{polarized $^3$He targets} at W$\&$M.
+		\pause
+		\item \alert{Gas Ring ImagiNg CHerenkov (GRINCH)}:
+			\setbeamercolor{alerted text}{fg=TolLightRed}
+			\begin{itemize}
+				\item[--] Built and tested the \alert{mirror system}.
+				\item[--] Characterized the \alert{PMTs} and assembled the detector.
+				\item[--] Developed preliminary \alert{DAQ}.
+				\item[--] Tested and implemented \alert{VETROC} boards allowing for real-time high rate triggering. 
+			\end{itemize}
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+		\pause
+		\item \alert{Tritium Experiments}:
+			\setbeamercolor{alerted text}{fg=TolDarkBlue}
+			\begin{itemize}
+				\item[--] Maintained and prepared \alert{VDCs and EM calorimeters}.
+				\item[--] Counting house \alert{script maintenance and development}.
+				\item[--] \alert{Shift work and analysis shifts}.
+			\end{itemize}
+
+	\end{itemize}
+	
+	\column{0.3\textwidth}
+		\vspace{7mm}
+		\begin{figure}[!ht]
+		\begin{center}
+		\onslide<2->\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Statement_of_Research_Interests/GRINCH_Clean.png}
+		\end{center}
+		\caption{
+		{\bf{GRINCH Detector.}} }
+		\label{fig:GRINCH}
+		\end{figure}
+	\end{columns}
+	
+	\begin{itemize}
+		\pause
+		\item Worked on many JLab experiments:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=mLightBrown}\alert{SRC X$>$2}, \setbeamercolor{alerted text}{fg=TolLightRed}\alert{A$_1^n$}, GMp, Ar(e,e'p), DVCS, and the \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Tritium Experiments}.
+				\setbeamercolor{alerted text}{fg=mLightBrown}
+			\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Elastic Electron Scattering}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+
+		\begin{figure}[!ht]
+		\begin{center}
+		\includegraphics[width=1.0\linewidth]{Elastic_Electron_Scattering_Clean.png}
+		\end{center}
+		\caption{
+		{\bf{Elastic Electron Scattering.}} An incident electron interacts with a target by exchanging a virtual 		photon causing the electron to scatter.}
+		\label{fig:elastic_scattering}
+		\end{figure}
+
+    \column{0.5\textwidth}
+    		\vspace{4mm}
+		\begin{equation} \label{eq:nu}
+			\nu = E_0-E'
+		\end{equation}
+		\vspace{4mm}
+		\begin{equation} \label{eq:E'}
+			E' = \frac{E_0}{1+\frac{2E_0}{M}sin^2\left(\frac{\theta}{2}\right)}
+		\end{equation}
+    		\vspace{4mm}
+    		\begin{equation} \label{eq:Q^2}
+			Q^2 = -q^2 = 4E_0E'sin^2\left(\frac{\theta}{2}\right)
+		\end{equation}
+		\vspace{4mm}
+		\begin{equation} \label{eq:xbj}
+			x_{Bj} = \frac{Q^2}{M(E_0-E')} 
+		\end{equation}
+
+      \begin{itemize}
+        \item<2-> Elastic scattering is completely determined by knowing two of \alert{$E_0$}, \alert{$\theta$}, or \alert{E'}.
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Rutherford Cross Section}
+      \begin{itemize}
+        \item The differential cross section describes the \alert{likelihood of an electron interacting with a target}.
+           \begin{itemize}
+           	  \item[--] Measures the `size' of an interaction.
+           	  \item[--] Must be viewed within a detector's solid angle acceptance.
+           \end{itemize}
+        \item \alert{Rutherford Scattering}: Charged particle scattering off a nucleus \cite{Book:Povh}.
+      \end{itemize}
+
+	\pause
+	\begin{equation} \label{eq:rutherford_2}
+		\left(\frac{d\sigma}{d\Omega}\right)_{Rutherford} = \frac{4Z^2\alpha^2\left(\hbar c\right)^2E'^2}{|qc|^4}
+	\end{equation}
+	
+	\begin{itemize}
+		\item<3-> Cross section falls off like \alert{$\frac{1}{q^4}$}.
+		   \begin{itemize}
+           	  \item[--] Likelihood of electrons interacting with a target decreases rapidly with energy.
+           \end{itemize}
+		\item<4-> Rutherford equation does not account for \alert{relativity}, \alert{spin}, or target \alert{recoil}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Mott Cross Section}
+  %\begin{columns}[T,onlytextwidth]
+    %\column{0.33\textwidth}
+    		\begin{itemize}
+    			\item Now add a term to account for relativity obtaining the \alert{Mott Equation} \cite{Book:Povh}:
+    		\end{itemize}
+    	%\column{0.67\textwidth}
+    		\begin{equation} \label{eq:mott_no_recoil}
+			\left(\frac{d\sigma}{d\Omega}\right)_{\substack{ \text{Mott} \\ \text{No Recoil}}} = 	\left(\frac{d\sigma}{d\Omega}\right)_{Rutherford} \left( 1-\beta^2 sin^2 \left( \frac{\theta}{2} \right) \right)
+		\end{equation}
+  %\end{columns}
+  		\pause
+      	\begin{itemize}
+    			\item In the relativistic limit \alert{$\beta \rightarrow$ 1} yielding \cite{Book:Povh}:
+    		\end{itemize}
+    		\begin{equation} \label{eq:mott_no_recoil_simple}
+	\left(\frac{d\sigma}{d\Omega}\right)_{\substack{ \text{Mott} \\ \text{No Recoil}}} = \frac{4Z^2\alpha^2\left(\hbar c\right)^2E'^2}{|qc|^4} cos^2 \left( \frac{\theta}{2} \right) 
+		\end{equation}
+		\pause
+    		\begin{itemize}
+    			\item Now we have accounted for relativity, \alert{but we have also accounted for spin} with the $cos^2 \left( \frac{\theta}{2} \right)$ term.
+    			\begin{itemize}
+    				\item[--] Suppresses scattering through 180$^{\circ}$ for a spinless target which is forbidden by conservation of helicity.
+			\end{itemize}    			 
+    		\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Mott Cross Section Cont.}
+	\begin{itemize}
+		%\item At our $E_0$ of 3.356 GeV an \setbeamercolor{alerted text}{fg=TolLightRed}\alert{electron has 1.48 GeV of energy} and a \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$^3$He nucleus has a mass of 2.81 GeV}.
+		\item Need electron with wavelength $\approx$ proton radius (0.84 fm) to probe nucleus. $E=\frac{hc}{\lambda}$ $\rightarrow$ \setbeamercolor{alerted text}{fg=TolLightRed}\alert{electron has 1.48 GeV of energy} and a \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$^3$He nucleus has a mass of 2.81 GeV}.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\pause
+		\item Clearly neglecting recoil is no longer an option. Happily, the recoil term is easily found from Equation \ref{eq:E'} describing elastic scattering
+	\end{itemize}
+	
+	\begin{equation} \label{eq:recoil}
+	\frac{E'}{E_0} = \frac{1}{1+\frac{2E_0}{M} sin^2 \left( \frac{\theta}{2} \right)}
+	\end{equation}
+	\pause
+	\begin{itemize}
+		\item Now we can add the recoil term and rewrite the Mott cross section with a few substitutions from earlier \cite{Book:Povh}:
+	\end{itemize}		
+	
+	\begin{equation} \label{eq:mott_recoil}
+	\alert{\left(\frac{d\sigma}{d\Omega}\right)_{Mott}} = \frac{4Z^2\alpha^2\left(\hbar c\right)^2E'^3}{|qc|^4 E_0} cos^2 \left( \frac{\theta}{2} \right) = \alert{Z^2 \frac{E'}{E_0} \frac{\alpha^2 cos^2\left( \frac{\theta}{2} \right)}{4E_0^2 sin^4\left( \frac{\theta}{2} \right)}}
+	\end{equation}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Nuclear Form Factors}
+	\begin{itemize}
+		\item Now we have an equation that accounts for relativity, spin, and recoil off of a point mass.
+		\pause
+		\item \alert{Nuclei are not point masses}! How do we describe the structure inside of a nucleus? 
+	\end{itemize} 
+	\begin{equation} \label{eq:xs_exp_ff}
+	\left(\frac{d\sigma}{d\Omega}\right)_{exp} = \left(\frac{d\sigma}{d\Omega}\right)_{\substack{ \text{Mott}}} \setbeamercolor{alerted text}{fg=TolLightRed}\alert{|F(q^2)|^2}
+	\end{equation}
+	\begin{itemize}
+		\pause
+		\item The term \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$|F(q^2)|^2$} is called a \setbeamercolor{alerted text}{fg=TolLightRed}\alert{form factor}. It contains all of the spatial and structural information about the target.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\item If we assume the validity of the Born approximation (incident wave function $\approx$ scattered wave function) and no recoil the form factor can be written as a \alert{Fourier transform of the charge distribution}.
+	\end{itemize} 
+\end{frame}
+
+\begin{frame}[fragile]{Form Factors Cont.}
+	\begin{equation} \label{eq:fourier}
+		F(q^2) = \int e^{\frac{iq \cdot x}{\hbar}} \rho(x) d^3x \xrightarrow{x \xrightarrow{} r} 4\pi \int \rho(r) \frac{sin\left( |q|r/\hbar \right)}{|q|r/\hbar} r^2 dr
+	\end{equation}
+	\pause
+	\begin{itemize}
+		\item This procedure can be inverted to find the charge distribution, $\rho$ \cite{Book:Povh}.
+	\end{itemize}
+	\begin{equation} \label{eq:inverse_fourier}
+		\rho(r) = \frac{1}{(2\pi)^3} \int F(q^2) e^{\frac{-iq \cdot x}{\hbar}} d^3q 
+	\end{equation}
+	\pause
+	
+	\vspace{-3mm}
+	\begin{itemize}
+		\item Let's approximate a nucleus as a \alert{hard sphere of charge}.
+    	\end{itemize}
+    	
+	\begin{columns}[T,onlytextwidth]   	
+	\pause
+
+	\column{0.6\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.68\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Elastic_Electron_Scattering/Hard_Sphere_FT_Clean.png}
+	\end{center}
+	\caption{
+	{\bf{Hard Sphere Charge Distribution Form Factor.}} }
+	\label{fig:hard_sphere}
+	\end{figure}
+	
+	\pause
+    \column{0.4\textwidth}
+    %\vspace{4mm}
+    		\begin{itemize}
+			\item[--] Yields \alert{oscillatory form factor}. 
+			\item[--] \alert{Charge radii} can be estimated by minima location \cite{Book:Povh}!
+		\end{itemize}
+		\begin{equation} \label{eq:minima}
+			R \approx \frac{4.5 \hbar}{q}
+		\end{equation}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}[fragile]{Charge Radius}
+	\begin{itemize}
+		\item We can find \alert{charge radii} by taking \alert{$r$ $\rightarrow$ 0} in the form factor. 
+		\begin{itemize}
+			\item[--] The wavelength of the electron, $\frac{\hbar}{q}$, is assumed to be much larger than the charge radius: $R \ll \frac{\hbar}{q} \implies$ \alert{$\frac{Rq}{\hbar} \ll 1$}.
+		\end{itemize}
+		\pause
+		\item Next we apply the Euler formula to the form factor equation and Taylor expand the cosine term \cite{Book:Povh}:
+	\end{itemize}
+	
+	\vspace{-2mm}
+	\begin{equation} \label{eq:ff_expanded}
+		F(q^2) = \int_0^\infty \int_{-1}^1 \int_0^{2\pi} \rho(r) \left( 1-\frac{1}{2} \frac{|q||r|cos(\omega)}{\hbar} \right) r^2 d\phi \; dcos(\omega) \; dr
+	\end{equation}
+	
+	\pause
+	\begin{equation} \label{eq:ff_expanded_r}
+		F(q^2) = 4\pi \int_0^\infty \rho(r) r^2 dr - 4\pi \frac{q^2}{6\hbar^2} \int_0^\infty \rho(r) r^4 dr
+	\end{equation}
+	
+	\pause
+	\begin{itemize}
+		\item Applying the normalization $4\pi \int_0^\infty \rho(r) r^2 dr = 1$, and defining the charge radius as $\langle r^2 \rangle = 4\pi \int_0^\infty r^2 \rho(r) r^2 dr$, we find:
+	\end{itemize}
+	
+	\pause
+	\begin{equation} \label{eq:ff_rms}
+		F(q^2) = 1 - \frac{q^2}{6\hbar^2} \langle r^2 \rangle \;\;\; \rightarrow \;\;\; \alert{\langle r^2 \rangle = -6\hbar^2 \frac{dF(q^2)}{dq^2} |_{q^2=0}}
+	\end{equation}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Rosenbluth Equation}
+	\begin{itemize}
+		\item Now our cross section accounts for \alert{charge}, \alert{relativity}, \alert{spin}, and \alert{recoil}. Great! Is there anything still missing?
+			\begin{itemize}
+				\pause
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Magnetic interactions} and \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{internal structure} are still not included. 
+				\item[--] Introduce a new \setbeamercolor{alerted text}{fg=TolLightRed}\alert{magnetic term} as was done for relativity \cite{Book:Povh}.
+			\end{itemize}
+	\end{itemize}
+	\pause
+	\begin{equation} \label{eq:mag}
+		\left(\frac{d\sigma}{d\Omega}\right)_{\substack{ \text{point} \\ \text{spin 1/2}}} = \left( \frac{d\sigma}{d\Omega} \right)_{Mott} \left( (1-2\tau \; tan^2\left( \frac{\theta}{2} \right) \right), \;\;\;\; \tau = \frac{Q^2}{4M}
+	\end{equation}
+	\pause
+	\begin{itemize}
+		\item Finally add in \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{nuclear form factors} to describe internal structure.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+	\end{itemize}
+	\pause
+	\begin{equation} \label{eq:rosenbluth_long}
+		\left(\frac{d\sigma}{d\Omega}\right) = \left( \frac{d\sigma}{d\Omega} \right)_{Mott} \left[ 	\frac{G_E^2\left(Q^2\right)+\tau G_M^2\left(Q^2\right)}{1+\tau} + 2 \tau G_M^2\left(Q^2\right) tan^2\left( \frac{\theta}{2} \right) \right]
+	\end{equation}
+	\pause
+	\begin{equation} \label{eq:ge_0}
+		G_E^p\left(Q^2=0\right) = 1 \;\; and \;\; G_M^p\left(Q^2=0\right) = 2.79
+	\end{equation}
+
+	\begin{equation} \label{eq:gm_0}
+		G_E^n\left(Q^2=0\right) = 0 \;\; and \;\; G_M^n\left(Q^2=0\right) = -1.91
+	\end{equation}
+\end{frame}
+
+\begin{frame}[fragile]{Rosenbluth Equation Cont.}
+	\begin{itemize}
+		\item \alert{$G_E$} and \alert{$G_M$} are known as the \alert{Sach's form factors}. Several other form factors are commonly used.
+			\begin{itemize}
+			%\setbeamercolor{alerted text}{fg=mLightBrown}
+				\pause
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$F_1$} and \setbeamercolor{alerted text}{fg=TolDarkBlue} \alert{$F_2$} are called the \setbeamercolor{alerted text}{fg=TolLightRed} \alert{Dirac} and \setbeamercolor{alerted text}{fg=TolDarkBlue} \alert{Pauli} form factors respectively.
+				\setbeamercolor{alerted text}{fg=mLightBrown}
+				\begin{columns}[T,onlytextwidth]   	
+					\column{0.5\textwidth}
+					\begin{equation} \label{eq:f1}
+						G_E \left(Q^2\right) = F_1\left(Q^2\right) -\mu \tau F_2\left(Q^2\right)
+					\end{equation}
+					
+					\column{0.5\textwidth}
+					\begin{equation} \label{eq:f2}
+						G_M \left(Q^2\right) = F_1\left(Q^2\right) + \mu F_2\left(Q^2\right)
+					\end{equation}
+				\end{columns}
+				
+				\pause
+				\item[--] There are also the \alert{$F_{ch}$} and \alert{$F_m$} form factors used in this analysis.
+				\begin{columns}[T,onlytextwidth]   	
+					\column{0.5\textwidth}
+					\begin{equation} \label{eq:fch}
+						F_{ch}\left(Q^2\right) = G_E \left(Q^2\right) 
+					\end{equation}
+
+					\column{0.5\textwidth}
+					\begin{equation} \label{eq:fm}
+						F_{m}\left(Q^2\right) = \frac{G_M \left(Q^2\right)}{\mu} 
+					\end{equation}
+				\end{columns}
+			\end{itemize}
+			
+			\pause
+			\item Now let's rewrite the cross section for the final \alert{Rosenbluth equation}:
+	\end{itemize}
+	\begin{equation} \label{eq:rosenbluth}
+		\left(\frac{d\sigma}{d\Omega}\right)_{exp} = \left( \frac{d\sigma}{d\Omega} \right)_{Mott} \frac{1}{1+\tau}\left[ G_E^2\left(Q^2\right) + \frac{\tau}{\epsilon} G_M^2\left(Q^2\right) \right]
+	\end{equation}
+	\begin{equation} \label{eq:epsilon}
+		\epsilon = \left( 1 + 2(1+\tau)tan^2\left( \frac{\theta}{2} \right) \right)^{-1}
+	\end{equation}
+\end{frame}
+
+\section{Experimental Setup}
+
+\begin{frame}[fragile]{Experiment E08-014}
+	\begin{itemize}
+		\item Experiment \alert{E08-014} ran in Jefferson Lab's Hall A in 2011 \cite{Thesis:Ye}.
+			\begin{itemize}
+				\item[--] Measured inclusive cross sections of $^2$H, \alert{$^3$He}, $^4$He, $^{12}$C, $^{40}$Ca, and $^{48}$Ca in the range of 1.1 GeV/c $<$ $Q^2$ $<$ 2.5 GeV/c.
+				\item[--] Compared heavy targets to two and three-nucleon targets to study \alert{short range correlations} between two and three-nucleon clusters.
+			\end{itemize}
+		\pause
+		\item E08-014 mostly took quasielastic data, but through a happy coincidence, \alert{KIN 3.2} was able to view the $^3$He elastic peak.
+			\begin{itemize}
+				\item[--] $E_0$ = \alert{3.356 GeV}. Scattering angle of \alert{20.51$^{\circ}$}.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]   	
+	\column{0.5\textwidth}
+	
+	\pause
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Elastic_Band.png}
+	\end{center}
+	\caption{
+	{\bf{Elastic Band for $^3$He.}} }
+	\label{fig:elastic_band}
+	\end{figure}
+	
+	\column{0.5\textwidth}
+	
+	\pause
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Elastic_Xbj.png}
+	\end{center}
+	\caption[\bf{Elastic Peak in $x_{Bj}$}]{
+	{\bf{Elastic Peak in $x_{Bj}$.}} }
+	\label{fig:elastic_xbj}
+	\end{figure}
+
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{CEBAF}
+	\begin{itemize}
+		\setbeamercolor{alerted text}{fg=TolLightRed}
+		\item \alert{C}ontinuous \alert{E}lectron \alert{B}eam \alert{A}ccelerator \alert{F}acility:
+			\begin{itemize}
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+				\item[--] \alert{Superconducting radio frequency} (SRF) cavities accelerate electrons.
+				\item[--] \alert{Continuous wave} (CW) electron beam to four halls.
+				\item[--] Polarized electron gun strikes GaAs cathode crystal with diode laser pulsed at 1497 MHz.
+				\item[--] Two Linacs containing 20 cryomodules each.
+				\item[--] Loop again to increase electron energy ($\approx$2.2 GeV/loop, \alert{12 GeV max}).
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-3mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.5\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/JLab_Layout.png}
+	\end{center}
+	\caption[\bf{CEBAF}]{
+	{\bf{CEBAF.}} Continuous Electron Beam Accelerator Facility. 6 GeV configuration. Image from \cite{Article:HallA}.}
+	\label{fig:halla_top}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Hall A Configuration}
+	\begin{itemize}
+		\item E08-014 used the standard Hall A configuration and detector packages.
+			\begin{itemize}
+				\item[--] Main trigger \alert{(S$_1$ $\&$ S$_{2m}$ $\&$ GC)}.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.6\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Hall_A_Top_View.png}
+	\end{center}
+	\caption[\bf{Hall A Top View}]{
+	{\bf{Hall A Top View.}} Standard Hall A configuration. Image from \cite{Thesis:Wang}.}
+	\label{fig:halla_top}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Beam Energy}
+
+	\begin{itemize}
+		\item \alert{Arc Method}:
+			\begin{itemize}
+				\item[--] Pass electron beam through series of eight dipole magnets.
+				\item[--] Measure \alert{deflection} of electron beam.
+				\item[--] Momentum given by field integral of dipoles divided by bend angle. 
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-3mm}
+	\begin{equation} \label{eq:arc}
+		|\overrightarrow{p}| = C_{arc} \frac{\int \overrightarrow{\rm \textbf{B}} \cdot \overrightarrow{\rm \textbf{d}}l}{\phi_{arc}}
+	\end{equation}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.45\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Arc_Method.png}
+	\end{center}
+	\caption[\bf{Arc Energy Measurement Diagram}]{
+	{\bf{Arc Energy Measurement Diagram.}} The electron beam is bent through an angle $\phi_{arc}$ by a series of eight dipole magnets. Image from \cite{Thesis:Wang}.}
+	\label{fig:halla_top}
+	\end{figure}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Beam Line}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.65\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Beamline_Layout.png}
+	\end{center}
+	\caption[\bf{Beam Line Components}]{
+	{\bf{Beam Line Components.}} Image from \cite{Thesis:Wang}.}
+	\label{fig:halla_top}
+	\end{figure}
+	
+	\vspace{-4mm}
+	\begin{itemize}
+		
+		\pause
+		\setbeamercolor{alerted text}{fg=TolDarkBlue}
+		\item \alert{B}eam \alert{C}urrent \alert{M}onitors:
+		\begin{itemize}
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+			\item[--] \alert{RF cavity monitors} produce signal proportional to the beam current.
+		\end{itemize}
+			
+		\pause
+		\item Raster:
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\begin{itemize}
+			\item[--] Two steering magnets spread the beam over several mm. \alert{Prevents target overheating}.
+		\end{itemize}
+		
+		\pause
+		\setbeamercolor{alerted text}{fg=TolLightRed}	
+		\item \alert{B}eam \alert{P}osition \alert{M}onitors:
+		\begin{itemize}
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+			\item[--] \alert{Four orthogonal antennae} perpendicular to beam produce signal inversely proportional to beam’s distance from antennae.
+		\end{itemize}
+
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Target}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\setbeamercolor{alerted text}{fg=TolLightRed}
+		\item \alert{C}ryogenic \alert{D}istribution \alert{S}ystem cools targets to 5 K to 15 K.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\item Targets kept in \alert{vacuum scattering chamber} where they interact with electron beam.
+		\pause
+		\item \alert{Target ladder} divided into three cryogenically cooled loops. 
+		\item Pressure and temperature continuously monitored.
+		\item \alert{20 cm gaseous $^3$He target} (17 K and 211 psia).
+		\item Carbon foil (7 foils 5 cm spacing) and dummy target. 
+	\end{itemize}
+
+	\column{0.37\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.85\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Ladder.png}
+	\end{center}
+	\caption[\bf{Target Ladder}]{
+	{\bf{Target Ladder.}} Image from \cite{Thesis:Ye}.}
+	\label{fig:halla_top}
+	\end{figure}
+	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{High Resolution Spectrometers}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.55\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/HRS_Diagram.png}
+	\end{center}
+	\caption[\bf{Side View of Single HRS}]{
+	{\bf{Side View of Single HRS.}} Image from \cite{Thesis:Wang}.}
+	\label{fig:halla_top}
+	\end{figure}
+
+	\vspace{-5mm}
+	\begin{itemize}
+		\setbeamercolor{alerted text}{fg=TolLightRed}
+		\pause
+		\item \alert{H}igh \alert{R}esolution \alert{S}pectrometers:
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+			\begin{itemize}
+				\item[--] \alert{Momentum Resolution}: of 1 $\times$ 10$^{-4}$ from 0.8 GeV to 4 GeV.
+				\item[--] \alert{Momentum Acceptance}: -4.5$\%$ $<$ $\delta p$/$p$ $<$ 4.5$\%$.
+				\item[--] \alert{Angular Acceptance}: horizontal $\pm$ 30 mrads, vertical $\pm$ 60 mrads.
+				\item[--] \alert{Angular Range}: HRSL 12.5$^{\circ}$ - 150$^{\circ}$, HRSR 12.5$^{\circ}$ - 130$^{\circ}$.
+			\end{itemize}
+			\pause
+			\item Magnets are configured as \setbeamercolor{alerted text}{fg=TolLightRed}\alert{QQ}\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{D}\setbeamercolor{alerted text}{fg=TolLightRed}\alert{Q}.\setbeamercolor{alerted text}{fg=mLightBrown}
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Quadrupoles focus particles}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Dipole bends particles 45$^{\circ}$ to detectors}.
+			\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Vertical Drift Chambers}
+
+	\begin{columns}[T,onlytextwidth]  
+	
+	\column{0.37\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/VDCs_External.png}
+	\end{center}
+	\caption[\bf{VDCs}]{
+	{\bf{VDCs.}} Image from \cite{Article:VDCs}.}
+	\label{fig:halla_top}
+	\end{figure}
+	
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{V}ertical \alert{D}rift \alert{C}hambers:\setbeamercolor{alerted text}{fg=mLightBrown}
+			\begin{itemize}
+				\item[--] \alert{Reconstructs particle trajectories}.
+				\item[--] Two planes each containing 368 sense wires.
+				\item[--] Chamber filled with 62$\%$-38$\%$ argon/ethane mixture.
+				\item[--] \alert{Charged particles ionize the gas releasing electrons}.
+			\end{itemize}
+			\pause
+			\item Two gold mylar plates in VDCs create 4 kV electric field.
+			\begin{itemize}
+				\item[--] \alert{Electric field draws electrons to the sense wires}.
+			\end{itemize}
+			\pause
+			\item By detecting which wires `fired' the particle's location in each VDC can be calculated. Then the two VDC intersection points determine the particle's initial trajectory.
+	\end{itemize}
+	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Main Trigger}
+
+	\begin{columns}[T,onlytextwidth]  
+	
+	\column{0.37\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Paddle.png}
+	\end{center}
+	\caption[\bf{Single Scintillator Paddle}]{
+	{\bf{Single Scintillator Paddle.}} Image from \cite{Thesis:Wang}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item \alert{Main trigger (T$_3$) S$_1$$\&$S$_{2m}$$\&$GC}.
+		\pause
+		\item \alert{Scintillator Counters}:
+			\begin{itemize}
+				\item[--] S$_1$ contains six paddles of plastic scintillators providing overlapping coverage.
+				\item[--] S$_{2m}$ contains 16 plastic scintillator paddles smaller than those in S$_1$.
+				\item[--] Charged particles striking the paddles produce photons which travel paddle length to photomultiplier tubes.
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Timing resolution of $\approx$ 30 ns}.
+			\end{itemize}
+		\pause
+		\item \alert{Gas Cherenkov}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}Mainly used for \alert{particle identification}.
+				\item[--] Detects Cherenkov radiation created by particles passing through the gas.
+			\end{itemize}
+	\end{itemize}
+	
+
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Main Trigger cont.}
+
+	\begin{itemize}
+		\item \alert{Cherenkov Radiation}:
+			\begin{itemize}
+				\item[--] Light passing through a medium has its speed reduced.
+				\item[--] Particles travelling faster than the speed of light in the medium create an EM shock wave releasing photons.
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Electrons require a momentum of 0.0178 GeV} to produce Cherenkov radiation and \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{pions 4.87 GeV}.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.48\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=.8\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/EM_Shock_Wave.png}
+	\end{center}
+	\caption[\bf{EM Shock Wave}]{
+	{\bf{EM Shock Wave.}} $\cos(\theta) = \frac{1}{\beta n}$. Image from \cite{Thesis:Cummings}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	
+	\column{0.48\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=.75\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/GC.png}
+	\end{center}
+	\caption[\bf{Hall A GC Interior}]{
+	{\bf{Hall A GC Interior.}} Image from \cite{Thesis:Ye}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{EM Calorimeters}
+
+	\begin{itemize}
+		\item Provide second level of \alert{particle identification}.
+			\begin{itemize}
+				\item[--] Charged particles pass through the lead-glass blocks.
+				\item[--] Nuclei deflect and slow particles producing \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Bremsstrahlung radiation}.
+				\item[--] Photons create electrons and positrons through \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{pair production}. 
+				\item[--] e$^-$ and e$^+$ produce more Bremsstrahlung creating an \setbeamercolor{alerted text}{fg=mLightBrown}\alert{alternating shower of particles}.
+				\item[--] Pions don't produce many photons as they interact mostly through ionization $\rightarrow$ large showers indicate electrons.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=.45\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/EM_Cal.png}
+	\end{center}
+	\caption[\bf{Hall A Electromagnetic Calorimeters}]{
+	{\bf{Hall A Electromagnetic Calorimeters.}} Image from \cite{Article:HallA}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	
+\end{frame}
+
+\begin{frame}[fragile]{Data Acquisition System}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.48\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/DAQ.png}
+	\end{center}
+	\caption[\bf{Hall A DAQ}]{
+	{\bf{Hall A DAQ.}} Image from \cite{DAQ}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	
+	\column{0.48\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/CODA.png}
+	\end{center}
+	\caption[\bf{CEBAF Online Data Acquisition}]{
+	{\bf{CEBAF Online Data Acquisition.}} Image from \cite{DAQ}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Optics}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.48\textwidth}
+	\begin{itemize}
+		\item \alert{Hall A Coordinate Systems}:
+			\begin{itemize}
+				\item[--] Hall, target, detector, transport, and focal plane coordinate systems.
+			\end{itemize}
+		\pause
+		\item \alert{Optics Calibration}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Optics matrix links focal plane back to target coordinate system}.
+				\item[--] Place sieve slit over spectrometer entrance.
+				\item[--] Sieve pattern appears in detectors corresponding to known locations.
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}Yields \alert{$Z_{react}$} (beam target interaction), \alert{$X_{sieve}$}, and \alert{$Y_{sieve}$}. 
+			\end{itemize}
+	\end{itemize}
+	
+	\column{0.48\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=.7\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Experimental_Setup/Sieve.png}
+	\end{center}
+	\caption[\bf{Optics Calibration Sieve Plate}]{
+	{\bf{Optics Calibration Sieve Plate.}} Image from \cite{Thesis:Ye}.}
+	\label{fig:halla_top}
+	\end{figure}	
+	\end{columns}
+	
+\end{frame}
+
+\section{Cross Section Extraction}
+
+\begin{frame}[fragile]{Extracting a Cross Section}
+	\begin{itemize}
+		\item We can rewrite the cross section in a more useful form:
+	\end{itemize}
+	
+	\begin{equation} \label{eq:exp_xs}
+		\left(\frac{d\sigma}{d\Omega}\right)_{exp} = \frac{ps \; N_e}{N_{in} \; \rho \; LT \; \epsilon_{det}} \frac{1}{\Delta\Omega\Delta P \Delta Z}
+	\end{equation}
+	
+	\pause
+	\begin{itemize}
+		\item Essentially, this is a game of \alert{electron counting}.
+			\begin{itemize}
+				\pause
+				\item[--] To count electrons we need the \alert{beam charge}.
+			\end{itemize}
+	\end{itemize}
+	
+	\pause
+	\begin{columns}[T,onlytextwidth]   	
+	\column{0.7\textwidth}
+	
+	\vspace{-4mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/BCMs_4074.png}
+	\end{center}
+	\caption{
+	{\bf{BCM Readouts for Run 4074.}} }%These plots show the $U_1$ and $D_1$ BCM measurements for run 4074. The 	cuts are applied two scaler readouts before (after) the BCMs register 90$\%$ of the 120 $\mu$A operating current for the falling (rising) edge.}
+	\label{fig:bcms_4074}
+	\end{figure}
+	
+	\column{0.3\textwidth}
+	
+	\vspace{3mm}
+	\begin{equation} \label{eq:charge}
+		Q = \langle I_{beam} \rangle \times time
+	\end{equation}
+
+	\vspace{3mm}
+	\begin{equation} \label{eq:electrons}
+		\alert{N_{in} = \frac{Q}{e}}
+	\end{equation}
+	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Particle Identification}
+	\begin{itemize}
+		\item How many elastic electrons, \alert{$N_e$}, were detected? 
+			\begin{itemize}
+				\item[--] We need a pure electron sample. Pions can contaminate the sample.
+				\pause
+				\item[--] The \alert{EM calorimeters} and \alert{GC} can discriminate electrons from pions.
+			\end{itemize}
+	\end{itemize}
+	
+	\pause
+	\begin{columns}[T,onlytextwidth]   	
+	\column{0.5\textwidth}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/PID_PR_Ye.png}
+	\end{center}
+	\caption{
+	{\bf{PID with the Pion Rejectors.}} Image from \cite{Thesis:Ye}.}%~\cite{Thesis:Ye}.}
+	\label{fig:pid_pr_ye}
+	\end{figure}
+	
+	\column{0.5\textwidth}
+	
+	\vspace{8mm}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.15\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/PID_GC_Ye.png}
+	\end{center}
+	\caption{
+	{\bf{PID with the Gas Cherenkov.}} Image from \cite{Thesis:Ye}.}%~\cite{Thesis:Ye}.}
+	\label{fig:pid_gc_ye}
+	\end{figure}
+
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Pion Rejectors PID}
+	\begin{itemize}
+		\item For our six runs there appear to be \alert{very few pions}.
+		\item Some \alert{delta (knock-on) electrons} are in the sample.
+			\begin{itemize}
+				\item[--] These delta electrons and few pions can be removed with a simple \alert{diagonal cut on the pion rejectors}.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]						{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/PID_PR.png}
+	\end{center}
+	\caption{
+	{\bf{PID with the Pion Rejectors.}} }.
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Gas Cherenkov PID}
+	\begin{itemize}
+		\item Does the gas Cherenkov agree with the pion rejectors?
+		\pause
+		\item Again there appear to be \alert{almost no pions} at our kinematics. 
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/PID_GC.png}
+	\end{center}
+	\caption{
+	{\bf{PID with the Gas Cherenkov.}} }.
+	\label{fig:pid_gc}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Target Density}
+	\begin{itemize}
+		\item Now we need to know how many scattering centers are in the target.
+		\pause
+		\item Let's look at the target's density profile to find \alert{$\rho$}.
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.6\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Boiling_Effect.png}
+	\end{center}
+	\caption[\bf{$^3$He Boiling Effect.}]{
+	{\bf{$^3$He Boiling Effect.}} Image from \cite{Thesis:Ye}.}%~\cite{Thesis:Ye}.}
+	\label{fig:boiling_effect}
+	\end{figure}
+	
+	\pause
+	\vspace{-5mm}
+	\begin{itemize}
+		\item The density is not constant along the cell due to \alert{boiling effects}.
+		\item CFD calculations by Silviu Covrig allowed $\rho$ to be calculated \cite{density}.
+		\begin{itemize}
+			\item[--] \alert{0.013 g/cm$^3$} $\pm$ 0.0004 g/cm$^3$.
+		\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Simulating Elastic Electrons}
+	\begin{itemize}
+		\item How do we know how \alert{many events were elastic}?
+			\begin{itemize}
+				\pause
+				\item[--] Find the \alert{elastic electron yield}.
+				\item[--] Count electrons in the elastic peak ($x_{Bj}$ = 3).
+			\end{itemize}
+		\pause
+		\item Before finding the experimental elastic electron yield we want a \alert{point of comparison}.
+			\begin{itemize}
+				\pause
+				\item[--] We can simulate what the elastic electron spectrum is expected to look like at our kinematics using \alert{SIMC}.
+			\end{itemize}
+		\pause	
+		\item SIMC:
+			\begin{itemize}
+				\item[--] Monte Carlo \setbeamercolor{alerted text}{fg=TolLightRed}\alert{generates events randomly} in given kinematic ranges.
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Transports electrons} from scattering vertex through spectrometers to detector stack. 
+				\item[--] Contains old \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$^3$He elastic scattering model} from Amroun \textit{et al} \cite{Article:Amroun}.
+				\item[--] Shape of form factors and cross section should be accurate.
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Cross section magnitude is expected to be off} at our kinematics.
+				\item[--] Can calculate \setbeamercolor{alerted text}{fg=mLightBrown}\alert{radiative effects}.
+			\end{itemize}	 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{SIMC Output}
+
+		\begin{columns}[T,onlytextwidth]   	
+		\column{0.5\textwidth}
+			\begin{figure}[!ht]
+			\begin{center}
+			\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/SIMC_vs_Data_Phi.png}
+			\end{center}
+			\caption[\bf{$\boldsymbol{\phi}$}]{
+			{\bf{$\boldsymbol{\phi}$.}} In plane angle.}
+			\label{fig:simc_phi}
+			\end{figure}
+		
+		\column{0.5\textwidth}
+			\begin{figure}[!ht]
+			\begin{center}
+			\includegraphics[width=.8\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/SIMC_vs_Data_Theta.png}
+			\end{center}
+			\caption[\bf{$\boldsymbol{\theta}$}]{
+			{\bf{$\boldsymbol{\theta}$.}} Out of plane angle.}
+			\label{fig:simc_theta}
+			\end{figure}
+			
+		\end{columns}
+		
+		\begin{columns}[T,onlytextwidth]  
+		\column{0.5\textwidth}
+			\begin{itemize}
+				\item \setbeamercolor{alerted text}{fg=TolLightRed} \alert{Red} is \alert{SIMC} and \setbeamercolor{alerted text}{fg=TolDarkBlue} \alert{blue} is \alert{data}. 
+				\setbeamercolor{alerted text}{fg=mLightBrown}
+				\item $\phi$ and $\theta$ both look decent.
+				\item \alert{SIMC $dP$}: 
+					\begin{itemize}
+						\item[--] Scaling is arbitrary.
+						\item[--] \alert{Only care about acceptance region} of -0.02 to 0.03.
+					\end{itemize}
+			\end{itemize}
+		 	
+		\column{0.5\textwidth}
+			\begin{figure}[!ht]
+			\begin{center}
+			\includegraphics[width=0.95\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/SIMC_vs_Data_dP.png}
+			\end{center}
+			\caption[\bf{$\boldsymbol{dP}$}]{
+			{\bf{$\boldsymbol{dP}$}} Momentum fraction.}
+			\label{fig:simc_dp}
+			\end{figure}
+		\end{columns}
+		
+\end{frame}
+
+\begin{frame}[fragile]{Aluminium Background Subtraction}
+	
+	\begin{itemize}
+		\item Take a closer look at the $x_{Bj}$ plot from earlier \setbeamercolor{alerted text}{fg=TolDarkBlue}(\alert{blue} histogram).
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+			\begin{itemize}
+				\item[--] What are the \alert{events above the $^3$He elastic peak}?
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-2mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Al_Background.png}
+	\end{center}
+	\caption[\bf{Scaled Aluminium Background and $x_{Bj}$}]{
+	{\bf{Scaled Aluminium Background and $x_{Bj}$.}} }%The red histogram shows the scaled Al background, and the blue histogram 	shows the $^3$He production data before the Al background is subtracted.}
+	\label{fig:al}
+	\end{figure}
+	
+	\pause
+	\vspace{-6mm}
+	\begin{itemize}
+		\item \alert{Aluminium contamination} from target cell \setbeamercolor{alerted text}{fg=TolLightRed}(\alert{red} histogram).
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+			\begin{itemize}
+				\item[--] Use \alert{dummy cell} to subtract Al events.
+				\item[--] Scale dummy by \alert{charge}, \alert{thickness}, and \alert{radiative corrections}.
+			\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Aluminium Background Subtraction Cont.}
+	\begin{itemize}
+		\item What happens when we \alert{subtract off the aluminium contamination} from the $x_{Bj}$ spectrum?
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{overprint}
+		%\begin{center}
+		\onslide<1>\includegraphics[width=0.8\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Al_Background.png}
+		%\end{center}
+		\caption[\bf{Scaled Aluminium Background and $x_{Bj}$}]{
+		{\bf{Scaled Aluminium Background and $x_{Bj}$.}} }%The red histogram shows the scaled Al background, and the blue histogram 	shows the $^3$He production data before the Al background is subtracted.}
+		\label{fig:al}
+		\onslide<2>\includegraphics[width=0.8\linewidth]	{3He_Xbj_Al_Sub.png}
+		%\end{center}
+		\caption[\bf{Aluminium Subtracted $x_{Bj}$}]{
+		{\bf{Aluminium Subtracted $x_{Bj}$.}} }%The red histogram shows the scaled Al background, and the blue histogram 	shows the $^3$He production data before the Al background is subtracted.}
+		\label{fig:al_sub}
+		\end{overprint}
+	\end{figure}
+	
+	\pause
+	\begin{itemize}
+		\item Now most of the \alert{events above the elastic peak disappear}!
+	\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Fitting the Elastic Peak}
+
+	\begin{itemize}
+		\item How do we count the number of electrons in the elastic peak, \alert{$N_e$}?
+			\begin{itemize}
+				\pause
+				\item[--] \alert{Fit the peak and integrate} over the elastic peak.
+			\end{itemize}
+		\pause
+		\item What kind of fit might be appropriate?
+			\begin{itemize}
+				\pause
+				\item[--] QE \setbeamercolor{alerted text}{fg=TolLightRed}\alert{background looks exponential} and elastic \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{peak looks Gaussian}.
+				\item[--] Create a fit equation summing an exponential and a Gaussian: 
+				\setbeamercolor{alerted text}{fg=mLightBrown}
+			\end{itemize}
+	\end{itemize}
+	
+	\pause
+	\vspace{-4mm}
+	\begin{equation} \label{eq:combined}
+		F_{combined} = \setbeamercolor{alerted text}{fg=TolLightRed}\alert{e^{\left( P_0+P_1 \; x \right)}} + \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{P_2 \; e^{\left( \frac{-1}{2} \left( \frac{x-P_3}{P_4} \right)^2 \right)}}
+	\end{equation}
+	\setbeamercolor{alerted text}{fg=mLightBrown}
+	
+	\pause
+	\vspace{-5mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.65\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Combined_Fit_Xbj.png}
+	\end{center}
+	\caption[\bf{Combined Fit of $x_{Bj}$ for E08-014}]{
+	{\bf{Combined Fit of $x_{Bj}$ for E08-014.}} }
+	\label{fig:combined}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Comparing SIMC and Experimental Yields}
+
+	\begin{itemize}
+		\item Now let's look at the \alert{elastics from SIMC}.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/SIMC_Elastics.png}
+	\end{center}
+	\caption[\bf{SIMC Elastically Scattered Electrons}]{
+	{\bf{SIMC Elastically Scattered Electrons.}} }
+	\label{fig:simc_elastics}
+	\end{figure}
+	
+	\pause
+	\vspace{-4mm}
+	\begin{itemize}
+		\item The spectrum looks reasonable.
+			\begin{itemize}
+				\item[--] Prominent \alert{elastic peak at $x_{Bj}$ = 3}.
+				\item[--] Nice \alert{radiative tail} as expected.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Comparing SIMC and Experimental Yields Cont.}
+
+	\begin{itemize}
+		\item How do we compare simulated elastic events to experimental events that are mostly quasielastic?
+			\begin{itemize}
+				\pause
+				\item[--] We can \setbeamercolor{alerted text}{fg=TolLightRed}\alert{fit only the QE background} and then \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{sum the fit with the SIMC elastics}.
+				\item[--] The QE fit is made in the region \setbeamercolor{alerted text}{fg=TolLightRed}\alert{where few elastics are expected}.
+			\end{itemize}
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+	\end{itemize}
+
+	\pause
+	\vspace{-4mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.85\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Quasielastic_Background.png}
+	\end{center}
+	\caption[\bf{Histogram Binned to Fit of Quasielastic Background}]{
+	{\bf{Histogram Binned to Fit of Quasielastic Background.}} }
+	\label{fig:QE_background}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Comparing SIMC and Experimental Yields Cont.}
+
+	\begin{itemize}
+		\item Finally we can compare the elastic electron yield from SIMC and experimental data.
+			\begin{itemize}
+				\pause
+				\item[--] The \alert{area under the Gaussian} of the two combined fits, but above the QE background, \alert{represents the elastic electron yield}.
+				\pause
+				\item[--] The \alert{elastic electron yield is directly proportional to the cross section}.
+				\pause
+				\item[--] Note that the real data yield is increased slightly to correct for live-time and various efficiencies.
+			\end{itemize}
+			\pause
+			\item Recall that at our kinematics the old $^3$He model in SIMC has the \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{correct cross section shape} but \setbeamercolor{alerted text}{fg=TolLightRed}\alert{incorrect magnitude} \cite{Article:Amroun}.
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+			\item \alert{SIMC produces the average cross section} for this experiment based on the previous model.
+			\pause
+			\item If the SIMC cross section is scaled by a constant until the SIMC yield matches the experimental yield then the average cross section SIMC produces will equal the experimental cross section. 
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Cross Section Value}
+
+	\begin{itemize}
+		\item Yields plots for the experimental data and SIMC scaled to match.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed} \alert{Red} is \alert{SIMC + QE background fit} and \setbeamercolor{alerted text}{fg=TolDarkBlue} \alert{blue} is \alert{experimental data}. 
+				\setbeamercolor{alerted text}{fg=mLightBrown}
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-3mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Peak_Matched_Xbj_Fits.png}
+	\end{center}
+	\caption[\bf{SIMC + QE Scaled to Experimental Elastic Electron Yield}]		{
+	{\bf{SIMC + QE Scaled to Experimental Elastic Electron Yield.}} }
+	\label{fig:final_xs}
+	\end{figure}
+	
+	\vspace{-5mm}
+	\pause
+	\begin{itemize}
+		\item Yield shapes are similar. %Slight shift is likely a Z offset issue.
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{SIMC scale factor}, $C_{SIMC}$, to match data \alert{= 1.01984}.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\item New $^3$He \alert{cross section value is 1.335 $\times$ 10$^{-10}$ fm$^{-2}$/sr}. 
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Where to Place the Data Point}
+
+	\begin{itemize}
+		\item We now have the cross section's \alert{magnitude}. Great! We're done right?
+			\begin{itemize}
+				\pause
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed} \alert{Wrong}!
+				\setbeamercolor{alerted text}{fg=mLightBrown}
+				\pause
+				\item[--] \alert{Where do we put our point}? 
+				\item[--] What is the \alert{uncertainty}?
+			\end{itemize}
+		\pause
+		\item Can't we just calculate $Q^2$ from the \alert{center of our bin} and be done?
+		\item The bin center is only correct if the function is \alert{linear} \cite{Article:data_placement}.
+	\end{itemize}
+	
+	\pause
+	\vspace{-3mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/XS_3356MeV_Representative.png}
+	\end{center}
+	\caption[\bf{$^3$He Elastic Cross Section at 3.356 GeV}]{
+	{\bf{$^3$He Elastic Cross Section at 3.356 GeV.}} }
+	\label{fig:xs_bin}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Where to Place the Data Point Cont.}
+
+	\begin{itemize}
+		\item Now let's \alert{zoom in and remove the log scale} to see the true shape.
+	\end{itemize}
+
+	\pause
+	\vspace{-2mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.7\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/XS_3356MeV_Representative_Zoom.png}
+	\end{center}
+	\caption[\bf{$^3$He Elastic Cross Section $Q^2$ Bin at 3.356 GeV}]{
+	{\bf{$^3$He Elastic Cross Section $Q^2$ Bin at 3.356 GeV.}} }
+	\label{fig:xs_bin_zoom}
+	\end{figure}
+	
+	\pause
+	\vspace{-5mm}
+	\begin{itemize}
+		\item Clearly \setbeamercolor{alerted text}{fg=TolLightRed}\alert{not linear}.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\item \alert{Weight the $Q^2$ values} in the bin \alert{by the cross section magnitude}.
+		\pause
+		\item The bin center would place the $Q^2$ at 35.90 fm$^{-2}$. 
+		\item The weighted bin center is at \alert{$Q^2$ = 34.19 fm$^{-2}$}.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Uncertainty}
+
+	\begin{itemize}
+		\item Lastly, we need to quantify the \alert{uncertainty on our point}.
+	\end{itemize}
+	
+	\vspace{-2mm}
+	{\scriptsize{
+	\begin{table}[!h]
+	\centering
+	\begin{tabular}{|l | r |}
+	\hline
+	\textbf{Uncertainty Source} & \makecell{\textbf{Cross Section}\\ \textbf{Uncertainty}} \\
+	\hline
+	\textbf{Statistical Sources} &  \\ 
+	\hline
+	Electron Yield & 4.21$\%$\\
+	Al Background Subtraction & 1.1$\%$\\
+	\textbf{Total Statistical} &  \setbeamercolor{alerted text}{fg=TolLightRed}\alert{\textbf{4.36$\%$}}\\
+	\hline
+	\textbf{Systematic Sources} &  \\
+	\hline
+	Target Density & 3.08$\%$\\
+	Optics Calibration & 2.248$\%$\\
+	GC Efficiency & 1.32$\%$\\
+	Beam/Target Offsets & 1.1$\%$\\
+	Radiative Corrections & 1$\%$\\
+	Beam Charge & 1$\%$\\
+	VDC Single-Track Efficiency & 1$\%$\\
+	Trigger Efficiency & 1$\%$\\
+	Beam Energy & 0.72$\%$\\
+	SIMC Model Comparison to Reality & 0.5$\%$\\
+	PR Cut & 0.055$\%$\\ 
+	Y$_{target}$ Position & 0.045$\%$\\
+	Live-time & 0.01145$\%$\\
+	\textbf{Total Systematic} &  \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{\textbf{4.72$\%$}}\\
+	\hline
+	\setbeamercolor{alerted text}{fg=mLightBrown}
+	\makecell{\textbf{Total Uncertainty}\\ \textbf{Statistical $\&$ Systematic}} &  \alert{\textbf{6.42$\%$}}\\
+	\hline
+	\end{tabular}
+	\caption{{\bf{Table of Uncertainties}} }
+	\label{tab:uncertainty}
+	\end{table}
+	}}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Main Uncertainties}
+
+	\begin{itemize}
+		\pause
+		\item \alert{Electron Yield}:
+			\begin{itemize}
+				\item[--] 565 elastic electrons.
+				\item[--] $\frac{1}{\sqrt{N_e}}$ = 0.0421 $\rightarrow$ $\pm$ 4.21$\%$.
+			\end{itemize}
+		\pause
+		\item \alert{Target Density}:
+			\begin{itemize}
+				\item[--] From density study and CFD simulations. $\pm$ 3.21$\%$.
+			\end{itemize}
+		\pause
+		\item \alert{GC Efficiency}:
+			\begin{itemize}
+				\item[--] $\delta_{GC} = \epsilon_{GC} \; \frac{\sqrt{T_7-(T_{3\&7})}}{T_7}$ $\rightarrow$ $\pm$ 1.32$\%$ ($T_3$ = main, $T_7$ = coincidence).
+			\end{itemize}
+		\pause
+		\item \alert{Beam and Target Offsets}:
+			\begin{itemize}
+				\item[--] Vary spectrometer angle $\pm$ 1 mrad and calculate Mott cross section $\rightarrow$ 1.1$\%$.
+			\end{itemize}
+		\pause
+		\item \alert{Aluminium Background Subtraction}:
+			\begin{itemize}
+				\item[--] Count electrons in elastic peak region (1093) and how many Al events (34) are there.
+				\item[--] $\frac{1}{\sqrt{34}}$ $\rightarrow$ $\pm$ 17$\%$ $\rightarrow$ $\pm$ 6 electrons. Small number so double it to be safe.
+				\item[--] 1059 $\pm$ 12 electrons $\rightarrow$ 1.1$\%$.
+			\end{itemize}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Main Uncertainties Cont.}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.48\textwidth}
+	\begin{itemize}
+		\item \alert{Optics Calibration}:
+			\begin{itemize}
+				\item[--] Uncertainty determined by sieve hole size and spacing.
+				\item[--] Monte Carlo sieve plane.
+				\item[--] Calculates area inside the outermost holes.
+				\item[--] Solid angle changes along target length.
+				\item[--] Two $\sigma$ $\rightarrow$ $\pm$ 2.248$\%$.
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-1mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Solid_Angle_Ytarget.png}
+	\end{center}
+	\caption[\bf{Solid Angle in $Y_{target}$}]{
+	{\bf{Solid Angle in $Y_{target}$.}} }
+	\label{fig:3he_fch_no_cut}
+	\end{figure}
+	
+	\column{0.48\textwidth}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Sieve_MC.png}
+	\end{center}
+	\caption[\bf{Sieve Plate MC}]{
+	{\bf{Sieve Plate MC.}} }
+	\label{fig:3he_fch_no_cut}
+	\end{figure}
+	
+	\vspace{-5mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Cross_Section_Extraction/Sieve_MC_Gaussian.png}
+	\end{center}
+	\caption[\bf{Sieve Plate Areas}]{
+	{\bf{Sieve Plate Areas.}} }
+	\label{fig:3he_fch_no_cut}
+	\end{figure}
+	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Comparison to Other Measurements}
+
+	\begin{itemize}
+		\item Our cross section measurement is now \alert{1.335 $\pm$ 0.086 $\times$ 10$^{-6}$ $\mu$b/sr} at \alert{$Q^2$ = 34.19 fm$^{-2}$}.
+		\pause
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{JLab} took high $Q^2$ data for $^3$He \cite{Article:Alex}.
+			\begin{itemize}
+				\item[--] $E_0$ = 3.304 GeV. Scattering angle of 20.83$^{\circ}$. 
+				\item[--] Cross section = \setbeamercolor{alerted text}{fg=TolLightRed}\alert{1.57 $\pm$ 0.10 $\times$ 10$^{-6}$ $\mu$b/sr} at \alert{$Q^2$ = 34.1 fm$^{-2}$}.
+				\item[--] This analysis' cross section is $\approx$ \setbeamercolor{alerted text}{fg=TolLightRed}\alert{15$\%$ smaller}. 
+				\item[--] Accounting for our higher $Q^2$ the error bars should nearly overlap.
+			\end{itemize}
+		\pause
+		\item Cross section estimate from \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{older SIMC model} \cite{Article:Amroun}.
+			\begin{itemize}
+				\item[--] $E_0$ = 3.356 GeV. Scattering angle of 20.51$^{\circ}$.
+				\item[--] Cross section = \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{1.887 $\times$ 10$^{-6}$ $\mu$b/sr} at \alert{$Q^2$ = 34.19 fm$^{-2}$}.
+				\item[--] This analysis' cross section is $\approx$ \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{30$\%$ smaller}.
+				\item[--] Old model had \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{very little high $Q^2$ data} so we expect the magnitude to not be extremely accurate.
+			\end{itemize}
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\pause
+		\item In sum this new point seems reasonably consistent with other data.
+	\end{itemize}
+
+\end{frame}
+
+\section{Global Fits}
+
+\begin{frame}[fragile]{World Data}
+
+	\begin{itemize}
+		\item We now have a \alert{new cross section}! \pause But what use is a \alert{single point}?
+		\pause
+		\item We need context to learn anything.
+		\pause
+		\item For context we can gather the \alert{world data} for $^3$He elastic cross sections.
+		\begin{itemize}
+			\item[--] We can also gather the \alert{$^3$H} world data so we have mirror nuclei.
+			\item[--] The world data for $^3$H and $^3$He stretches back over \alert{50 years}!
+			\item[--] Experiments were done at at least nine different facilities.
+			\item[--] Many experiments used different methodologies.
+		\end{itemize}
+		\pause
+		\item This analysis used as many of the data sets as possible.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}Some papers \alert{did not publish their data}.
+				\item[--] Some \alert{published only form factors and/or did not publish scattering angles and energies}.
+			\end{itemize}
+		\item This analysis adds more high $Q^2$ data from \alert{JLab}, \alert{Nakagawa}, and this \alert{new cross section from SRC X$>$2} for $^3$He .
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Sum of Gaussians Parametrization}
+
+	\begin{itemize}
+		\item What do we want to get out of the world data?
+		\begin{itemize}
+			\pause
+			\item[--] \alert{Form factors}, \alert{charge densities}, and \alert{charge radii}.
+		\end{itemize}
+		\pause
+		\item How do we find these quantities?
+		\begin{itemize}
+			\pause
+			\item[--] We need some \alert{parametrization} to fit the world data.
+		\end{itemize}
+		\pause
+		\item Select a \alert{sum of Gaussians} (SOG) parametrization \cite{Article:SOG}.
+		\begin{itemize}
+			\pause
+			\item[--] Parametrizes charge density using \alert{multiple Gaussians placed at different radii}.
+			\item[--] Disallows unphysically small structures in the charge density.
+			\item[--] $q_{max}$ based on limited data: \alert{$\lambda = \frac{2\pi}{q_{max}}$}.
+		\end{itemize}
+	\end{itemize}
+	
+	\pause
+	\vspace{-2mm}
+	\begin{equation} \label{eq:sog_rho}
+		\rho(r) = \frac{Ze}{2 \pi^{3/2}\gamma^3} \sum_{i=1}^N \frac{Q_i}{1+\frac{2R_i^2}{\gamma^2}} \left( e^{-\left( r-R_i \right)^2/\gamma^2} + e^{-\left( r+R_i \right)^2/\gamma^2} \right)
+	\end{equation}
+	
+	\begin{itemize}
+		\item With normalization:
+	\end{itemize}		
+	
+	\vspace{-2mm}
+	\begin{equation} \label{eq:normalization}
+		4 \pi \int_0^{\infty} \rho(r) r^2 dr = Ze
+	\end{equation}
+
+\end{frame}
+
+\begin{frame}[fragile]{SOG Cont.}
+
+	\begin{itemize}
+		\item When using the \alert{plane wave born approximation} the form factors can be written as \cite{Article:SOG}: 
+	\end{itemize}
+	
+	\vspace{-4mm}
+	\begin{equation} \label{eq:sog_ffs}
+		F_{(ch,m)}(q) = exp \left(-\frac{1}{4} q^2 \gamma^2 \right) \sum^{N}_{i=1} \frac{Q_i{_{(ch,m)}}}{1+2R^2_i/\gamma^2} \left( \cos(qR_i) + \frac{2R^2_i}{\gamma^2} \frac{\sin(qR_i)}{qR_i} \right)
+	\end{equation}
+	
+	\pause
+	\vspace{-3mm}
+	\begin{itemize}
+		\item The $Q_i$ are the fit parameters.
+			\begin{itemize}
+				\item[--] Represent the \setbeamercolor{alerted text}{fg=TolLightRed}\alert{fraction of charge held by each Gaussian}.
+				\item[--] $Q_i>$0 and $\sum Q_i$ = 1.
+			\end{itemize}
+		\pause
+		\item The $R_i$ represent the \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{radii at which each Gaussian is placed}.
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+			\begin{itemize}
+				\item[--] Selected pseudorandomly then optimized.
+			\end{itemize}
+		\pause
+		\item The differential cross section can be written as \cite{Article:Amroun}: 
+	\end{itemize}
+	
+	\vspace{-3mm}
+	\begin{equation} \label{eq:xs}
+		\frac{d\sigma}{d\Omega} = \left( \frac{d\sigma}{d\Omega} \right)_{Mott} \frac{1}{\eta} \left[ \frac{q^2}{\boldsymbol{q}^2}F_{ch}^2(q) + \frac{\mu^2q^2}{2M^2} \left( \frac{1}{2} \frac{q^2}{\boldsymbol{q}^2} + \tan^2 \left( \frac{\theta}{2} \right) \right)F_{m}^2(q) \right]
+	\end{equation}
+	
+	\vspace{-4mm}
+	\begin{equation}
+		\eta = 1 + q^2/4M^2
+	\end{equation}
+
+\end{frame}
+
+\begin{frame}[fragile]{SOG Cont.}
+
+	\begin{itemize}
+		\item To account for the Born approximation we utilize \alert{$Q_{eff}$} in place of a full phase shift code. 
+	\end{itemize}
+	
+	\vspace{-3mm}
+	\begin{equation} \label{eq:qeff}
+		Q^2_{eff} = Q^2 \left(  1+ \frac{1.5Z\alpha}{1.12 \; E_0 \; A^{\frac{1}{3}}}   \right)^2
+	\end{equation}
+	
+	\pause
+	\begin{itemize}
+		\item Next we need to decide how to generate our \alert{starting radii}, $R_i$.
+		\begin{itemize}
+			\pause
+			\item[--] There is an \alert{$R_{max}$} beyond which there is almost no charge density.
+			\item[--] $R_{max}$ $\approx$ 5 fm for our nuclei.
+			\item[--] Consecutive $R_i$ \alert{spacing is closer at smaller radii}.
+			\item[--] $R_i$ $<$ $R_{max}$/2 $\approx$ half as far apart as spacing of $R_i$ $>$ $R_{max}$/2.
+		\end{itemize}
+		\pause
+		\item Essentially, the \alert{set of $R_i$ constitute a model} of the charge distribution.
+		\item $R_i$ are generated within pseudorandom ranges initially to span the model space.
+		\item $R_i$ are then adjusted up and down by 0.1 fm until $\chi^2$ is minimized.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Selecting the Number of Gaussians}
+
+	\begin{itemize}
+		\item How do we select \alert{how many Gaussians}, $N_{Gaus}$, to use in our fit?
+		\begin{itemize}
+			\pause
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed} \alert{$\chi^2$} is useful, but it can be misleading. \setbeamercolor{alerted text}{fg=TolDarkBlue} \alert{Reduced $\chi^2$} can help.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.5\textwidth}
+	
+	\vspace{-4.65mm}
+	\setbeamercolor{alerted text}{fg=TolLightRed}
+	\begin{equation} \label{eq:chi2}
+		\alert{\chi^2} = \sum_{n=1}^N \frac{\left( \sigma_{exp}-\sigma_{fit} \right)^2}{\Delta^2}
+	\end{equation}
+	
+	\column{0.5\textwidth}
+	
+	\setbeamercolor{alerted text}{fg=TolDarkBlue}
+	\begin{equation} \label{eq:rchi2}
+		\alert{r\chi^2} = \frac{\chi^2}{N-N_{var}-1}
+	\end{equation}
+	
+	\end{columns}
+	
+	\begin{itemize}
+		\pause
+		\item \setbeamercolor{alerted text}{fg=TolLightRed} \alert{Akaike} and \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Bayesian} information criterion are more powerful \cite{doug_stats}.
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.45\textwidth}
+	
+	\setbeamercolor{alerted text}{fg=TolLightRed}
+	\begin{equation} \label{eq:AIC}
+		\alert{AIC} = N \ln\left( \frac{\chi^2}{N} \right) + 2 N_{var}
+	\end{equation}
+
+	\column{0.55\textwidth}
+	
+	\setbeamercolor{alerted text}{fg=TolDarkBlue}
+	\begin{equation} \label{eq:BIC}
+		\alert{BIC} = N \ln\left( \frac{\chi^2}{N} \right) +  \ln\left( N \right) N_{var}
+	\end{equation}
+	\setbeamercolor{alerted text}{fg=mLightBrown}
+	
+	\end{columns} 
+	
+	\begin{itemize}
+		\pause
+		\item The \alert{$Q_i$ are not forced to sum to unity}.
+			\begin{itemize}
+				\item[--] By not forcing $\sum Q_i$ = 1 the $\sum Q_i$ becomes a measure of how well our fit and the current data approach physical requirements. 
+			\end{itemize}
+		\pause
+		\item Lastly the fits can be \alert{visually} inspected for physicality. 
+	\end{itemize}
+		
+\end{frame}
+
+\begin{frame}[fragile]{Selecting the Number of Gaussians Cont.}
+
+	\begin{itemize}
+		\item Compare the metrics for \alert{different values of $N_{Gaus}$} for \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$^3$He} and \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$^3$H}.
+	\end{itemize}
+	
+	\pause
+	\setbeamercolor{alerted text}{fg=TolLightRed}
+	\vspace{-3mm}
+	{\scriptsize{
+	\begin{table}[!h]
+	\centering
+	\begin{tabular}{|c c c c c c c c c|}
+	\hline
+	%\makecell{\textbf{Absorption}\\ \textbf{Spectrum Shape}} & \textbf{Paint QE} & \makecell{\textbf{Visual}\\ 		\textbf{Opacity}} \\
+	$\boldsymbol{N_{Gaus}}$ & \textbf{Avg.} $\boldsymbol{\chi^2}$ & $\boldsymbol{\chi^2_r}$ & \textbf{BIC} & \textbf{AIC} & $\boldsymbol{\sum Q_{i_{ch}}}$ & $\boldsymbol{\sum Q_{i_{m}}}$ & $\boldsymbol{\chi^2_{max}}$ & 		\makecell{\textbf{`Good'}\\ 	\textbf{Fits}} \\
+	\hline
+	8 & 584.902 & 2.41695 & 255.440 & 223.228 & \alert{\textbf{1.00769}} & 1.11065 & 765 & 11 \\
+	9 & 470.435 & 1.96014 & 204.590 & 172.375 & 1.00851 & \alert{\textbf{1.02161}} & 521 & 58 \\
+	10 & 469.177 & 1.97133 & 209.454 & 173.793 & 1.00812 & 1.08196 & 519 & 66 \\
+	11 & 445.136 & 1.88617 & \alert{\textbf{201.387}} & 162.233 & 1.00843 & 1.04007 & 503 & 67 \\
+	\alert{\textbf{12}} & \alert{\textbf{436.264}} & \alert{\textbf{1.86438}} & 201.727 & \alert{\textbf{159.045}} & 1.00839 & 1.02557 & 501 & \alert{\textbf{75}} \\
+	13 & 439.084 & 1.89260 & 208.924 & 162.685 & 1.00947 & 1.03975 & 500 & 56 \\
+	\hline
+	\end{tabular}
+	\caption{\bf{Determination of $\boldsymbol{N_{Gaus}}$ for $^3$He}}
+	\label{tab:3he_ngaus}
+	\end{table}
+	}}
+	
+	\pause
+	\setbeamercolor{alerted text}{fg=TolDarkBlue}
+	\vspace{-5mm}
+	{\scriptsize{
+	\begin{table}[!h]
+	\centering
+	\begin{tabular}{|c c c c c c c c c|}
+	\hline
+	%\makecell{\textbf{Absorption}\\ \textbf{Spectrum Shape}} & \textbf{Paint QE} & \makecell{\textbf{Visual}\\ 		\textbf{Opacity}} \\
+	%\textbf{$N_{Gaus}$} & \textbf{Avg. $\chi^2$} & \textbf{$\chi^2_r$} & \textbf{BIC} & \textbf{AIC} & 				\textbf{$\sum Q_{i_{ch}}$} & \textbf{$\sum Q_{i_{m}}$} & \textbf{$\chi^2_{max}$} & 								\makecell{\textbf{`Good'}\\ \textbf{Fits}} \\
+	$\boldsymbol{N_{Gaus}}$ & \textbf{Avg.} $\boldsymbol{\chi^2}$ & $\boldsymbol{\chi^2_r}$ & \textbf{BIC} & \textbf{AIC} & $\boldsymbol{\sum Q_{i_{ch}}}$ & $\boldsymbol{\sum Q_{i_{m}}}$ & $\boldsymbol{\chi^2_{max}}$ & 		\makecell{\textbf{`Good'}\\ 	\textbf{Fits}} \\
+	\hline
+	7 & 611.690 & 2.79310 & \alert{\textbf{263.039}} & 238.851 & \alert{\textbf{1.08373}} & 1.32730 & 611.7 & 1\\
+	8 close & 601.836 & 2.77344 & 264.694 & 237.051 & 1.09013 & 1.32859 & 603 & 32\\
+	\alert{\textbf{8 wide}} & 601.752 & 2.79892 & 264.661 & \alert{\textbf{237.018}} & 1.08970 & 1.33270 & 603 & 39\\
+	9 & 601.768 & 2.82579 & 270.123 & 239.025 & 1.08849 & 1.31982 & 604 & \alert{\textbf{95}}\\
+	10 & 601.893 & 2.84416 & 275.627 & 241.074 & 1.09248 & \alert{\textbf{1.29611}} & 603 & 78\\
+	11 & \alert{\textbf{600.750}} & \alert{\textbf{2.77305}} & 280.637 & 242.629 & 1.08699 & 1.34100 & 602 & 88\\
+	\hline
+	\end{tabular}
+	\caption{\bf{Determination of $\boldsymbol{N_{Gaus}}$ for $^3$H}}
+	\label{tab:3h_ngaus}
+	\end{table}
+	}}
+	\setbeamercolor{alerted text}{fg=mLightBrown}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Fits}
+
+	\begin{itemize}
+		\item Let's look at the $N_{Gaus}$ = 12 $^3$He form factor plots.
+	\end{itemize}
+	
+	\pause
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3He_n12_1352.png}
+	\end{center}
+	\caption[\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}]{
+	{\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3he_fch_no_cut}
+	\end{figure}
+	
+	\pause
+	\begin{itemize}
+		\item \alert{Many of these fits look nonphysical}. How do we remove them?
+		\begin{itemize}
+			\item[--] Apply a cut on $\chi^2$.
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Charge Form Factor}
+
+\vspace{-5mm}
+{\scriptsize{
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c c c c c c c c c|}
+\hline
+%\makecell{\textbf{Absorption}\\ \textbf{Spectrum Shape}} & \textbf{Paint QE} & \makecell{\textbf{Visual}\\ \textbf{Opacity}} \\
+%\textbf{$N_{Gaus}$} & \textbf{Avg. $\chi^2$} & \textbf{$\chi^2_r$} & \textbf{BIC} & \textbf{AIC} & \textbf{$\sum Q_{i_{ch}}$} & \textbf{$\sum Q_{i_{m}}$} & \alert{\textbf{$\chi^2_{max}$}} & \makecell{\textbf{Below}\\ \textbf{Cut}} \\
+$\boldsymbol{N_{Gaus}}$ & \textbf{Avg.} $\boldsymbol{\chi^2}$ & $\boldsymbol{\chi^2_r}$ & \textbf{BIC} & \textbf{AIC} & $\boldsymbol{\sum Q_{i_{ch}}}$ & $\boldsymbol{\sum Q_{i_{m}}}$ & \alert{$\boldsymbol{\chi^2_{max}}$} & \makecell{\textbf{Below}\\ \textbf{Cut}} \\
+\hline
+12 & 523.743 & 2.23822 & 249.063 & 184.771 & 1.01018 & 1.04558 & \alert{No Cut} & 1352\\
+12 & 436.564 & 1.86566 & 201.908 & 159.223 & 1.00840 & 1.02235 & \alert{500} & 852\\
+\hline
+\end{tabular}
+\caption{\bf{Metrics for Final $^3$He Fits}}
+\label{tab:3he_fits}
+\end{table}
+}}
+
+	\vspace{-5mm}
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[12cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3He_n12_1352.png}
+	%\end{center}%error
+	\caption[\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3he_fch_no_cut}
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3He_n12_852.png}
+	\caption[\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut}]{
+	{\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut.}} }
+	\label{fig:3he_fch_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Charge Density}
+
+	\begin{itemize}
+		\item Now we can Fourier transform $F_{ch}$ to find the \alert{charge density}. 
+		\begin{itemize}
+			\item<2->[--] As expected the density falls off by r = 5 fm.
+			\item<2->[--] Density turns over slightly and \alert{plateaus} at small r.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[11.7cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Charge_Density_3He_n12_1352.png}
+	%\end{center}%error
+	\caption[\bf{Charge Densities from 1352 $^3$He Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Charge Densities from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3he_charge_density_no_cut}
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Charge_Density_3He_n12_852.png}
+	\caption[\bf{Charge Densities from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut}]{
+	{\bf{Charge Densities from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut.}} }
+	\label{fig:3he_charge_density_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Charge Radius}
+
+	\begin{itemize}
+		\item Using the derivative of $F_{ch}$ we can obtain the \alert{charge radius}.
+		\begin{itemize}
+			\item<2->[--] Higher radii disappear completely with the cut.
+			\item<2->[--] Avg. $^3$He charge radius = \alert{1.90 fm}, SD = 0.00144 fm.
+			\item<3->[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}Saclay \alert{1.96 $\pm$ 0.03}. Bates \alert{1.87 $\pm$ 0.03} \cite{3h_proposal}. 
+			\item<3->[--] \setbeamercolor{alerted text}{fg=TolLightRed}GFMC \alert{1.97 $\pm$ 0.01}. $\chi$EFT \alert{1.962 $\pm$ 0.004} \cite{3h_proposal}.
+		\end{itemize}
+	\end{itemize}
+	
+	\setbeamercolor{alerted text}{fg=mLightBrown}
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[11.7cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/RMS_deriv_3He_n12_1352.png}
+	%\end{center}%error
+	\caption[\bf{Charge Radius from 1352 $^3$He Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Charge Radius from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3he_charge_density_no_cut}
+	\onslide<2->\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/RMS_deriv_3He_n12_852.png}
+	\caption[\bf{Charge Radius from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut}]{
+	{\bf{Charge Radius from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut.}} }
+	\label{fig:3he_charge_density_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$He $F_{ch}$ Fits in Context}
+
+	\begin{itemize}
+		\item We can compare the new $^3$He $F_{ch}$ fits to older fits as well as theory \cite{Article:Marcucci}.
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\onslide<1>\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3He_n12_852_Errors_Rep.png}
+	\end{center}
+	\caption[\bf{$^3$He Charge Form Factors.}]{
+	{\bf{$^3$He Charge Form Factors.}} }
+	\label{fig:3he_fch}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$He $F_{ch}$ Fits in Context Cont.}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.5\textwidth}
+	
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3He_n12_852_Errors_Rep.png}
+	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\begin{itemize}
+		\item The $F_{ch}$ fits are \alert{very tightly grouped} due to an abundance of low $Q^2$ data.
+		\begin{itemize}
+			\item[--] All $R_i$ models strongly \alert{agree up to 55-60 fm$^{-2}$}.
+		\end{itemize}
+		\item The new fits almost perfectly overlap the fits of Amroun \textit{et al}.
+	\end{itemize}
+	
+	\end{columns}
+	
+	\begin{itemize}
+		%\item How does the data compare to theory predictions?
+		\pause
+		\item \alert{Conventional Approach}: Simulates 2 and 3-body nucleon interactions and relativistic corrections \cite{Article:Marcucci}.
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Describes the $F_{ch}$ minima and magnitude very well}.
+		\end{itemize}
+		\pause
+		\item \alert{$\chi$EFT}: Uses chiral symmetry of QDC to describe the internal strong and EM interactions (momentum space cutoffs 500/600 MeV) \cite{Article:Marcucci}.
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Underestimates magnitude of $F_{ch}$}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$\chi$EFT500 finds first minima}.
+		\end{itemize}
+		\pause
+		\item \alert{Covariant Spectator Theorem (CST)}: Covariant FT where nucleons and light mesons are effective DOF (fully relativistic) \cite{Article:Marcucci}.
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Misses $F_{ch}$ minima and underestimates magnitude}.
+		\end{itemize}
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+%		\item The impulse approximation (IA) assumes the \alert{electron only interacts with one nucleon constituent}.
+%			\begin{itemize}
+%				\item[--] Predicts a higher $Q^2$ first minima and underestimates $F_{ch}$ after the minima.
+%			\end{itemize}
+%		\pause
+%		\item Add meson exchange currents (MEC) to describe the \alert{2 and 3-body interactions}
+%between the nucleons.
+%		\begin{itemize}
+%			\item[--] Closely \alert{predicts first minima} and $F_{ch}$ magnitude after minima.
+%			\item[--] Second minima looks early, but there is less data in this region.
+%		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Magnetic Form Factor}
+
+	\vspace{8mm}
+
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[11.7cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3He_n12_1352.png}
+	%\end{center}%error
+	\caption[\bf{Magnetic Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Magnetic Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3he_fm_no_cut}
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3He_n12_852.png}
+	\caption[\bf{Magnetic Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut}]{
+	{\bf{Magnetic Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut.}} }
+	\label{fig:3he_fm_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$He $F_{m}$ Fits in Context}
+
+	\begin{itemize}
+		\item We can compare the new $^3$He $F_m$ fits to older fits as well as theory.
+	\end{itemize}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\onslide<1>\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3He_n12_852_Errors_Rep.png}
+	\end{center}
+	\caption[\bf{$^3$He Magnetic Form Factors.}]{
+	{\bf{$^3$He Magnetic Form Factors.}} }
+	\label{fig:3he_fm}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$He $F_{m}$ Fits in Context Cont.}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.5\textwidth}
+	
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3He_n12_852_Errors_Rep.png}
+	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\begin{itemize}
+		\item $F_{m}$ fits \alert{more loosely grouped}. Lacking high $Q^2$ data.
+		\begin{itemize}
+			\item[--] The $R_i$ models take divergent paths above 40 fm$^{-2}$.
+		\end{itemize}
+		\item The \alert{first minima shifted up in $Q^2$} from Amroun \textit{et al}.
+		\item Magnitude decreased between minima.
+	\end{itemize}
+	
+	\end{columns}
+	
+	\begin{itemize}
+		\pause
+		\item \alert{Conventional Approach} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Minima shifted too low}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Appropriate $F_m$ magnitude above 25 fm$^{-2}$}.
+			\end{itemize}
+		\pause
+		\item \alert{$\chi$EFT} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$\chi$EFT500 misses minima}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$\chi$EFT600 closest to minima}, but \setbeamercolor{alerted text}{fg=TolLightRed}\alert{underestimates $F_m$ magnitude}.
+			\end{itemize}
+		\pause
+		\item \alert{CST} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Very poor description of the data}.
+			\end{itemize}
+		\pause
+		\item \alert{Data first minima moved further away from all predictions}.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Theory is having difficulty predicting the $^3$He $F_m$}.
+			\end{itemize}
+%		\item How does the data compare to theory predictions?
+%		\pause
+%		\item IA assumes the electron only interacts with one nucleon constituent.
+%			\begin{itemize}
+%				\item[--] Predicts a much \alert{lower $Q^2$ first minima} and \alert{overestimates $F_{m}$ magnitude} significantly.
+%			\end{itemize}
+%		\pause
+%		\item MEC describe the 2 and 3-body interactions between the nucleons.
+%		\begin{itemize}
+%			\item[--] Predicts \alert{lower $Q^2$ first minima}, but \alert{predicts $F_{m}$ magnitude after first minima and second minima $Q^2$ well}.
+%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Data first minima moved further from theory}.
+%		\setbeamercolor{alerted text}{fg=mLightBrown}
+%		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Representative Cross Section Fit Statistics}
+
+	\begin{itemize}
+		\item 259 $^3$He points. $\chi^2$ = 436. \alert{$\chi^2_r$ = 1.86}.
+	\end{itemize}
+	
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[12cm]
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Fch_Rep_Fit.png}
+	\caption[\bf{$^3$He Representative Charge Form Factor and Uncertainty Band}]{
+	{\bf{$^3$He Representative Charge Form Factor and Uncertainty Band.}} }
+	
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Fch_Rep_Data.png}
+	\caption[\bf{$^3$He Representative Charge Form Factor and World Data}]{
+	{\bf{$^3$He Representative Charge Form Factor and World Data.}} }
+	
+	\onslide<3>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Fm_Rep_Fit.png}
+	\caption[\bf{$^3$He Representative Magnetic Form Factor and Uncertainty Band}]{
+	{\bf{$^3$He Representative Magnetic Form Factor and Uncertainty Band.}} }
+	
+	\onslide<4>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Fm_Rep_Data.png}
+	\caption[\bf{$^3$He Representative Magnetic Form Factor and World Data}]{
+	{\bf{$^3$He Representative Magnetic Form Factor and World Data.}} }
+	
+	\onslide<5>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_World_Data_Distribution.png}
+	\caption[\bf{$^3$He Representative Form Factors and World Data Distribution}]{
+	{\bf{$^3$He World Data Distribution.}} }
+	
+	\onslide<6>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Rep_Chi2_vs_Q2.png}
+	\caption[\bf{$^3$He Representative Fit $\chi^2$ vs. $Q^2$}]{
+	{\bf{$^3$He Representative Fit $\chi^2$ vs. $Q^2$.}} }
+	
+	\onslide<7>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Rep_Residual.png}
+	\caption[\bf{$^3$He Representative Fit Residual vs. $Q^2$}]{
+	{\bf{$^3$He Representative Fit Residual vs. $Q^2$.}} }
+	
+	\onslide<8>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Rep_Residual_Zoom.png}
+	\caption[\bf{$^3$He Representative Fit Residual vs. $Q^2$ Zoomed}]{
+	{\bf{$^3$He Representative Fit Residual vs. $Q^2$ Zoomed.}} Two large residual points from not shown.}
+	\end{overprint}
+	\end{figure}
+	\end{center}
+	
+%	\begin{center}
+%	\begin{figure}[!ht]
+%	%\begin{center}
+%	\begin{overprint}[12cm]
+%	%\begin{center}%error
+%	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Data_Distribution.png}
+%	%\end{center}%error
+%	\caption[\bf{$^3$He Representative Form Factors and World Data Distribution}]{
+%	{\bf{$^3$He Representative Form Factors and World Data Distribution.}} }
+%	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Rep_Chi2_vs_Q2.png}
+%	\caption[\bf{$^3$He Representative Fit $\chi^2$ vs. $Q^2$}]{
+%	{\bf{$^3$He Representative Fit $\chi^2$ vs. $Q^2$.}} }
+%	\onslide<3>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Rep_Residual.png}
+%	\caption[\bf{$^3$He Representative Fit Residual vs. $Q^2$}]{
+%	{\bf{$^3$He Representative Fit Residual vs. $Q^2$.}} }
+%	\onslide<4>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Rep_Residual_Zoom.png}
+%	\caption[\bf{$^3$He Representative Fit Residual vs. $Q^2$ Zoomed}]{
+%	{\bf{$^3$He Representative Fit Residual vs. $Q^2$ Zoomed.}} Two large residual points from not shown.}
+%	%\end{center}%error
+%	\end{overprint}
+%	%\end{center}
+%	\end{figure}
+%	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$He Cross Section}
+
+	\begin{itemize}
+		\item \alert{$^3$He cross section at $E_0$ = 3.356 GeV} using new form factors.
+	\end{itemize}
+	
+	\begin{center}
+	\begin{figure}[!ht]
+	\begin{overprint}[12cm]
+	
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Cross_Section.png}
+	\caption[\bf{$^3$He Cross Section}]{
+	{\bf{$^3$He Cross Section.}} }
+	
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3He_Cross_Section_Zoom.png}
+	\caption[\bf{$^3$He Cross Section Zoomed}]{
+	{\bf{$^3$He Cross Section Zoomed.}} }
+	
+	\end{overprint}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{Revisiting the $^3$He Cross Section Extraction}
+
+	\begin{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Now we have new form factor fits}.
+		\pause
+		\item Recall \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{SIMC} elastic event generator \alert{used old fits}.
+		\pause 
+		\item Why not \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{replace old fits} in SIMC \setbeamercolor{alerted text}{fg=TolLightRed}\alert{with new ones}?
+		\begin{itemize}
+			\item[--] Should have better fit in high $Q^2$ region.
+			\item[--] Scale SIMC elastic yield to match experiment.
+			\item[--] If method is valid should yield similar cross section.
+		\end{itemize}
+		\pause
+		\item Must scale by \setbeamercolor{alerted text}{fg=mLightBrown}\alert{$C_{SIMC}$ = 1.23}.
+			\begin{itemize}
+				\item[--] Most due to decrease in $F_m$.
+			\end{itemize}
+		\item Cross section with new fit = \setbeamercolor{alerted text}{fg=TolLightRed}\alert{1.345 $\times$ 10$^{-6}$ $\pm$ 0.086 $\mu$b/sr} at \alert{$Q^2$ = 34.19 fm$^{-2}$}.
+		\pause
+		\item Previous fit = \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{1.335 $\times$ 10$^{-6}$ $\pm$ 0.086 $\mu$b/sr}.
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Better than 1$\%$ agreement}!
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$H Charge Form Factor}
+
+\vspace{-5mm}
+{\scriptsize{
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c c c c c c c c c|}
+\hline
+%\makecell{\textbf{Absorption}\\ \textbf{Spectrum Shape}} & \textbf{Paint QE} & \makecell{\textbf{Visual}\\ \textbf{Opacity}} \\
+%\textbf{$N_{Gaus}$} & \textbf{Avg. $\chi^2$} & \textbf{$\chi^2_r$} & \textbf{BIC} & \textbf{AIC} & \textbf{$\sum Q_{i_{ch}}$} & \textbf{$\sum Q_{i_{m}}$} & \alert{\textbf{$\chi^2_{max}$}} & \makecell{\textbf{Below}\\ \textbf{Cut}} \\
+$\boldsymbol{N_{Gaus}}$ & \textbf{Avg.} $\boldsymbol{\chi^2}$ & $\boldsymbol{\chi^2_r}$ & \textbf{BIC} & \textbf{AIC} & $\boldsymbol{\sum Q_{i_{ch}}}$ & $\boldsymbol{\sum Q_{i_{m}}}$ & \alert{$\boldsymbol{\chi^2_{max}}$} & \makecell{\textbf{Below}\\ \textbf{Cut}} \\
+\hline
+8 & 611.385 & 2.81744 & 266.175 & 238.532 & 1.08866 & 1.33481 & \alert{No Cut} & 2600\\
+8 & 601.840 & 2.77346 & 264.695 & 237.053 & 1.08991 & 1.32926 & \alert{603} & 908\\
+\hline
+\end{tabular}
+\caption{\bf{Metrics for Final $^3$H Fits}}
+\label{tab:3h_fits}
+\end{table}
+}}
+
+	\vspace{-5mm}
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[12cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3H_n8_2600.png}
+	%\end{center}%error
+	\caption[\bf{Charge Form Factors from 2600 $^3$H Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Charge Form Factors from 2600 $^3$H Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3h_fch_no_cut}
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3H_n8_908.png}
+	\caption[\bf{Charge Form Factors from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut}]{
+	{\bf{Charge Form Factors from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut.}} }
+	\label{fig:3h_fch_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$H Charge Density}
+
+	\begin{itemize}
+		\item Again we Fourier transform $F_{ch}$ to find the \alert{charge density}. 
+		\begin{itemize}
+			\item<2->[--] \alert{Plateaus} at small r like $^3$He. Unclear if the density turns over.
+			\item<2->[--] Magnitude at r = 0 has much \alert{more uncertainty} than $^3$He.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[11.7cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Charge_Density_3H_n8_2600.png}
+	%\end{center}%error
+	\caption[\bf{Charge Densities from 2600 $^3$H Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Charge Densities from 2600 $^3$H Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3h_charge_density_no_cut}
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Charge_Density_3H_n8_908.png}
+	\caption[\bf{Charge Densities from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut}]{
+	{\bf{Charge Densities from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut.}} }
+	\label{fig:3h_charge_density_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$H Charge Radius}
+
+	\begin{itemize}
+		\item Again, using the derivative of $F_{ch}$ we can obtain the \alert{charge radius}.
+		\begin{itemize}
+			\item<2->[--] Avg. $^3$H charge radius = \alert{2.02 fm}, SD = 0.0133 fm.
+			\item<3->[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}Saclay \alert{1.76 $\pm$ 0.09}. Bates \alert{1.68 $\pm$ 0.03} \cite{3h_proposal}. 
+			\item<3->[--] \setbeamercolor{alerted text}{fg=TolLightRed}GFMC \alert{1.77 $\pm$ 0.01}. $\chi$EFT \alert{1.756 $\pm$ 0.006} \cite{3h_proposal}.
+			\setbeamercolor{alerted text}{fg=mLightBrown}
+			\item<4->[--] This is the result of \alert{not forcing $Q_{i_{ch}}$ = 1}.
+		\end{itemize}
+	\end{itemize}
+	
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[11.7cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/RMS_deriv_3H_n8_2600.png}
+	%\end{center}%error
+	\caption[\bf{Charge Radius from 2600 $^3$H Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Charge Radius from 2600 $^3$H Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3he_charge_density_no_cut}
+	\onslide<2->\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/RMS_deriv_3H_n8_908.png}
+	\caption[\bf{Charge Radius from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut}]{
+	{\bf{Charge Radius from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut.}} }
+	\label{fig:3he_charge_density_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$H $F_{ch}$ Fits in Context}
+
+	\begin{itemize}
+		\item We can compare the new $^3$H $F_{ch}$ fits to older fits.
+	\end{itemize}
+	
+	\vspace{-2mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\onslide<1>\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3H_n8_908_Errors_Rep.png}
+	\end{center}
+	\caption[\bf{$^3$H Charge Form Factors.}]{
+	{\bf{$^3$H Charge Form Factors.}} }
+	\label{fig:3h_fch}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$H $F_{ch}$ Fits in Context Cont.}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.5\textwidth}
+	
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fch_3H_n8_908_Errors_Rep.png}
+	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\begin{itemize}
+		\item \alert{Results are comparable} with Amroun et al.
+		\begin{itemize}
+			\item[--] No new $^3$H data added.
+			\item[--] \alert{Above $Q^2$ $\approx$ 25 fm$^{-2}$ the fits diverge greatly}. 
+		\end{itemize}		 
+		\item Demonstrates the consistency of our method.
+	\end{itemize}
+	
+	\end{columns}
+	
+	\begin{itemize}
+		\pause
+		\item \alert{Conventional Approach} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Describes minimum well}. \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$F_{ch}$ magnitude a bit large}.
+			\end{itemize}
+		\pause
+		\item \alert{$\chi$EFT} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$\chi$EFT500 misses minima and magnitude}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$\chi$EFT600 close to minimum}, and \setbeamercolor{alerted text}{fg=TolLightRed}\alert{slightly large $F_{ch}$ magnitude}.
+			\end{itemize}
+		\pause
+		\item \alert{CST} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Poorly describes the data}.
+			\end{itemize}
+		\pause
+		\item \alert{Theory predicts data relatively well}.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Better understanding of $F_{ch}$ magnitude needed}.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$H Magnetic Form Factor}
+
+	\vspace{8mm}
+
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[11.7cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3H_n8_2600.png}
+	%\end{center}%error
+	\caption[\bf{Magnetic Form Factors from 2600 $^3$H Fits with no $\chi^2_{max}$ cut}]{
+	{\bf{Magnetic Form Factors from 2600 $^3$H Fits with no $\chi^2_{max}$ cut.}} }
+	\label{fig:3h_fm_no_cut}
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3H_n8_908.png}
+	\caption[\bf{Magnetic Form Factors from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut}]{
+	{\bf{Magnetic Form Factors from 908 $^3$H Fits surviving a $\chi^2_{max}$ = 603 cut.}} }
+	\label{fig:3h_fm_cut}
+	%\end{center}%error
+	\end{overprint}
+	%\end{center}
+	\end{figure}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$H $F_{m}$ Fits in Context}
+
+	\begin{itemize}
+		\item We can compare the new $^3$H $F_{m}$ fits to older fits.
+	\end{itemize}
+	
+	\vspace{-2mm}
+	\begin{figure}[!ht]
+	\begin{center}
+	\onslide<1>\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3H_n8_908_Errors_Rep.png}
+	\end{center}
+	\caption[\bf{$^3$H Magnetic Form Factors.}]{
+	{\bf{$^3$H Magnetic Form Factors.}} }
+	\label{fig:3h_fm}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{New $^3$H $F_{m}$ Fits in Context Cont.}
+
+	\begin{columns}[T,onlytextwidth]  
+	\column{0.5\textwidth}
+	
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Fm_3H_n8_908_Errors_Rep.png}
+	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\begin{itemize}
+		\item \alert{Results are comparable} with Amroun et al.
+		\begin{itemize}
+			\item[--] No new $^3$H data added.
+			\item[--] \alert{Very little understanding of $F_m$ above $Q^2$ = 35 fm$^{-2}$}. 
+		\end{itemize}		 
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Need more high $Q^2$ data}.
+	\end{itemize}
+	
+	\end{columns}
+	
+	\begin{itemize}
+		\pause
+		\item \alert{Conventional Approach} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Early first minimum}. If minimum shifts right $F_{m}$ magnitude looks close.
+			\end{itemize}
+		\pause
+		\item \alert{$\chi$EFT} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$\chi$EFT500 misses badly}. $\chi$EFT600 is similar to the conventional approach.
+			\end{itemize}
+		\pause
+		\item \alert{CST} \cite{Article:Marcucci}:
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Poorly describes the data}.
+			\end{itemize}
+		\pause
+		\item \alert{Theory struggles to predict data}.
+			\begin{itemize}
+				\item[--] Magnitude may be close to correct if minimum shifts up in $Q^2$.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{$^3$H Representative Cross Section Fit Statistics}
+
+	\begin{itemize}
+		\item 234 $^3$H points. $\chi^2$ = 602. \alert{$\chi^2_r$ = 2.77}.
+	\end{itemize}
+	
+	\begin{center}
+	\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[12cm]
+	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Fch_Rep_Fit.png}
+	\caption[\bf{$^3$H Representative Charge Form Factor and Uncertainty Band}]{
+	{\bf{$^3$H Representative Charge Form Factor and Uncertainty Band.}} }
+	
+	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Fch_Rep_Data.png}
+	\caption[\bf{$^3$H Representative Charge Form Factor and World Data}]{
+	{\bf{$^3$H Representative Charge Form Factor and World Data.}} }
+	
+	\onslide<3>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Fm_Rep_Fit.png}
+	\caption[\bf{$^3$H Representative Magnetic Form Factor and Uncertainty Band}]{
+	{\bf{$^3$H Representative Magnetic Form Factor and Uncertainty Band.}} }
+	
+	\onslide<4>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Fm_Rep_Data.png}
+	\caption[\bf{$^3$H Representative Magnetic Form Factor and World Data}]{
+	{\bf{$^3$H Representative Magnetic Form Factor and World Data.}} }
+	
+	\onslide<5>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_World_Data_Distribution.png}
+	\caption[\bf{$^3$H Representative Form Factors and World Data Distribution}]{
+	{\bf{$^3$H World Data Distribution.}} }
+	
+	\onslide<6>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Rep_Chi2_vs_Q2.png}
+	\caption[\bf{$^3$H Representative Fit $\chi^2$ vs. $Q^2$}]{
+	{\bf{$^3$H Representative Fit $\chi^2$ vs. $Q^2$.}} }
+	
+	\onslide<7>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Rep_Residual.png}
+	\caption[\bf{$^3$H Representative Fit Residual vs. $Q^2$}]{
+	{\bf{$^3$H Representative Fit Residual vs. $Q^2$.}} }
+	\end{overprint}
+	\end{figure}
+	\end{center}
+	
+%	\begin{center}
+%	\begin{figure}[!ht]
+%	%\begin{center}
+%	\begin{overprint}[12cm]
+%	%\begin{center}%error
+%	\onslide<1>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Data_Distribution.png}
+%	%\end{center}%error
+%	\caption[\bf{$^3$H Representative Form Factors and World Data Distribution}]{
+%	{\bf{$^3$H Representative Form Factors and World Data Distribution.}} }
+%	\onslide<2>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Rep_Chi2_vs_Q2.png}
+%	\caption[\bf{$^3$H Representative Fit $\chi^2$ vs. $Q^2$}]{
+%	{\bf{$^3$H Representative Fit $\chi^2$ vs. $Q^2$.}} }
+%	\onslide<3>\includegraphics[width=0.9\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/3H_Rep_Residual.png}
+%	\caption[\bf{$^3$H Representative Fit Residual vs. $Q^2$}]{
+%	{\bf{$^3$H Representative Fit Residual vs. $Q^2$.}} }
+%	%\end{center}%error
+%	\end{overprint}
+%	%\end{center}
+%	\end{figure}
+%	\end{center}
+
+\end{frame}
+
+\section{Conclusions}
+
+\begin{frame}[fragile]{Conclusions}
+	\begin{itemize}
+		\item New $^3$He elastic cross section of \alert{1.335 $\pm$ 0.086 $\times$ 10$^{-6}$ $\mu$b/sr}.
+		\pause
+		\item SOG fits with new data (JLab, Nakagawa, this analysis).
+			\begin{itemize}
+				\item[--] $^3$He $F_{ch}$ and $^3$H $F_{ch}$ and $F_m$ relatively unchanged.
+				\item[--] \alert{$^3$He $F_{m}$ first minimum shift up several fm$^{-2}$ in $Q^2$}.
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$^3$He charge radii agrees with past data}.
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$^3$H charge radii disagrees with past data} ($\sum Q_i$ $\neq$ 1).
+			\end{itemize}
+		\pause
+		\item \alert{Conventional theoretical approach} using 2 and 3-body nucleon interactions and relativistic corrections \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{reproduces $F_{ch}$ well}. $\chi$EFT also performs decently.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Theory predictions struggle with predicting $F_m$}. 
+			\end{itemize}
+		\pause
+		\setbeamercolor{alerted text}{fg=mLightBrown}
+		\item Need more high $Q^2$ data to study FFs at large momentum transfers.
+			\begin{itemize}
+				\item[--] \alert{JLab is well positioned to make these measurements}! 
+				\item[--] Hall A back angle max of 150$^{\circ}$ with 12 GeV available. Rates fall extremely fast, but very high $Q^2$ could be accessed.
+				\item[--] Probe transitional region where scattering off hadrons and mesons $\rightarrow$ scattering off quarks and gluons.
+				\item[--] \alert{Asymmetry measurement} using polarized $^3$He and polarized electron beam. Asymmetry sign flips at FF minima \cite{Asymmetry}.
+			\end{itemize}
+		\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Acknowledgements}
+
+	\begin{itemize}
+		\item This work was made possible by \alert{DOE} grant 742481 as well as a \alert{JSA Graduate Fellowship}.
+		\item Thanks to \alert{Douglas Higinbotham} for his knowledge of fitting best practices and XS extractions as well as his invaluable mentorship.
+		\item Thanks to \alert{Todd Averett} for his guidance as my advisor, and the freedom he has allowed me in my research.
+		\item Special thank you to \alert{Dien Nguyen} for pioneering this data set and saving me countless hours of confusion.
+		\item And thanks to my other JLab mentors like \alert{Bob Michaels} and \alert{Bogdan Wojtsekhowski}, and the many others at JLab who have supported me in my graduate work.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Questions}
+
+	\begin{center}
+		\Huge{\alert{Questions?}}	
+	\end{center}
+
+\end{frame}
+
+%\begin{frame}[allowframebreaks]{References}
+%
+%\vspace{-1mm}
+%{\scriptsize
+%	\begin{enumerate}
+%		\item Povh \textit{et al.}, ``Particles and Nuclei an Introduction to the Physical Concepts" (Springer, Reading, Mass, 2008).
+%		\item Z. Ye, ``Short Range Correlations in Nuclei at Large x Bj through Inclusive Quasi-Elastic Electron Scattering", (University of Virginia, Dec. 2013).
+%		\item Y. Wang, ``Measurement of the Proton Elastic Cross Section at $Q^2$ = 0.66, 1.10, 1.51 and 1.65 GeV$^2$", (The College of William $\&$ Mary, Aug. 2017).
+%		\item D. Nguyen, ``Target Density Determination Through Elastic Scattering from $^3$He in Experiment E08014", unpublished, (Mar. 2016).
+%		\item A. Amroun \textit{et al.}, ``$^3$H and $^3$He EM Form Factors", Nuclear Physics A
+%\textbf{579}, 596 (1994).
+%		\item G. Lafferty and T. Wyatt, ``Where to stick your data points: The treatment of measurements within wide bins", Nuclear Instruments and Methods in Physics Research Section A \textbf{355}, 541 (1995).
+%		\item A. Camsonne \textit{et al.}, ``JLab Measurements of the $^3$He Form Factors at Large Momentum Transfers", Physical Review Letters \textbf{119}, (2017).
+%		\item I. Sick, ``Model-Independent Nuclear Charge Densities from Elastic Electron Scattering", Nuclear Physics A \textbf{218}, 509 (1973).
+%		\item D. Higinbothan, ``Bias-Variance Trade-off and Model Selection for Proton Radius Extractions", https://arxiv.org/abs/1812.05706.
+%		\item L. Myers, ``E12-14-009: Ratio of the Electric Form Factor in the Mirror Nuclei $^3$He and $^3$H", https://arxiv.org/pdf/1408.5283.pdf.
+%		\item L. Marcucci \textit{et al.}, ``Electromagnetic Structure of Few-Nucleon Ground States", J. Phys. G: Nucl. Part. Phys. \textbf{43}, (2016).
+%	\end{enumerate}
+%}
+
+
+  %\bibliography{demo}
+  %\bibliographystyle{abbrv}
+  
+  
+%  \begin{thebibliography}{10}    
+%  \beamertemplatebookbibitems
+%  \bibitem{Autor1990}
+%    A.~Autor.
+%    \newblock {\em Introduction to Giving Presentations}.
+%    \newblock Klein-Verlag, 1990.
+%  \beamertemplatearticlebibitems
+%  \bibitem{Jemand2000}
+%    S.~Jemand.
+%    \newblock On this and that.
+%    \newblock {\em Journal of This and That}, 2(1):50--100, 2000.
+%  \end{thebibliography}
+
+%\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+	
+	\setbeamertemplate{bibliography item}{}%Removes page icon in from of each references.
+	\renewcommand*{\bibfont}{\scriptsize}%Change bib font size.
+	%\printbibliography[heading=bibintoc, title=References]
+	\printbibliography
+	%\bibliographystyle{plainnat}
+	%\bibliography{bib_Books}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$He $Q_{i_{ch}}$ distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Qich_3He_n12_852.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$He $Q_{i_{ch}}$ Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$He $Q_{i_{m}}$ distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Qim_3He_n12_852.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$He $Q_{i_{m}}$ Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$He $R_i$ distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Ri_3He_n12_852.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$He $R_i$ Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$He consecutive $R_i$ separation distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Ri_Sep_3He_n12_852.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$He $R_i$ Separation Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$H $Q_{i_{ch}}$ distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Qich_3H_n8_908.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$H $Q_{i_{ch}}$ Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$H $Q_{i_{m}}$ distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Qim_3H_n8_908.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$H $Q_{i_{m}}$ Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$H $R_i$ distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Ri_3H_n8_908.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$H $R_i$ Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backup Slides}
+
+	\begin{itemize}
+		\item $^3$H consecutive $R_i$ separation distributions.
+	\end{itemize}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]	{/home/skbarcus/Documents/Thesis/Chapters/Ch_Global_Fits/Ri_Sep_3H_n8_908.png}
+	\end{center}
+	\caption{
+	{\bf{$^3$H $R_i$ Separation Distributions.}} }
+	\label{fig:pid_pr}
+	\end{figure}
+
+\end{frame}
+
+\end{document}

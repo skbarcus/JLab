@@ -1,0 +1,244 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=phys,% 
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{HCal Update}
+\subtitle{}
+\date{May 9\textsuperscript{th} 2019}
+\author{Scott Barcus}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{HCal Hall Layout}
+
+	\begin{itemize}
+		\item Detect multiple GeV protons and neutrons. 
+	\end{itemize}
+
+%	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/HCal_Hall_Layout_Clean.png}
+	\end{center}
+%	\caption{
+%	{\bf{HCal Layout in Hall A.}} }
+%	\label{fig:hall_layout}
+%	\end{figure}
+\end{frame}
+
+\begin{frame}{HCal Front-End Layout}
+
+	\begin{itemize}
+		\item Front end layout.
+	\end{itemize}
+
+	\vspace{-3mm}
+%	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Update/HCal_Front_End_Clean.png}
+	\end{center}
+%	\caption{
+%	{\bf{HCal Front-End Layout.}} }
+%	\label{fig:front_end}
+%	\end{figure}
+\end{frame}
+
+\begin{frame}{HCal Front-End Layout RR1 $\&$ RR3}
+	
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\vspace{6mm}
+	\begin{itemize}
+		\item RR1 and RR3 are nearly identical and contain:
+			\begin{itemize}
+				\item[--] Bottom crate \alert{9 amplifiers}. 16 ch in 16X2 ch out. Outputs to FADC and splitter panels.
+				\item[--] \alert{9 splitter panels}. 16 ch in 16X2 ch out.  A = output to summers, B = input from amps, C = output to discriminators. 
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{RR1} top crate has \alert{8 summers + 1 discriminator}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{RR3} top crate has \alert{7 summers}.\setbeamercolor{alerted text}{fg=mLightBrown}
+			\end{itemize}
+	\end{itemize}
+	
+  	\column{0.5\textwidth}
+  	
+  		\begin{center}
+  		\includegraphics<1>[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg}
+  		\includegraphics<2>[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170802.jpg}
+  		\end{center}
+  		
+  		%\begin{center}
+		%\begin{figure}[!ht]
+		%\begin{overprint}[12cm]
+		
+%		\onslide<1>\includegraphics[width=0.3\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg}
+%		\caption{{\bf{RR1 Uncabled.}} }
+%		\label{fig:RR1}
+%		\onslide<2>\includegraphics[width=0.3\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170802.jpg}
+%		\caption{{\bf{RR2 Partially Cabled}} }
+%		\label{fig:RR2}
+		
+%		\includegraphics<1>[width=0.3\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg} \caption{{\bf{RR1 Uncabled.}} }
+%		\label{fig:RR1}
+%		\includegraphics<2>[width=0.3\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170802.jpg}%\captionof{figure}{RR2} 
+%		%\caption{{\bf{RR2 Partially Cabled}} }
+%		\label{fig:RR2}
+		
+		%\end{overprint}
+%		\end{figure}
+		%\end{center}
+  	
+%	\begin{figure}[!ht]
+%	\begin{center}
+%	\includegraphics[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg}
+%	\end{center}
+%	\caption{
+%	{\bf{RR1 Uncabled.}} }
+%	\label{fig:front_end}
+%	\end{figure}
+	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}{HCal Front-End Layout RR2}
+
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\vspace{8mm}
+	\begin{itemize}
+		\item RR2 takes inputs from RR1 and RR3.
+		\item RR2 contains:
+		\begin{itemize}
+			\item[--] An upper and lower crate each with 9 discriminators.
+			\begin{enumerate}
+			
+				\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{RR1} uses the \alert{bottom 9 discriminators}. 
+				\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{RR3} uses the \alert{top 9 discriminators}. 
+			
+			\end{enumerate}
+			\item[--] 10 16X4 ch patch panels (still need one more).
+			\begin{enumerate}
+				\item Bottom 5 PPs go to \alert{FADC}.
+				\item Top 5 PPs go to \alert{TDC}.
+			\end{enumerate}
+		\end{itemize}
+	\end{itemize}
+	
+	\column{0.5\textwidth}
+	  	\begin{center}
+  		\includegraphics[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170743.jpg}
+  		\end{center}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Detector HV}
+
+	\begin{itemize}
+		\item Cabling partially completed.
+	\end{itemize}
+	
+	\begin{center}
+  		\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170610.jpg}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Cable Tie Bars}
+
+	\begin{itemize}
+		\item Bars help \alert{support cables} without stressing them while also helping with \alert{organization}.
+	\end{itemize}
+	
+	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190506_141426.jpg}
+  		\includegraphics<2>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170921.jpg}
+  		\includegraphics<3>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170849.jpg}
+    \end{center}
+
+\end{frame}
+
+\begin{frame}{Cosmics To Do List}
+
+	\begin{itemize}
+		\item Aiming to \alert{begin cosmic tests} on one half of the HCal in \alert{June}.
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Finish cabling the front-end} (Scott).
+		\begin{itemize}
+			\item[--] Ordering more (60) cable tie bars (Chuck).
+			\item[--] Need summing modules (have one) (others in production).
+		\end{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Finish cabling HV}. Have long cables may need to find short ones (Scott + others/students?).
+		\item Need \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{2 VME crates} with \alert{F1 TDC}, \alert{Flash ADC}, and \alert{FPGA trigger logic} (Alex).
+		\begin{itemize}
+			\item[--] Get DAQ software operational (Scott).
+		\end{itemize}
+		\item Another \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{CPU with relay rack} for DAQ and monitors (Alex).  
+	\end{itemize}
+
+\end{frame}
+
+\end{document}

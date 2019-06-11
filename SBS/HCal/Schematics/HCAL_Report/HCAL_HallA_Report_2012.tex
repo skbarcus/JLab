@@ -1,0 +1,228 @@
+\documentclass[11pt]{article}
+\usepackage{epsfig}
+
+%\usepackage{times,latexsym,graphicx,wrapfig,url,eurosym}
+
+\usepackage{hyperref}
+\setlength{\textwidth}{6.5in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textheight}{9in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+
+\newcommand{\etal}{{\it et al.\/}}
+\newcommand{\PRL}{{\em Phys. Rev. Lett. }}
+\newcommand{\PL}{{\em Phys. Lett. }}
+
+\begin{document}
+
+\section{Instrumentation}
+
+\subsection{Hadron Calorimeter, HCAL-J}
+\label{sec:HCAL}
+
+\begin{center} 
+G.~B.~Franklin and V. Mamyan, Carnegie-Mellon University, for the CMU, Catania, JINR, JLab collaboration
+\end{center}
+
+The DOE review report of October, 2011, stated that, "while not formally part of the SBS program, the HCAL calorimeter and its good
+performance are essential for the envisioned suite of experiments."  They found the design concept,
+based on the existing COMPASS HCAL1 detector appropriate and noted that "the HCAL design appears to have
+adequate segmentation to provide sufficient angular constraints for the neutron program."  The report recommended  the development of relevant HCAL specifications and quality control procedures.  In response, specifications for the HCAL-J detector have been developed and numerous performance tests of prototype modules and materials have been performed as the first steps of developing realistic quality control specifications.   
+
+\subsubsection{Detector Specifications}
+\label{sec:Detector}
+
+The design specifications of HCAL-J are determined by the requirements of the GEp, GMn, and GEn experiments.  
+They are summarized as follows:
+
+{\bf Size:}
+The detector should have an active area of 160 cm x 330 cm to match the acceptance of the SBS.
+If allowed by budget considerations, a detector larger than this minimum size will be constructed 
+to maintain resolution near the acceptance boundaries and to provide the improved performance 
+associated with a larger time-of-flight distance. 
+
+
+{\bf Energy Resolution:}
+The module design will be optimized to allow the use of a high threshold trigger to reject background 
+events while maintaining high trigger efficiency for the real events.   The goal will be to achieve 
+efficiency greater than 95\% with a trigger threshold set at 25\% of the average signal.
+
+{\bf Time Resolution:}
+Simulations show timing requirements, combined with an rms time resolution of 1.0 ns from the HCAL
+detector, would result in a trigger efficiency of 80\% for the GEn experiment.   This is acceptable
+as the minimum performance criteria, but the HCAL-J module geometry, scintillator materials, and 
+waveshifters will be optimized to obtain a time resolution better than 1.0 ns rms with an overall 
+goal of achieving a time resolution closer to 0.5 ns rms.
+
+{\bf Angular Resolution:}{
+The detector will be designed to provide a spatial resolution of 8 cm rms and thus the desired 
+angular resolution of 5 mrad can be achieved by placing the detector 17 m from the target.
+
+{\bf Gain monitoring:}
+The detector will have an LED or laser-based pulser system that will allow in-situ monitoring of 
+the PMT gains and facilitate data-acquisition testing.
+
+\subsubsection{Module Design}
+\label{sec:Module}
+The HCAL-J detector design will be based on a modular construction similar to the existing HCAL1 detector used in the COMPASS experiment.  Each module will consist of alternating layers of iron and scintillator.   In use, the hadronic showers are formed in the iron and the scintillators sample the energy of the showers.  The resulting scintillation light is director to PMTs using wavelength-shifter/light guides that run the length of each module.
+
+Each module will have a 15~cm$ \times $15~cm front face  and will be approximately 1 meter in length.  With this design, the 160 cm x 330 cm active area design criteria can be achieved by stacking 288 modules into an array 12 wide by 24 high.  The individual modules will be constructed to allow this stacking by using the iron plates to transfer the load of the upper modules through the lower modules.
+
+In order to make calorimeter suitable for the JLab energy range, 2-10 GeV, 
+the thickness of scintillator plates will be  increased from 0.5 cm to 1.0 cm 
+while keeping the total length and number of plates the same. This increases the light yield but 
+reduces the thickness of iron plates (from 2.0 cm to 1.5 cm) and therefore hadron detection efficiency. 
+The energy resolution of a device with this design was simulated realistically by taking account light propagation in the wavelength shifter (WLS)
+and the PMT efficiency. For a hadron momentum of 2.7 GeV/c,  energy resolution was found to be 42.3\% and it gradually improves with 
+increasing hadron momentum.
+The GEANT4 simulation shows that 1.5 cm thick iron plates are thick enough to provide more 
+than 95\% hadron detection efficiency in the 2-10 GeV energy range when the hadron calorimeter 
+threshold is 1/4 of the average  deposited energy.  
+
+The position of the incident hadron is determined  using an energy-weighted sum of the positions of the 
+modules containing the corresponding hadronic shower.
+The resulting position resolution predicted from simulation is 5.5 - 3.0 cm for hadrons in the momentum range 2-10 GeV/c.  The angular resolution of 5 mrad  $\sigma$ can be achieved by placing the calorimeter about 12 m from the target.  The predicted coordinate resolution at 40 GeV hadron momentum agrees with the resolution achieved by the COMPASS experiment (1.5 cm rms). 
+
+\subsubsection{Time Resolution Optimization}
+Time resolution is critical for rejecting background during form factor experiments. 
+The goal resolution is 0.5 ns sigma and is most important for background separation at higher 
+hadron momentum due to short time of flight.
+
+To achieve the required time resolution, we will deviate from the COMPASS design in the choice of scintillator and wavelength shifter (WLS) materials.
+The choice of plastic scintillators is constrained by several factors, most important of which is 
+the need to match emission spectrum of the scintillator with the absorption spectrum of the fast wavelength shifter .
+Fast wavelength shifters ( for example EJ-299-27 and BC-484 ) tend to have absorption spectra
+near the end of the UV and start of the violet range (350-400 nm). Since wavelength shifters are sensitive to light 
+in the 350-400 nm range absorption, absorption of light in scintillator becomes problematic due to increased light 
+absorption by the base material (PVT) of scintillators.  Another problem is absorption and re-emission of light by scintillator fluor (PPO).
+The variation in the efficiency of the re-absorption and re-emission process as a function
+of spatial position of a shower track
+increases non-linearity of the calorimeter signal and can cause coordinate and energy resolution degradation. 
+).  
+\begin{figure}[ht]
+\centerline{
+\epsfig{file=hcal_modules.eps, scale=0.5}
+}
+\caption{ GEANT4 representation of 9 calorimeter modules showing the WLS (in red) positioned vertically in the middle of the each module. }
+\label{fig:MODULE}
+\end{figure}
+
+
+One of shortcomings of EJ-232 scintillator is the light absorption length (13.5 $\pm$ 0.5 cm) 
+in the spectra range useful for exciting the EJ-299-27 WLS. To mitigate this problem 
+the WLS will be positioned in the middle of the calorimeter module, as shown in Fig.~\ref{fig:MODULE}, instead of along one side.
+The advantage of this design is that light travels half the length in the scintillator 
+and is absorbed less. As a result. the light yield is increased by almost a factor of two. Another advantage is 
+the resulting symmetric distribution of reconstructed particle position (a source of systematic error in angle reconstruction) 
+and reduction of non-linearity of calorimeter response. 
+
+In simulation, the time of flight is found by analyzing the signal from the module with the most energy deposited.  A flash ADC with sampling step of 2 ns (500 MHz) is simulated and the time is found when 
+the signal reaches at 1/4 of its amplitude.  With EJ-232 scintillator and EJ-299-27 WLS simulation predicts 0.65 ns rms time resolution. 
+Muon tests performed at JLab showed that simulation is able to predict muon time resolution 
+with 5\% precision. Based on this the predicted hadron time resolution is quite realistic.
+
+\subsubsection{Light Guides}
+Light guides are required to transport the light from the WLS to the PMT.   Production of 288 or more adiabatic
+light guides based on a traditional twisted-strip design would take considerable time and resources.
+However, we are exploring the alternative light guide design shown in Fig.~\ref{fig:LGUIDE}.  This design is well-suited
+to injection molding techniques and, 
+after extensive searchers, we have found companies that are capable of manufacturing acrylic light guide of this design with appropriate surface quality.   The ability to produce the light guides with injection molding will greatly reduce the cost of production and gives additional design options, such as a lip to strengthen the scintillator/WLS glue joint, without significant increase
+in cost.
+
+A GEANT4 based simulation of the light guide has been developed to optimize light collection efficiency. 
+The efficiency is estimated with and without aluminum foil wrapping. Without aluminum foil
+light collection efficiency is 65\%, with aluminum foil wrapping (assuming 90\% reflection) 
+light collection efficiency is 75\%. 
+
+
+\begin{figure}[ht]
+\centerline{
+\epsfig{file=lguide.eps, scale=0.7}
+}
+\caption{ Light guide design from GEANT4. }
+\label{fig:LGUIDE}
+\end{figure}
+
+
+\subsubsection{Phototubes}
+\label{sec:PMT}
+
+Simulation shows that the light produced and propagated in ELJEN-299-27 WLS has wavelength in the 410-500 nm range. 
+Over 95\% of photons have wavelength in 410-460 nm range. PMTs that have bi-alkali based cathodes are well suited 
+to this photon spectrum range (they have max sensitivity around 420 nm). 
+Since the XP2262-type PMTs from BigHAND detector have bi-alkali photo-cathodes, they can be coupled with ELJEN-299-27 
+and BC-484.
+
+\subsubsection{DAQ and Trigger}
+\label{sec:DAQ}
+The energy from a single hadronic shower will be typically spread over 9 modules or more.  To provide an effective trigger signal, the signals from groups of modules, corresponding to each possible hadronic shower location, must be summed prior to discrimination.   This can be done using a complex system of linear fan-ins/fan-outs.  However, we are also considering the use of low-resolution FADCS and executing the necessary summing and trigger logic using FPGAs.
+
+\subsubsection{Results of Component Tests}
+\label{sec:Tests}
+
+Oleg Gavrishchuk performed cosmic tests at JLab using one of the COMPASS modules provided by JINR, Dubna.
+The tests had the following goals: measure trigger time resolution of muons, 
+estimate number of photo-electrons produced by minimum-ionizing particles (muons), and to calibrate and test our GEANT4 simulation. 
+The GEANT4 comparison was done in the following steps:
+
+\begin{itemize}
+
+\item { The number of photo-electrons found from cosmic muon passing across the module was inputted into the simulation (80 photo-electrons). }
+\item { Simulation was performed with muon going opposite to the light propagation direction 
+        and muons going in the direction of light propagation. } 
+\item { The simulated timing results were compared with cosmic test results. }
+
+\end{itemize}
+It was found that simulation and test results agree with good precision. 
+With muons going in the direction of light propagation muon time resolution was 
+0.6 ns while, when going opposite to light propagation direction, the trigger time resolution was 0.77 ns. 
+In both cases agreement of simulation with data was within 5\%. 
+
+Cosmic tests with EJ-232 scintillator coupled with EJ-299-27 WLS were performed at CMU.
+The purpose of these tests were to study light attenuation length in the WLS, attenuation length  
+in EJ-232 scintillator and to estimate the number of photo-electrons produced by coupling EJ-232 scintillator and EJ-299-27 WLS. 
+Test results show that the attenuation length of light in the WLS is $\approx$ 1.5 m. 
+The somewhat short attenuation length is not indicative of the optical quality of the WLS surface, but is a result of 
+self absorption in the wavelength shifter and can not be avoided. 
+The tests done in the lab were also simulated in GEANT4 to estimate the accuracy of the simulation. 
+Optical properties of the EJ-232 scintillator and EJ-299-27 wavelength shifter provided 
+by ELJEN technology were input into the simulation. The simulation predicts 14 cm absorption length for EJ-232 scintillator, which 
+is in good agreement with test results of 13.0 $\pm$ 0.5 cm. 
+The mean number of photo-electrons produced by muons passing through the 0.635 cm thick EJ-232 scintillator 
+is found to be 10 (light-guide efficiency is not taken account). 
+The test setup is simulated in GEANT4 and the scintillation yield per MeV of deposited energy is adjusted to 
+match this result. 
+
+\subsubsection{Plan and Summary}
+\label{sec:Summary}
+
+The overall geometric design of the calorimeter is complete; the only remaining  issue is determining the optimal scintillator/WLS combination.  The goal is to achieve good time resolution by using scintilators and wavelength shifters with
+relatively fast decay-times while, at the same, time, minimizing the reduction of light and spatial uniformity that will arise from
+short attenuation lengths.
+
+The light guide simulation shows that we have a design that will give suitable light collection efficiency. 
+Our plan is to produce these light guides using injection molding and our immediate goal is to obtain quotes from at least three companies for this project.  If possible, we will obtain sample products from companies to provide a means of matching the surface properties obtained from injection molding to our GEANT4 optical photon simulations.
+
+Due to high cost of commercial scintillators ($\sim$\$1M) new options for the scintillators are 
+necessary. It appears that both Fermilab and JINR are able to produce scintillators with properties necessary for HCAL-J. 
+We have written an MOU with Fermilab to produce scintillator samples with several concentration (0, 0.5, 1.0, 2.0, 3.0 percent)  of PPO fluor.  These samples will be tested at CMU to determine their absorption lengths 
+and photon statistics.  We expect additional samples to be provided by JINR in the near future.   The results of these tests will be used in simulation to evaluate HCAL-J timing  performance.
+
+The final details of the HCAL-J design will be fixed when the tests of the prototype scintillator materials have been completed.
+
+
+%\cleardoublepage
+%\newpage
+
+\begin{thebibliography}{99}
+
+\bibitem{S2m_res} Hall A annual report 2004, page 22-24.
+
+\bibitem{Ham} Hamamatsu, \url{http://jp.hamamatsu.com/en/index.html}.
+
+\end{thebibliography}
+
+\end{document}
