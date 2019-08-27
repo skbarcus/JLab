@@ -1,0 +1,148 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=authoryear,% Author , Date style citations.
+  %style=phys,% APS Style citations.
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+\addbibresource{references.bib}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for use of long table that can go over multiple slides.
+\usepackage{longtable}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{Measurement of $^3$He Elastic Electromagnetic Form Factor Diffractive Minima Using Polarization Observables}
+\subtitle{}
+\date{July 31\textsuperscript{st} 2019}
+\author{Brad Sawatzky}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Current Status}
+
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll|}
+	\hline
+	\makecell{Item} & \makecell{Status}\\
+	\hline
+	HV Crates & Installed (1 Ch Broken) \\
+	HV Cables & Installed \\
+	Pulser/Fiber System & Installed \\
+	Summing Modules & 10x Installed \\
+	FE Amplifiers & 18x P.S. 776 Installed \\
+	FE Splitter Panels & 18x Installed (1 Ch Broken)\\
+	FE Patch Panels & 10x Installed \\
+	1/2 HCal FE Cables & Installed \\
+	DAQ Discriminators & 18x LeCroy 2313 Installed \\
+	DAQ Patch Panels & 10x Installed \\
+	DAQ Crates & 1x VXS and 1x VME (temp) \\
+	Crate CPUs & 2x Installed \\
+	TIs & 2x Installed \\
+	fADC 250s & 18x Installed/Working (1 Ch Broken) \\
+	F1TDCs & 5x Installed/Working 1x Spare \\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	%\caption*{Current Status}
+	%\caption*{For the high rate kinematics, these measurements will not be statistics limited and those points 		will be used to check systematics. For the lowest Q$^2$, this measurement can be used to precisely determine 	the product of beam-target polarization.} %Caption* supresses printing of second caption saying Table number again.
+	\end{table}
+	
+\end{frame}
+
+\begin{frame}{Current Status Cont.}
+
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll|}
+	\hline
+	\makecell{Item} & \makecell{Status}\\
+	\hline
+	fADC SD & 2x Installed (temp.) \\
+	F1TDC SD & 1x Installed \\
+	Analysis PC & Installed \\
+	CODA & Installed \\
+	ROL fADC+F1TDC & Working \\
+	Decoder & Working \\
+	Databases & Created/Working \\
+	\hline
+	\makecell{720 FE 2m BNC-LEMO + \\ $\approx$ 288 DAQ 2m BNC-LEMO} & \makecell{Detector Support Group \\ Est $\approx$ 3 Months}\\
+	P.S. 706 Discriminators & Being Repaired Est 1 Month \\
+	Scalers ($\approx$ 64 ch) & Alex/Bob Est  \\
+	VME Digital-Analog Converter & Alex Est \\
+	Cosmic Analysis & In Production Est \\
+	Scaler Readout (Xscaler) & Scott/Bob? Est \\
+	Online Rate Analysis & Exploring Previous Versions Est \\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	%\caption*{Current Status}
+	%\caption*{For the high rate kinematics, these measurements will not be statistics limited and those points 		will be used to check systematics. For the lowest Q$^2$, this measurement can be used to precisely determine 	the product of beam-target polarization.} %Caption* supresses printing of second caption saying Table number again.
+	\end{table}
+	
+\end{frame}
+
+\begin{frame}{HCal Front End}
+
+	\includegraphics[width=1.0\textwidth]{HCal_FE.png}
+
+\end{frame}
+
+\begin{frame}{HCal DAQ Side}
+
+	\includegraphics[width=1.0\textwidth]{HCal_DAQ.png}
+
+\end{frame}
+
+\end{document}

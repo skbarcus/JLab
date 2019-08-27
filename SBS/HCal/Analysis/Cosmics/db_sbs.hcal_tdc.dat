@@ -1,0 +1,92 @@
+## Detector map, format:
+## crate slot start_channel end_channel
+sbs.hcal_tdc.detmap =
+## FADC modules        #     Module number that starts at channel 0
+## This map is for the 12 fADC modules used for testing
+## as described in https://logbooks.jlab.org/entry/3480927
+  #22    18     2     3 #      0
+#  22     4      0    63
+#  22     5      0    63
+#  22     6      0    63
+#  22     7      0    63
+#  22     8      0    63
+#  22     9      0    63
+## The following is just a test, we won't use it, but it makes
+## the rows and columns divisible by 12
+#  22     10      0     3 ## Just so it can be divided into rows of 12
+   22     9      48   63
+   22     8      50   51
+   22     8      62   63
+sbs.hcal_tdc.ledmap = 2 30
+
+## Channel map from channel to logical channel
+sbs.hcal_tdc.chanmap_start=1
+#sbs.hcal_tdc.chanmap = 
+##Ch1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16 #
+##-----------------------------------------------------------------
+##    1   2   2   8   3   9   4  10   5  11   6  12  37  43  38  44 # ADC1
+##    3   4  14  20  15  21  16  22  17  23  18  24  39  45  40  46 # ADC2
+##   25  31  26  32  27  33  28  34  29  35  30  36  41  47  42  48 # ADC3
+##   49  55  50  56  51  57  52  58  53  59  54  60                 # ADC4
+##   61  67  62  68  63  69  64  70  65  71  66  72                 # ADC5
+                                                                  #
+                                                                  #
+
+
+## Positions in [m] where +z is roated by sbs.theta
+sbs.hcal_tdc.position = 0 0 0
+
+## HCal is composed of 4 sub-assemblies each of 6x12 (row,col) modules
+
+## Test settings for one sub-assembly
+sbs.hcal_tdc.size  =  1.8567  0.9461  1.0000
+
+## HCal is a matrix of with nrows and ncols
+## Numbers below are just a test so that it maches the number of used fADC's
+#sbs.hcal_tdc.ncols = 12
+#sbs.hcal_tdc.nrows = 16
+sbs.hcal_tdc.nrows = 11
+sbs.hcal_tdc.ncols = 12
+sbs.hcal_tdc.nrows = 5
+sbs.hcal_tdc.ncols = 4
+## Position of first module
+sbs.hcal_tdc.xyz    =  0.92835  0.47305 0.0
+## Space between modules
+sbs.hcal_tdc.dxdydz  =  0.00254  0.00254 0.0
+
+## Mininum energy  for a cluster center (not really used right now)
+sbs.hcal_tdc.emin  = 0.0
+
+## Set the default pedestals
+sbs.hcal_tdc.pedestal =
+# Col:
+#  1    2    3    4    5    6    7    8    9    10   11   12  
+  0.00 0.00 0.00 0.00 #0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  1
+  0.00 0.00 0.00 0.00 #0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  2
+  0.00 0.00 0.00 0.00 #0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  3
+  0.00 0.00 0.00 0.00 #0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  4
+  0.00 0.00 0.00 0.00 #0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  5
+#  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  6
+#  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  7
+#  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  8
+#  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row  9
+#  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row 10 
+#  0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 # Row 11
+
+## Set the default gain (calibration factor)
+sbs.hcal_tdc.gain =
+# Col:
+#  1    2    3    4    5    6    7    8    9    10   11   12  
+  1.00 1.00 1.00 1.00 #1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  1
+  1.00 1.00 1.00 1.00 #1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  2
+  1.00 1.00 1.00 1.00 #1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  3
+  1.00 1.00 1.00 1.00 #1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  4
+  1.00 1.00 1.00 1.00 #1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  5
+ # 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  6
+ # 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  7
+ # 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  8
+ # 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row  9
+ # 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row 10 
+ # 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 1.00 # Row 11
+
+sbs.hcal_tdc.tdc_mode = 0 ## 0== LORES, 1==HI RES

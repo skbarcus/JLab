@@ -1,0 +1,210 @@
+% Template for PLoS
+% Version 1.0 January 2009
+%
+% To compile to pdf, run:
+% latex plos.template
+% bibtex plos.template
+% latex plos.template
+% latex plos.template
+% dvipdf plos.template
+
+\documentclass[10pt]{article}
+
+% amsmath package, useful for mathematical formulas
+\usepackage{amsmath}
+% amssymb package, useful for mathematical symbols
+\usepackage{amssymb}
+
+% graphicx package, useful for including eps and pdf graphics
+% include graphics with the command \includegraphics
+\usepackage{graphicx}
+
+%Allow captions for figures
+\usepackage{caption}
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+% cite package, to clean up citations in the main text. Do not remove.
+\usepackage{cite}
+
+\usepackage{color} 
+\usepackage{indentfirst}
+\usepackage{wrapfig}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for use of long table that can go over multiple slides.
+\usepackage{longtable}
+
+%allows for multiple pictures in one figure.
+%\usepackage{subfigure}
+
+% Use doublespacing - comment out for single spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+% Text layout
+\topmargin 0.0cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\textwidth 16cm 
+\textheight 21cm
+
+% Bold the 'Figure #' in the caption and separate it with a period
+% Captions will be left justified
+\usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
+%Import graphics package
+
+% Use the PLoS provided bibtex style
+\bibliographystyle{plos2009}
+
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+
+% Leave date blank
+\date{}
+
+%\pagestyle{myheadings}
+%\usepackage{fancyhdr}
+%\lfoot{Hello}
+%\pagestyle{fancy}
+%% ** EDIT HERE **
+
+
+%% ** EDIT HERE **
+%% PLEASE INCLUDE ALL MACROS BELOW
+
+%% END MACROS SECTION
+
+\begin{document}
+
+% Title must be 150 characters or less
+\begin{flushleft}
+{\Large
+\textbf{HCal Front-End and DAQ Power Consumption Requirements}
+}
+% Insert Author names, affiliations and corresponding author email.
+\\
+\vspace{4mm}
+\hrule height 0.8pt \relax
+\vspace{2mm}
+\textbf{Scott Barcus}, August 26$^{\text{th}}$ 2019, E-mail: skbarcus@jlab.org
+\end{flushleft}
+\vspace{-2mm}
+\hrule height 0.8pt \relax
+\vspace{6mm}
+%\hline
+% Please keep the abstract between 250 and 300 words
+%\section*{Educational Objectives and Professional Goals}
+%\begin{flushleft}
+%{\large\bf{Educational Objectives and Professional Goals}}
+%\end{flushleft}
+
+\setlength{\parindent}{0.5cm}
+
+%\newcommand{\xtimes}[1]{#1{\Rx}}
+
+{\large \noindent \bf{Introduction}}
+\vspace{3mm}
+
+This document designates the power consumption requirements for the Hadron Calorimeter's (HCal) front-end (FE) racks (RR1, RR2, and RR3) in Table \ref{tab:FE} and DAQ racks (RR4, RR5, and RR6) in Table \ref{tab:DAQ}. Total power requirements of the FE and DAQ are given in Table \ref{tab:totals}. All input voltages are standard 120 $V$ AC (RMS voltage value) sources. Manuals and any labels on units requiring power were used to estimate power consumption requirements when possible, however in many cases this was not possible. To give an accurate measure of the power requirements of each unit the AC current going into each unit was measured. This was done by using an EXTECH 480172: AC Line Splitter to separate the live conductor from the neutral and ground. The AC current pulled by the unit when energized was then measured with an Extech EX830 True RMS 1000 Amp Clamp Meter clamped through the 1x opening in the AC line splitter yielding the AC current (RMS). The power consumption for each unit was then calculated using Equation \ref{eq:power}.
+
+\begin{equation}\label{eq:power}
+	\text{Power} \; (W) = \text{Voltage}\; (120\; V\; \text{RMS}) \times \text{Current}\; (A\; \text{RMS})
+\end{equation} 
+
+\noindent Input currents to units were measured without a data load from the PMTs. Actual power requirements will increase with a data load, but this should be accounted for by using maximum possible power inputs for each unit or making power estimates more conservative by doubling the power draw without a data load. In the tables below the units requiring power are listed in order of descending height in their respective racks. 
+\vspace{3mm}
+
+The total power consumption required for the HCal FE and DAQ are calculated by using the maximum listed power input for each unit if available (either from the manual or labels on the unit). If a maximum power input is not available one is calculated by taking the maximum allowable current input (either from the manual or labels on the unit) and multiplying by the 120 $V$ AC from the outlets. When a maximum current input was not available the input current was measured as described above, and the power draw was calculated and then doubled to compensate for the lack of data rate in the system and the possibility of adding extra modules. Fan power draws were not doubled as they should remain constant (the max input current for each fan type was used for all fans of that type). The total maximum power consumption requirements for the HCal's FE and DAQ racks and their combined requirements is given in Table \ref{tab:totals}. The first number quoted is the total maximum input calculated as described above. The second number applies a 25\% overhead to the maximum power consumption, and the third number applies an even more conservative 50\% overhead to the maximum power consumption.
+
+\begin{table}[h]
+    \centering
+    %\begin{tabular}{|llllll>{\raggedright\arraybackslash}p{4cm}|}%Last column centered or something.
+    \hspace*{-1.5cm}\begin{tabular}{|cccccccc|}
+    	\hline
+	    \bfseries{Rack\#} & \bfseries{Unit} & \bfseries{\makecell{Label\\ on Unit}} & \bfseries{\makecell{Operator's\\Manual}} & \bfseries{\makecell{Measured\\ Input\\ Current (A)}} & \bfseries{\makecell{Measured\\ Input\\ Power (W)}} & \textbf{\makecell{Manufacturer\\Max Input\\ Power (W)}} & \textbf{Notes}\\
+	    \hline
+	    \makecell{RR1\\ (FE)} & \makecell{P.S. Model\\ 702 Power\\ Supply} & \makecell{103-129V\\ 5A Fuse} & - & 0.4 & 48 & 600 & \makecell{Max input\\ 120V$\times$5A,\\ 5x Summers\\ Uncabled} \\
+	    \hline
+        \makecell{RR1\\ (FE)} & \makecell{Fan Hammond\\ Manufacturing\\ FT900HA1BK} & \makecell{120V,\\ 3A Max} & - & 1.7 & 204 & 360 & \makecell{Max input\\ 120V$\times$3A}\\
+        \hline
+        	\makecell{RR1\\ (FE)} & \makecell{P.S. Model\\ 702 Power\\ Supply} & \makecell{103-129V\\ 5A Fuse} & - & 1.1 & 132 & 600 & \makecell{Max input\\ 120V$\times$5A,\\ 9x P.S.\\ 776 Amps \\ Uncabled} \\
+	    \hline
+	    \makecell{RR1\\ (FE)} & \makecell{Fan Hammond\\ Manufacturing\\ FT900TA1BK} & \makecell{120V,\\ 3A Max} & - & 1.8 & 216 & 360 & \makecell{Max input\\ 120V$\times$3A}\\
+	    \hline
+        \makecell{RR2\\ (FE)} & \makecell{Black Max\\ Model 4002E\\ Power Supply} & - & 115V 7A & 2.9 & 348 & 840 & \makecell{Max input\\ 120V$\times$7A\\ 9x 706 Discr.\\ Cabled}\\
+        \hline
+        \makecell{RR2\\ (FE)} & \makecell{Fan (gray\\ 9 fans)} & - & - & 1.9 & 228 & - & - \\
+        \hline
+        \makecell{RR2\\ (FE)} & \makecell{Black Max\\ Model 4002E\\ Power Supply} & - & 115V 7A & 2.9 & 348 & 840 & \makecell{Max input\\ 120V$\times$7A\\ 9x 706 Discr.\\ Uncabled}\\
+        \hline
+        \makecell{RR2\\ (FE)} & \makecell{Fan (gray\\ 9 fans)} & - & - & 1.9 & 228 & - & - \\
+        \hline
+        \makecell{RR3\\ (FE)} & \makecell{Mechtronics\\ Nuclear\\ Model 201\\ Power Supply} & \makecell{115V,\\ 5A Fuse} & 400 W & 1.1 & 132 & 400 & \makecell{5x Summers +\\ various NIM\\ Cabled}\\
+        \hline
+        \makecell{RR3\\ (FE)} & \makecell{Fan (gray\\ 9 fans)} & - & - & 1.9 & 228 & - & - \\
+        \hline
+        \makecell{RR3\\ (FE)} & \makecell{Tektronix\\ TDS210\\ Oscilloscope} & \makecell{Power Max\\ = 20W,\\ VA Max\\ = 30W} & - & 0.1 & 12 & 30 & -\\
+        \hline
+        \makecell{RR3\\ (FE)} & \makecell{Mechtronics\\ Nuclear\\ Model 201\\ Power Supply} & \makecell{115V,\\ 5A Fuse} & 400 W & 2.3 & 276 & 400 & \makecell{9x P.S.\\ 776 Amps\\ Cabled}\\   
+        \hline
+        \makecell{RR3\\ (FE)} & \makecell{Fan (gray\\ 9 fans)} & - & - & 1.9 & 228 & - & - \\     
+        \hline
+    \end{tabular}
+    \caption{\textbf{Power Consumptions for Front-End Units.} }
+    \label{tab:FE}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    %\begin{tabular}{|llllll>{\raggedright\arraybackslash}p{4cm}|}%Last column centered or something.
+    \hspace*{-1.5cm}\begin{tabular}{|cccccccc|}
+    	\hline
+	    \bfseries{Rack\#} & \bfseries{Unit} & \bfseries{\makecell{Label\\ on Unit}} & \bfseries{\makecell{Operator's\\Manual}} & \bfseries{\makecell{Measured\\ Input \\Current (A)}} & \bfseries{\makecell{Measured\\ Input\\ Power (W)}} & \textbf{\makecell{Manufacturer\\Max Input\\ Power (W)}} & \textbf{Notes}\\
+        \hline
+        \makecell{RR4\\ (DAQ)} & \makecell{Scaler (Red\\ Rack Mounted)} & - & - & 0.2 & 24 & - & - \\
+        \hline
+        \makecell{RR4\\ (DAQ)} & \makecell{Tektronix\\ TDS220\\ Oscilloscope} & \makecell{Power Max\\ = 20W,\\ VA Max\\ = 30W} & - & 0.1 & 12 & 30 & -\\
+        \hline 
+        \makecell{RR4\\ (DAQ)} & \makecell{Fan EBM\\ Industries\\ FT-170-318-001\\ 16/01} & - & - & 0.8 & 96 & - & 3 Fans\\
+        \hline
+        \makecell{RR4\\ (DAQ)} & \makecell{Model 6700\\ BiRa Systems\\ CAMAC Power\\ Supply Module} & - & - & 9.5 & 1140 & - & \makecell{18x LeCroy\\ 2313 Discr\\ Cabled}\\
+        \hline
+        \makecell{RR5\\ (DAQ)} & \makecell{Mechtronics\\ Nuclear\\ Model 201\\ Power Supply} & \makecell{115V,\\ 5A Fuse} & 400 W & 2.2 & 264 & 400 & \makecell{$\approx$7x NIM}\\
+        \hline
+        \makecell{RR5\\ (DAQ)} & \makecell{Fan Hammond\\ Manufacturing\\ FT900HA1BK} & \makecell{120V,\\ 3A Max} & - & 1.8 & 216 & 360 & \makecell{Max input\\ 120V$\times$3A}\\
+        \hline
+        \makecell{RR5\\ (DAQ)} & \makecell{Fan EBM\\ Industries\\ FT-170-318-001\\ 41/05} & - & - & 0.7 & 84 & - & 3 Fans\\
+        \hline
+        \makecell{RR5\\ (DAQ)} & \makecell{VME64X Crate,\\ PROMEC Model\\ WV8105} & \makecell{Max Input\\ 16A} & - & 5.2 & 624 & 1920 & \makecell{Max input\\ 120V$\times$16A,\\ 6x F1TDCs,\\ 2x fADCs,\\ 2x SD,\\CPU, TI,\\ECL$\leftrightarrow$NIM,\\ Cabled}\\
+        \hline
+        \makecell{RR5\\ (DAQ)} & \makecell{VXS Crate,\\ WEINER Plein\\ \& Baus GmbH\\ Type UEP6021} & \makecell{Max Input\\ 15A} & \makecell{Max\\ Input\\ 16A} & 10.9 & 1308 & 1920 & \makecell{Max input\\ 120V$\times$16A,\\ 16x fADCs\\ ($\frac{7}{16}$ Cabled),\\ CPU, TI,\\ VTP,} \\
+        \hline
+        \makecell{RR6\\ (DAQ)} & \makecell{PC with\\ 2x Monitors} & - & - & 0.3 & 36 & - & -\\
+        \hline                                                                 
+    \end{tabular}
+    \caption{\textbf{Power Consumptions for DAQ Units.}}
+    \label{tab:DAQ}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    %\begin{tabular}{|llllll>{\raggedright\arraybackslash}p{4cm}|}%Last column centered or something.
+    \begin{tabular}{|ccc|}
+    	\hline
+	    \bfseries{\makecell{FE Racks Max Power\\ Input/+25\%/+50\% (W)}} & \bfseries{\makecell{DAQ Racks Max Power\\ Input/+25\%/+50\% (W)}} & \bfseries{\makecell{Total Max Power Input/\\+25\%/+50\% (FE + DAQ) (W)}} \\
+        \hline 
+        5342/6678/8013 & 7222/9028/10833 & 12564/15706/18846 \\ 
+        \hline                                                            
+    \end{tabular}
+    \caption{\textbf{Total Power Consumptions for HCal FE and DAQ Racks.} The total maximum input calculated as described above is listed first. The second number applies a 25\% overhead to the maximum power consumption, and the third number applies an even more conservative 50\% overhead to the maximum power consumption.}
+    \label{tab:totals}
+\end{table}
+
+\end{document}
+
