@@ -1,0 +1,280 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+%% To allow text-wrapping in table cells
+%\usepackage{array}
+%\newcolumntype{LF}{>{\arraybackslash}m{4cm}}
+
+\usepackage{xfrac}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for use of long table that can go over multiple slides.
+\usepackage{longtable}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+%% Our helper commands
+\newcommand{\itemsheader}{\bfseries{Item(s)} & \bfseries{Status} & \bfseries{Comments}}
+\newcommand{\hcal}{HCAL}
+\newcommand{\Rplus}{\texttt{+}}
+\newcommand{\Rminus}{\texttt{-}}
+\newcommand{\Rx}{\texttt{x}}
+\newcommand{\xtimes}[1]{#1{\Rx}}
+
+\title{{\hcal} Status Report}
+\subtitle{}
+\date{August 5\textsuperscript{th} 2019}
+\author{Juan Carlos Cornejo and Scott Barcus}
+%\institute{SBS Collaboration Meeting - Jefferson Lab}
+\institute{SBS Collaboration Meeting - Jefferson Lab\\[\medskipamount]
+      \includegraphics[width=0.3\textwidth,height=.1\textheight]{JLab_logo_text_white1.jpg}%
+ }
+\titlegraphic{\vspace{35mm}\hfill\includegraphics[height=3.cm]{HCal_PMTs.jpg}}
+
+\begin{document}
+
+
+\maketitle
+
+\begin{frame}{{\hcal} Detector Status}
+\begin{table}[c]
+    \centering
+    \begin{tabular}{|ll>{\raggedright\arraybackslash}p{4cm}|}
+    	\hline
+	    \bfseries{Item(s)} & \bfseries{Status} & \bfseries{Comments}\\
+	    \hline
+        \xtimes{288} Modules & On-site & Last set of modules arrived Feb 2018  \\
+        \hline
+        \xtimes{4} Sub-Assemblies & Assembled & Spring 2018 \\
+        \hline
+        \xtimes{288} PMT {\Rplus} base & On-site & Fall 2018 \\
+        $\rightarrow$ \xtimes{96} 20-pin base & Installing\footnote{Cleaning, applying grease, and rotating PMT needed by pulser system.} & by Sep 2019 \\
+        $\rightarrow$ \xtimes{192} 19-pin base & Installing\footnotemark[1] & by Oct 2019\footnote[frame]{Recently added 300 V Zener diode (explained in a weekly meeting update), and testing (one week) is pending OSP approval.}\\
+         \hline
+        Pulser/fiber system & Installed & Aug 2018\\
+        \hline
+    \end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}{{\hcal} HV {\Rplus} Front-End Electronics Status}
+({\bfseries{Note:}} Installed here means in Test Lab area without Weldment)
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll>{\raggedright\arraybackslash}p{4.5cm}|}
+	\hline
+	\itemsheader\\
+	\hline
+	HV Cards & Installed & \xtimes{25} V$^\Rminus$ Cards\\
+	\hline	
+	HV Cables & Installed & \xtimes{12} 75-m long (multi-core) {\Rplus} \xtimes{288}2 short cables.\\
+	\hline
+	Racks & Installed & \xtimes{3} FE {\Rplus} \xtimes{1} HV {\Rplus} \xtimes{2} DAQ\\
+	\hline
+	Crates & Installed & \xtimes{7} NIM {\Rplus} \xtimes{2} LeCroy HV mainframes\\
+	\hline
+	Summing & Installed & \xtimes{10} modules\\
+	\hline
+	Amplifiers & Installed & \xtimes{18} P.S. 776 (\xtimes{1} needs repair)\\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	\end{table}
+\end{frame}
+
+\begin{frame}{{\hcal} HV {\Rplus} Front-End Electronics Status (II)}
+({\bfseries{Note:}} Installed here means in Test Lab area without Weldment)
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll>{\raggedright\arraybackslash}p{4.5cm}|}
+	\hline
+	\itemsheader\\
+	\hline
+	FE Discriminators & All Present & \xtimes{18} P.S. 706 (cross talk issue electronics group attempting repairs Est 1-2 months)\\
+	\hline
+	DAQ Discriminators & Installed & \xtimes{18} LeCroy 2313\\
+	\hline
+	FE Splitter Panels & Installed & \xtimes{18} (\xtimes{1} ch broken)\\
+	\hline
+	Patch Panels & Installed & \xtimes{10} FE {\Rplus} \xtimes{10} DAQ side\\
+	\hline
+	{\hcal} FE Cables & Half Installed & Remaining $\approx$1008
+	BNC-LEMO 2m Det. Support Group Est $\approx$ 3 Months\\
+	\hline
+	Sum Discriminator & \makecell{Exists (Find)} & Remote adjustable threshold\\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	\end{table}
+\end{frame}
+
+\begin{frame}{{\hcal} DAQ Status}
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll>{\raggedright\arraybackslash}p{5.25cm}|}
+	\hline
+	\itemsheader\\
+	\hline
+	Crates & Installed$^{*}$ & \xtimes{1} VXS, 2$^{\text{nd}}$ VXS available after GEM tests ($^*$using temp VME64x)\\
+	\hline
+	CPU {\Rplus} TI & Installed & \xtimes{2} each\\
+	\hline
+	fADC 250 & Installed & \xtimes{18} fADC + \xtimes{2} SD (\xtimes{4} already repaired, \xtimes{1} bad ch needs repair)\\
+	\hline
+	F1TDCs & Installed & \xtimes{5} F1TDC {\Rplus} \xtimes{1} SD (have \xtimes{1} spare)\\
+	\hline
+	Triggers & In progress & Available now: cosmic-paddle (top crate), pulser (bottom crate). \\
+	& & By Oct 2019: {\hcal} trigger (summing mod) and identical triggers sent to both crates simultaneously. \\% Production trigger after\\ PMT mods {\Rplus} cables\\ Est October}\\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	\end{table}
+\end{frame}
+
+\begin{frame}{{\hcal} DAQ Status (II)}
+
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll>{\raggedright\arraybackslash}p{4.5cm}|}
+	\hline
+	\itemsheader\\
+	\hline
+	CODA & Installed & Standalone mode only (one instance per crate). Readout-lists written, need to combine (estimate by end of Dec 2019).\\
+	\hline
+	Ribbon Cables & 20\% Complete & Have \xtimes{3}, need \xtimes{18} (Searching JLab otherwise will need to order)\\
+	\hline
+	F1TDC SD Cables & 40\% Complete & Have \xtimes{2}, need \xtimes{5}. \\
+	\hline
+	Scalers (64 ch)  & In LHRS & Free Mid-Sept.\\
+	\hline
+	Scaler Readout & Use Xscaler & Bob offered to help\\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	\end{table}
+\end{frame}
+
+\begin{frame}{{\hcal} Software Status}
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|ll>{\raggedright\arraybackslash}p{4.5cm}|}
+	\hline
+	\itemsheader\\
+	\hline
+	Decoders & Working \& Tested & F1TDC in SBS-offline, fADC from Hall A Analyzer\\
+	\hline
+	Analyzer & Working \& Testing & Tested with cosmic{\Rplus}pulser in standalone mode \\
+	\hline
+	Databases & Created & (uncalibrated)\\
+	\hline
+	Online Monitor & In Progress & Mockups used and tested with cosmics and pulser.\\
+	\hline
+	Online Replay & Pending & Full version (tested with G4SBS) by Dec 2019\\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	\end{table}
+\end{frame}
+
+\begin{frame}{Infrastructure/Misc HCAL Needs}
+This is a list of items needed for HCAL that are being handled by JLab Staff. We present them here for completion but refer you to different talks for status and timeline.
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|l>{\raggedright\arraybackslash}p{4.5cm}|}
+	\hline
+	{\bfseries{Item(s)}} & \bfseries{Comments} \\
+	\hline
+	Detector Stand & (See Robin's earlier talk) \\
+	\hline
+	Dry Air & Pending Hall Installation \\
+	\hline
+	Shims & \xtimes{3} missing and planned to be manufactured at JLab (\xtimes{20} already installed on HCAL)\\ 
+	\hline
+	Floor Plates & (See Robin's earlier talk)\\
+	\hline
+	{\hcal} Rollers & (See Robin's earlier talk)\\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	\end{table}
+\end{frame}
+
+\begin{frame}{{\hcal} Front End}
+
+	\includegraphics[width=1.0\textwidth]{HCal_FE.png}
+
+\end{frame}
+
+\begin{frame}{{\hcal} Front End Cont.}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{HCal_FE_RR1.jpg}
+	
+	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{HCal_FE_RR3.jpg}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{{\hcal} Front End Cont.}
+    \centering
+	\includegraphics[width=0.43\textwidth]{HCal_FE_RR2.jpg}
+
+\end{frame}
+
+\begin{frame}{{\hcal} DAQ Side}
+
+	\includegraphics[width=1.0\textwidth]{HCal_DAQ.png}
+
+\end{frame}
+
+\begin{frame}{{\hcal} DAQ Side Cont.}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{HCal_DAQ_RR4.jpg}
+	
+	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{HCal_DAQ_RR5.jpg}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Acknowledgments}
+Thanks to \alert{Gregg Franklin} for his many dedicated years designing and overseeing the construction of {\hcal}. Thanks to \alert{Universit\'{a} di Catania} for their major financial contributions. Many other people and institutions were involved in making {\hcal} possible, including, but not limited to:
+    \begin{itemize}
+        \item Thanks to the many students who have worked on {\hcal} this summer including \alert{Alexis Ortega}, \alert{So Young Jeon}, \alert{Jorge Pe\~{n}a}, and \alert{Carly Wever}. 
+        \item Thanks to \alert{Alexandre Camsonne} for helping us get the DAQ working and finding all the modules for us.
+        \item Thanks to \alert{Chuck Long} for all his help fixing and acquiring things.
+        \item Thanks to \alert{Bryan Moffit} for helping us get the fADC/F1TDC ROLs working.
+        \item Thanks also to \alert{Brian Quinn} and \alert{Bogdan Wojtsekhowski}.
+        \item Thanks to \alert{Vanessa Brio}, \alert{Cattia Petta}, and \alert{Vincenzo Bellini} for their cosmic commissioning efforts last summer.
+    \end{itemize}
+
+\end{frame}
+
+\end{document}
