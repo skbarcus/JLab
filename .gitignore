@@ -7,6 +7,20 @@
 *wire*
 vdc*
 *~
+*.sty
+*.jt
+*.aux
+*.log
+*.gz
+*.nav
+*.out
+*.xml
+*.snm
+*.toc
+*.bcf
+*.zip
+*.svg
+*.JPG
 
 #unignore 
 !vdc*.*

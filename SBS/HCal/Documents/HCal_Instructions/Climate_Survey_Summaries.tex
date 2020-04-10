@@ -1,0 +1,690 @@
+\documentclass[oneside]{book}   %Oneside makes the document one sided. Without this chapters always start on odd numbered pages.
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+ 
+\usepackage[bookmarksopen]{hyperref}   %Bookmarks adds index on the sidebar in the PDF viewer.
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{multirow,bigstrut}
+\usepackage{caption}
+\usepackage{cleveref} %Load this package last.
+ 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Sharelatex Example},
+    bookmarks=true,
+    hyperindex=true,
+    pdfpagemode=UseOutlines,
+    pdfstartpage=1,
+}
+
+%\setlength{\parindent}{10ex}
+
+\begin{document}
+ 
+\frontmatter
+
+\begin{titlepage} % Suppresses displaying the page number on the title page and the subsequent page counts as page 1
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for horizontal lines, change thickness here
+	
+	\center % Centre everything on the page
+	
+	%------------------------------------------------
+	%	Headings
+	%------------------------------------------------
+	
+	\textsc{\LARGE Climate Steering Committee Report}\\[1.5cm] % Main heading such as the name of your university/college
+	
+	\textsc{\Large The College of William \& Mary}\\[0.5cm] % Major heading such as course name
+	
+	\textsc{\large Department of Physics}\\[0.5cm] % Minor heading such as course title
+	
+	%------------------------------------------------
+	%	Title
+	%------------------------------------------------
+	
+	\HRule\\[0.4cm]
+	
+	{\huge\bfseries Summary of Physics Department Climate Surveys}\\[0.4cm] % Title of your document
+	
+	\HRule\\[1.5cm]
+	
+	%------------------------------------------------
+	%	Author(s)
+	%------------------------------------------------
+	
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushleft}
+			\large
+			\textit{Climate Steering Committee}\\
+			\textit{Chairs} \newline% Your name
+			Scott \textsc{Barcus} \newline
+			Dr. Eugene \textsc{Tracy} \newline
+			\textit{Past Chairs} \newline
+			Dr. Melissa \textsc{Beebe}
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft}
+			\large
+			\textit{Membership}\\
+			Dr. Seth \textsc{Aubin} \newline% Supervisor's name
+			Anashe \textsc{Bandari} \newline
+			Courtney \textsc{Bishop} \newline
+			Michael \textsc{Cairo} \newline
+			Tangereen \textsc{Claringbold} \newline
+			Carrington \textsc{Metts} \newline
+			Dr. Phiala \textsc{Shanahan} \newline
+			Dr. Jeffery \textsc{Nelson} \newline
+			Amy \textsc{Schertz}
+			
+					
+		\end{flushleft}
+	\end{minipage}
+	
+	% If you don't want a supervisor, uncomment the two lines below and comment the code above
+	%{\large\textit{Author}}\\
+	%John \textsc{Smith} % Your name
+	
+	%------------------------------------------------
+	%	Date
+	%------------------------------------------------
+	
+	\vfill\vfill\vfill % Position the date 3/4 down the remaining page
+	
+	{\large\today} % Date, change the \today to a set date if you want to be precise
+	
+	%------------------------------------------------
+	%	Logo
+	%------------------------------------------------
+	
+	%\vfill\vfill
+	%\includegraphics[width=0.2\textwidth]{placeholder.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
+	 
+	%----------------------------------------------------------------------------------------
+	
+	\vfill % Push the date up 1/4 of the remaining page
+	
+\end{titlepage}
+
+\tableofcontents
+ 
+\mainmatter
+ 
+\chapter{Introduction: Notes on Physics Department Graduate Student Attitude Survey Results}
+
+The Physics Department Climate Steering Committee has been charged with being on point in our efforts to improve the climate. Toward that end, in Fall 2016 we developed an online survey instrument. Results from that first survey informed the development of the department’s Diversity Plan last Spring, and we intend to continue these surveys on an annual basis so we can track progress toward improving the climate, or to detect issues early when intervention might be easier and more effective. Our survey instrument was developed in collaboration with Professors Anne Charity Hudley, Cheryl Dickter, and Chris Nemacheck, who have experience with survey methods. We intend for the survey to be the start, not the end, of a process that will lead to concrete actions.
+
+
+The second annual survey was launched right after the 2017 Thanksgiving Break. Preliminary analysis began just after Winter Break, and this informal report summarizes some of the key findings in the Graduate Student Survey (\cref{ch:grads}), the Undergraduate Major Survey (\cref{ch:majors}) which was sent to all declared majors, and the Undergraduate Intro Survey (\cref{ch:intro}) which was taken by PHYS 101, PHYS 101H, and PHYS 107 students. These surveys were publicized by asking the instructors of these classes to encourage their students to participate in the surveys. We note that more encouragement to participate increased participation rates and we hope to increase awareness of these surveys in the future. In addition to the online survey, students were asked if they wanted a follow-up focus-group conversation. Five graduate students requested a follow-up. Ben Boone of the Center for the Liberal Arts volunteered to help with that. We include the summary of his findings below as well (\cref{sec:focus_group}). 
+
+
+In short, these results suggest that we still have a climate problem in our department, particularly for women. This is disheartening, given all the work we put in over the last few years to improve things. We need to look for ways to ensure the students see that the faculty and staff take these matters seriously. There is also still a sense among the women that the Title IX process is slow and opaque, and a feeling that after bringing a complaint ‘nothing happens’. This suggests that we – the Department and the Administration – still have work to do in making the process more transparent, taking more visible actions to improve things, and informing complainants of the outcomes of investigations more proactively. 
+
+
+One concrete suggestion we would like to make that might improve things is to create the role of Title IX Advocate, someone who is trained and could clearly play the role of advocate for those who bring a complaint. This is not intended as a criticism of the work of the Title IX Office, but an acknowledgement that they work to guard the impartiality of the investigations of complaints, and hence cannot take on the role of advocate for either the complainant or the accused. If the complainant is a student or staff member, the person bringing the complaint might have few personal resources, finds the Title IX process a black box, and they currently have no formal advocate who is well informed and experienced with Title IX issues. This is especially concerning when there are large differentials in power or levels of seniority between the complainant and the accused\footnote{We note that the recent external investigation of a very messy Title IX/EEOC complaint at the University of Rochester included the creation of an advocate’s position as one of their recommendations. See Recommendation 3, page 42 of \url{http://urindependentinvestigation.net/exhibits/Report_Final.pdf}}. We recognize that this is not a step to be taken lightly, but we believe it is worth considering.
+
+We now turn to a summary of the survey results and note that full text answers to free response questions can be found in the appendices (\cref{ch:appendix}):
+
+
+\chapter{Graduate Student Survey}
+\label{ch:grads}
+\section{Overview and Selected Survey Results}
+
+\noindent\underline{\textbf{Overview:}}
+
+\begin{itemize}
+   	\item  21 students completed the survey.
+	\item A larger number started and didn’t go very far. 
+	\item There were 9 female and one non-binary respondents (essentially all of the non-male members of the department)
+	\item There were 11 male respondents, or less than 1/4 of the male graduate students.
+	\item All but 1 of the respondents are post-qualifier and involved in research.
+\end{itemize}
+
+\noindent\underline{\textbf{Selected Survey Results:}}\\
+
+We asked a variety of questions, including questions about the program, their overall wellbeing, and demographic questions, including socioeconomic information. We allowed for free responses on a number of areas. We summarize the sense of those comments and several survey results here, and provide the complete text of the free responses in the Appendices (\cref{ch:appendix}) along with a tabular summary of the data later in this chapter (\cref{sec:tabular_grad}). 
+
+\begin{itemize}
+	\item In sum, among our graduate students we have some very unhappy people.
+	\item 8 of 21 respondents (38$\%$) have considered leaving the graduate program.
+	\item There were a number of very troubling free-response answers on climate and interactions in the department. The full text of these free response questions is in Appendix A (\cref{sec:app_A}) and some of the more troubling responses can be found in \cref{subsec:uncomfortable} and \cref{subsec:leave}.
+	\item A number of negative comments concern the impact of the Qualifying Exam on student morale. We note that this is in spite of the fact that most students eventually pass the test. However, the test design is viewed simply as a hurdle to leap over, with little pedagogic value, and the grading of it is not very transparent. 
+	\item There were 12 free responses to the question “Do you have any opinions or suggestions on the Physics Department's graduate qualifying examination (i.e.``the qual") or the possibility of replacing the current exam with an alternative such as an oral discussion on your summer research or a thesis proposal with committee?” (\cref{subsec:qual}). 8 (67$\%$) of those expressed support for an alternative to the current qual with many supporting the idea of a thesis proposal or an evaluation of their summer research. 1 (8$\%$) person supported the Qual as is. 3 (25$\%$) people gave indeterminate answers or didn’t state a position.
+	\item 8 of 20 respondents (40$\%$) had less than \$1000 in savings which is about one paycheck. These students are living paycheck to paycheck and unexpected expenses or changes in paycheck size can have large consequences. Many graduate students are from less wealthy families than the undergraduate population, 9 of 20 respondents (45$\%$) came from families making less than \$50,000 a year, and may have fewer familial resources to draw on.
+	\item 13 of 24 respondents (54$\%$) said that mental health issues have impacted their performance in graduate school, and 7 of 22 respondents (32$\%$) said that physical health issues have impacted their performance.
+	\item Exit interviews have come up in several forums as something students are interested in.
+\end{itemize}
+
+\section{Notable Gender Differences}
+
+\begin{itemize}
+	\item Women and gender minorities in the program tend to come from less affluent families, have larger debts, and less liquid funds. 
+	\item They have less family experience with undergrad (or graduate) education.
+	\item They tend to not be directly coming from their undergraduate studies, while their male counterparts do. 
+	\item Women and gender minorities report working longer hours than males.
+	\item Women and gender minorities report feeling less safe, feeling less like they belong, and feeling that the program is less diverse than their male counterparts perceive it to be.
+	\item Half of women and gender minorities report seeking treatment for anxiety, and are more likely than males to report impactful physical issues.
+	\item They also report more instances of harassment or discrimination.
+\end{itemize}
+
+\section{Tabular Summary of Survey Results by Gender}
+\label{sec:tabular_grad}
+The questions shown in \hyperlink{Fig 2.1}{Figure 2.1} were typically of the form: `I currently feel X.’ The scale ranged from 0-10, with 0 meaning `strongly disagree’ and 10 `strongly agree’. The mean and standard deviation are reported for women and gender minorities (left two columns) and men (rightmost two columns). The responses suggest a significant difference in the experiences of women and gender minorities and men in the department.
+
+\begin{itemize}
+	\item Yellow Means: the difference of the means between women and gender minorities and men is between one and two male standard deviations.  (The women and gender minorities standard deviation is usually much higher.)
+	\item Orange Means: the difference of the means between women and gender minorities and men is greater than two male standard deviations; 
+	\item Orange (Red) Means: Standard Deviation (STDEV) differences between gender groups of  0.9 (1.9) or more, suggesting widely different responses to these questions. Some of the open-ended responses suggest that some of the women and gender minorities are deeply unhappy.
+\end{itemize}
+
+\noindent WGM = Women and gender minorities
+\\
+
+%\begin{figure}[!ht]
+%\hypertarget{Fig 2.1}{}
+%\begin{center}
+%\includegraphics[width=1.0\linewidth]{Grad_Results_Table_Clean.png}
+%\end{center}
+%\caption{
+%{\bf{Table of Survey Results.}} Selected survey question responses broken down by gender.}
+%\label{Figure_label}
+%\end{figure}
+
+The table directly below takes three of the questions from \hyperlink{Fig 2.1}{Figure 2.1} and gives the full breakdown of responses to be more illustrative than a simple mean. The full responses make it clear that the response averages, particularly for women and gender minorities, are not being driven solely by a few outliers. Instead, there are numerous department members experiencing discomfort, harassment, and discrimination.\\
+
+\noindent\textbf{Questions:}\\
+\indent \textbf{A:} I have been made to feel uncomfortable (not rising to the level of harassment or discrimination) in the Physics Department.\\
+\indent \textbf{B:} I have been harassed in the Physics Department.\\
+\indent \textbf{C:} I have felt discriminated against in the Physics Department.\\
+
+\noindent\begin{tabular}{cccc|ccccccccccc}
+  & Responses & Question & Mean & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+\hline
+ & 9 & A & 5.78 & 2 & 1 & - & - & - & - & 1 & 1 & - & 2 & 2 \\
+WGM: & 9 & B & 3.11 & 5 & 1 & - & - & - & - & - & 1 & - & - & 2 \\
+ & 9 & C & 2.89 & 4 & 1 & 1 & - & - & - & 1 & 1 & - & - & 1 \\
+\hline
+ & 11 & A & 3.36 & 3 & 1 & 1 & 1 & 1 & 1 & 1 & - & 2 & - & - \\
+M: & 11 & B & 1.36 & 5 & 4 & - & - & - & 1 & 1 & - & - & - & - \\
+ & 11 & C & 1.27 & 5 & 3 & 1 & - & 1 & 1 & - & - & - & - & - \\
+\hline
+\end{tabular}
+\\
+
+
+\section{Focus Group Discussion Selected Results}
+\label{sec:focus_group}
+In the focus group discussion (5 students) the primary themes that emerged were similar to the survey:
+
+\begin{itemize}
+	\item \underline{\textbf{Community}}:
+		\begin{itemize}
+			\item Graduate student socialization – the Physics Graduate Student Association does little to promote a sense of belonging among all the graduate students..
+			\item There is little socialization across cohorts (year on year), meaning that women and gender minorities tend to feel even more isolated than they would otherwise since in any given yearly cohort there might only be one or two.
+			\item It was noted that the Faculty have a role in promoting that sense of community.\\ \\
+		\end{itemize}
+	\item \underline{\textbf{Gender}}:
+		\begin{itemize}
+			\item There is a striking gender difference in the self-reported workload, with women reporting they work longer hours per week. 
+			\item There were suggestions that some faculty/student interactions can contribute to different experiences for each gender, especially if this reinforces the gender difference reported in the online survey about different family background and research experience prior to joining the department. (E.g. if men are more like to come from families where a parent had some research experience, they are more likely to `jump in’ early, which can help socialize them to the department, and increase the likelihood of passing the qualifier, etc.)
+			\item Some students reported comments in the department about gender performance and norms, and the impact this has on morale.
+			\item There was recognition that some of these issues about gender climate concern perceptions, so one could dismiss them as `not real’, but the point was made that if the perception is general, and it is not acknowledged and addressed, it becomes real.  Some of this can be dealt with through the advising system.
+		\end{itemize}
+	\item \underline{\textbf{Qualifying Exams}}:
+		\begin{itemize}
+			\item There is a strong desire for more transparency.
+			\item There was concern about discrepancies in preparedness tied to research advisors. See the second bullet above about gender issues.
+		\end{itemize}
+\end{itemize}
+
+\chapter{Undergraduate Majors Student Survey}
+\label{ch:majors}
+\section{Demographics}
+\noindent\underline{\textbf{Basic Demographic Data:}}
+\begin{itemize}
+	\item 39 students completed the survey.
+	\item 38\% female, 59\% male, and 3\% non-binary (3\% of these identified as transgender).
+	\item 56\% heterosexual, 5\% homosexual, 28\% bisexual, and 10\% other.
+	\item 77\% white, 5\% Hispanic/Latino, 3\% African-American, 3\% Asian or Asian-American, and 13\% mixed heritage.
+\end{itemize}
+\underline{\textbf{Campus Demographics:}}
+
+%\begin{figure}[!ht]
+%\begin{center}
+%\includegraphics[width=1.2\linewidth]{Majors_Table_1_2_Clean.png}
+%\end{center}
+%\caption{
+%{\bf{Campus Demographics.}} Not collected from this survey.}
+%\label{Figure_label}
+%\end{figure}
+
+\section{Notable Gender Differences}
+
+\indent While both gender groups viewed the department as welcoming, women and gender minority respondents were somewhat more likely to view the department as less diverse and welcoming than male respondents. More importantly, women and gender minorities report having been made to feel uncomfortable at significantly higher rates than men. Furthermore, women and gender minorities report harassment and discrimination in the department at higher rates than men.
+
+%\begin{figure}[!ht]
+%\begin{center}
+%\includegraphics[width=1.2\linewidth]{Majors_Table_3_Clean.png}
+%\end{center}
+%\caption{
+%{\bf{Gender differences for discrimination, harassment, and discomfort.}} Key: F* = women and gender minorities, M = men.}
+%\label{Figure_label}
+%\end{figure}
+
+The table below shows the responses to three questions. 0 means strongly disagree and 10 means strongly agree. WGM means women and gender minorities and M means men. It is again clear that women and gender minorities experience significantly higher levels of discomfort, harassment, and discrimination than men in the department do.\\
+\textbf{Questions:}\\
+\noindent \textbf{A:} I have been made to feel uncomfortable (not rising to the level of harassment or discrimination) in the Physics Department.\\
+\noindent \textbf{B:} I have been harassed in the Physics Department.\\
+\noindent \textbf{C:} I have felt discriminated against in the Physics Department.\\
+
+\noindent\begin{tabular}{cccc|ccccccccccc}
+  & Responses & Question & Mean & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+\hline
+ & 16 & A & 5.56 & - & 2 & 2 & - & 4 & - & 1 & 3 & - & - & 4 \\
+WGM: & 16 & B & 1.88 & 9 & 2 & - & 1 & 1 & - & 1 & 1 & 1 & - & - \\
+ & 16 & C & 1.75 & 9 & - & 2 & 1 & - & 3 & 1 & - & - & - & - \\
+\hline
+ & 23 & A & 1.22 & 11 & 7 & - & 2 & 1 & 1 & 1 & - & - & - & - \\
+M: & 23 & B & 0.20 &22 & 1 & - & - & - & - & - & - & - & - & - \\
+ & 23 & C & 0.20 & 22 & 1 & - & - & - & - & - & - & - & - & - \\
+\hline
+\end{tabular}
+\\
+
+\begin{itemize}
+
+	\item\textbf{Self-confidence (WGM vs M):} On average, women and gender minorities indicated a somewhat lower confidence in surmounting academic physics challenges than men.
+
+	\item\textbf{Mental Health (WGM vs M):} While men were more likely to report that their academic performance had been affected by mental health issues (e.g. depression, ADHD), women and gender minorities were six times more likely to report dissatisfaction with campus mental health resources.
+
+	\item\textbf{Research Experience by Family Members (WGM vs M):} Men reported somewhat higher rates of family research experience in college than women and gender minorities.
+\end{itemize}
+
+
+\noindent\begin{tabular}{ccccc}
+\textbf{Sexual orientation (WGM vs M):}  & Heterosexual & Bisexual & Homosexual & Other \\
+\hline
+WGM: & 38\% & 44\% & 6\% & 13\% \\
+M:  & 70\% & 17\% & 5\% & 9\% \\
+\hline
+\end{tabular}
+
+\section{Other Survey Results}
+\noindent\underline{\textbf{Wellbeing:}}
+\begin{itemize}
+	\item \textbf{Stress:} Respondents reported their average stress level as 4 on a scale of 1 to 10, with the primary source of stress being classes, and lesser contributions from research, social situations, family, and finances.
+	\item \textbf{Physical Health:} 5\% report having been impacted by physical health issues or disabilities (respondent examples: illness, PTSD, and bipolar disorder).
+	\item \textbf{Mental Health:} 33\% report having been impacted by mental health issues. A little over a third of those who chose to elaborate indicated that they suffered from depression. One respondent reported that ADHD had affected their studies, while another reported on anxiety.
+	\item \textbf{Accommodations:} 18\% report having sought academic accommodations through the Dean of Students office for mental and/or physical health issues.
+\end{itemize}
+
+\noindent\underline{\textbf{Age:}} (note: the question neglected to include a “26 years and above” category.)
+\begin{itemize}
+	\item 92\% were 18-22 years old
+	\item 5\% were 23-25 years old and 3\% were under 18 years old
+\end{itemize}
+
+\noindent\underline{\textbf{Academic Year and Origin:}}
+\begin{itemize}
+	\item 26\% seniors
+	\item 50\% juniors
+	\item 24\% sophomores or lower
+	\item 16\% of respondents were transfer students
+\end{itemize}
+
+\noindent\underline{\textbf{Employment:}}
+\begin{itemize}
+	\item 3\% (1) employed full-time
+	\item 23\% (9) employed part-time
+	\item 74\% (29) not employed
+\end{itemize}
+
+\noindent\underline{\textbf{Economic Background:}}
+\begin{itemize}
+	\item 8\% (3) had family incomes below \$50k, including 3\% with income below \$25k.
+	\item 19\% (7) had families with incomes between \$50-100k
+	\item 19\% (7) had families with incomes between \$100-150k
+	\item 17\% (6) had families with incomes between \$150-300k
+	\item 11\% (4) had families with incomes above \$300k
+	\item 25\% (9) were unsure about their family's income situation
+\end{itemize}
+
+\noindent\underline{\textbf{Parents/Guardians Education:}}
+\begin{itemize}
+	\item 15\% (6) had completed high school or had some college education.
+	\item 13\% (5) had an undergraduate degree.
+	\item 72\% (26) earned a graduate or professional degree.
+	\item About one third had immediate family who had performed research in college.
+\end{itemize}
+
+\section{Student Experiences/Recommendations}
+\noindent\underline{\textbf{Unwelcoming Experiences:}} (all quotes are from women or gender minorities)
+\begin{itemize}
+	\item ``It has really only been one professor I’ve had in my time with the department who just made sexist comments."
+	\item ``A professor asked me an inappropriate question."
+	\item ``I’m a transfer student … and I feel like I don’t really belong in my physics classes. I’ve been shut down in my homework groups (even when I am right) …"
+\end{itemize}
+
+\noindent\underline{\textbf{Individual Student Recommendations:}}
+\begin{itemize}
+	\item More resources and preparation for students intending to continue in Physics (career options, typical portfolios of alumni, graduate application guidance, earlier Physics GRE prep assistance, etc).
+	\item Please allow access to the roof for astronomical research. Also, if the department could implement a more straightforward path to get involved in research, that would help many majors.
+	\item Be clear about resources within the department with regard to climate issues. Also, be clear about how safe those resources are and how willing they are to help.
+	\item Be better prepared to deal with students whose academic backgrounds deviate from the norm.
+	\item Make the program more friendly to students uninterested in physics graduate school, since there is no engineering school here.
+\end{itemize}
+
+For full text answers to free response questions see Appendix B (\cref{sec:free_response_majors}).
+
+\chapter{Undergraduate Intro Student Survey}
+\label{ch:intro}
+\section{Demographics}
+\noindent\underline{\textbf{Basic Demographic Data:}}
+\begin{itemize}
+	\item 29 students completed the survey (42 began the survey).
+	\item 28\% female, 69\% male, and 3\% non-binary (7\% of these identify as transgender).
+	\item 86\% heterosexual, 7\% bisexual, and 7\% other.
+	\item 86\% white, 7\% Asian or Asian-American, and 7\% as Hispanic/Latino, Native American, or mixed.
+\end{itemize}
+
+\noindent\underline{\textbf{Campus Demographics:}} (not from physics surveys) – class of 2016
+\begin{itemize}
+	\item \textbf{Gender:} 55\% women, 45\% men.
+	\item \textbf{Race/ethnic background:} 7\% African-American, 9\% Hispanic or Latino, and 12\% Asian or Asian-American.
+\end{itemize}
+
+\section{Notable Gender Differences}
+
+The table below shows the responses to three questions. 0 means strongly disagree and 10 means strongly agree. WGM means women and gender minorities and M means men. Women and gender minorities experience slightly higher levels of discomfort, harassment, and discrimination than men in the department, but to a much lesser degree than the graduate students and physics majors report.\\
+
+\noindent \textbf{Questions:}\\
+\noindent \textbf{A:} I have been made to feel uncomfortable (not rising to the level of harassment or discrimination) in the Physics Department.\\
+\noindent \textbf{B:} I have been harassed in the Physics Department.\\
+\noindent \textbf{C:} I have felt discriminated against in the Physics Department.\\
+
+\noindent\begin{tabular}{cccc|ccccccccccc}
+  & Responses & Question & Mean & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+\hline
+ & 11 & A & 1.55 & 6 & 1 & 2 & - & - & - & 2 & - & - & - & - \\
+WGM: & 11 & B & 0.55 & 10 & - & - & - & - & - & 1 & - & - & - & - \\
+ & 11 & C & 0.55 & 10 & - & - & - & - & - & 1 & - & - & - & - \\
+\hline
+ & 20 & A & 0.5 & 15 & 3 & - & - & 1 & 1 & - & - & - & - & - \\
+M: & 20 & B & 0.0 &20 & - & - & - & - & - & - & - & - & - & - \\
+ & 20 & C & 0.0 & 20 & - & - & - & - & - & - & - & - & - & - \\
+\hline
+\end{tabular}
+\\
+
+\begin{itemize}
+	\item \textbf{Major and Year:} A factor of two more male respondents are considering majoring in physics than women and gender minorities. Furthermore, the men were more likely to be freshmen, whereas the women tended to be sophomores.
+	\item \textbf{Department Activities:}  Men were significantly more likely to participate in physics department related activities (e.g. PhysicsFest, SPS, MakerSpace, tutoring) than women: 86\% of women participated in no activities, while only 25\% of the men did not.
+	\item \textbf{Gender Climate:} One woman or gender minority reported harassment/\\discrimination at a level of 6 out of 10. Furthermore, women and gender minorities are more likely than men to report having been made to feel uncomfortable and at a higher level.
+	\item \textbf{Health Issues:} Women and gender minorities sought accommodations for mental and physical disabilities at a rate of 30\% compared to 5\% for men. Furthermore, over half of women and gender minorities and a third of the men reported that mental health issues impacted their academic performance. Moreover, more than half of women reported inadequate campus mental resources, whereas all men indicated satisfaction with these resources.
+	\item \textbf{Survey Completion:} We also note that participation of women in the survey decreased by 50\% by question 6, whereas men completed the survey at a 100\% rate.
+\end{itemize}
+
+\section{Other Survey Results}
+\noindent\underline{\textbf{Economic Background:}}
+\begin{itemize}
+	\item 0\% had family incomes below \$50k.
+	\item 15\% had families with incomes between \$50-100k.
+	\item 15\% had families with incomes between \$100-150k.
+	\item 31\% had families with incomes between \$150-300k.
+	\item 8\% had families with incomes above \$300k.
+	\item 31\% were unsure about their family's income situation.
+\end{itemize}
+
+\noindent\underline{\textbf{Parents/Guardians Education:}}
+\begin{itemize}
+	\item 24\% had an undergraduate degree.
+	\item 76\% had a graduate or professional degree.
+	\item Roughly half had immediate family who performed research in college.
+\end{itemize}
+
+\noindent\underline{\textbf{Employment:}}
+\begin{itemize}
+	\item None of the respondents were employed full-time, but 21\% were employed part-time, and the rest were not employed.
+\end{itemize}
+
+\noindent\underline{\textbf{Academic Year and Origin:}}
+\begin{itemize}
+	\item 60\% freshmen.
+	\item 30\% sophomores.
+	\item 10\% juniors and seniors.
+	\item None of the respondents were transfer students.
+\end{itemize}
+
+\noindent\underline{\textbf{Age:}}
+\begin{itemize}
+	\item 21\% were 18 year or under.
+	\item 75\% were 18-22 years old.
+	\item 4\% were 22-25 years old.
+\end{itemize}
+
+\noindent\underline{\textbf{Major:}}
+\begin{itemize}
+	\item 40\% of respondents are planning to major in physics.
+	\item 54\% do not plan to major in physics.
+	\item 5\% are undecided.
+\end{itemize}
+
+\section{Student Experiences}
+\begin{itemize}
+	\item \textbf{Department Climate:} A small number of respondents, but more than one, reported being made to feel uncomfortable in the department; however, they did not choose to elaborate. A majority of respondents report that they feel the department is welcoming.
+	\item \textbf{Stress:} Respondents reported an average stress level of slightly under 4 on a scale of 1 to 10, with primary sources of stress being classes and social situations.
+	\item \textbf{Accommodations:} 13\% reported having sought accommodations from the Dean of Students office.
+	\item \textbf{Physical Health:} 10\% report having been impacted by physical health issues, such as difficulty paying attention in class, and having to miss classes for doctor appointments.
+	\item \textbf{Mental Health:} 41\% report having been impacted by mental health issues. Half of those who chose to elaborate report anxiety or anxiety-type issues as having a significant impact on their studies, while a quarter reported depression (including chronic) affecting their studies. ADHD was also reported as having an impact on studies.
+	\item \textbf{PTSD Caution:} One student reported that unexpected loud noises during lecture demonstrations are upsetting to students with PTSD or who are on the autism spectrum.
+\end{itemize}
+
+For full text answers to free response questions see Appendix C (\cref{sec:free_response_intro}).
+
+\chapter{Appendix}
+\label{ch:appendix}
+\section{Appendix A: Graduate Students}
+\label{sec:app_A}
+\subsection{Full Notes from Focus Group}
+\begin{itemize}
+	\item Community:
+		\begin{itemize}
+			\item ``Wine \& Cheese" party was an important part of the departmental culture
+				\begin{itemize}
+					\item With renaming, the event is less popular among faculty
+					\item Backlash against religious inclusivity because of the name change (and the ensuing change in popularity)
+					\item Event was challenging to coordinate and implement, but important to community development
+					\item Recognition of issues around a department-sponsored event with alcohol
+				\end{itemize}
+			\item PGSA runs the risk of becoming defunct without solidified support (financially and administrative) 
+			\begin{itemize}
+				\item Events rely on a small group 		
+			\end{itemize}
+			\item Student socialization seems driven by a student’s funding situation (i.e. TA vs RA) or which research group they belong to
+			\item First-year students feel isolated because second-year students grade their assignments (potential FERPA violation, of significant concern)
+			\item There’s a significant difference in approaches from advisors regarding socialization 
+			\item Significant divide between those who entered before or after 2015
+			\item Role of faculty in developing community: provide the support and continuity for programming
+			\item Clear divide between faculty who encourage community development and socialization and those who are more withdrawn from the department
+		\end{itemize}
+	\item Gender:
+		\begin{itemize}
+			\item Some male faculty seem to have made a strong attempt to avoid any non-academic conversation with female students – pendulum swung too far perhaps?
+			\item When issues have been raised by female students, there’s a sense of “just don’t worry about he’s a jerk” response from male colleagues (other students)
+			\item Perception of difference between the level of work and effort required of male students vs. female students. Particular example of two students who were performing equally, female student was required to take more classes and ended up leaving the program unfunded while male student got an advisor and progressed through the program
+			\item Comments from faculty and staff around gender performance and norms
+		\end{itemize}
+	\item Qualifying Exams:
+		\begin{itemize}
+			\item Students with a research advisor seem to do better, and male students seem to get advisors sooner than female students
+			\item The process for evaluating students post-qualifying exams is nebulous, lacks firm standards, and is opaque. Sense from students that the conversations are based on experiences with students, which skews to favor males because they tend to be more involved with the faculty.  
+			\item Lack of transparency around scores, pass rates, and the process in general (with the exception of a leaked email)
+			\item Perception that theoretical students do better than experimentalists
+		\end{itemize}
+	\item General observations/suggestions:
+		\begin{itemize}
+			\item Could increase outreach to non-academic alumni and partners to bolster career advising
+			\item Departmental support for student socialization
+				\begin{itemize}
+					\item Fall social event could be moved out of private clubs/residences and instead to a reserved area of a restaurant 
+					\item Department could work with Student Leadership Development office to secure more permanent funding 
+				\end{itemize}
+			\item Qualifying exams seem to be a significant source of discontent, stress, and perceived discrimination
+				\begin{itemize}
+					\item Clarify evaluation criteria and process
+				\end{itemize}
+			\item Research groups/advisors seem to be central to student success, both academically and socially.  Develop policies and practices that formalize the selection process and have an alternative path that still includes advising for students who are unsure of their research interests. 
+			\item Continue departmental conversations around diversity and inclusion
+			\item Incentivize participation in survey efforts to increase the participation rate
+		\end{itemize}
+\end{itemize}
+
+\subsection{Free Response to ``In what ways were you made to feel uncomfortable in the department?"}
+\label{subsec:uncomfortable}
+\begin{itemize}
+	\item “Sometimes people make comments about race and gender, but they've gotten better about it.”
+	\item “The department makes it very clear that it wants only a certain mold of student.” Students who have learning disabilities, are bad test takers or writers, etc. are shamed by classmates and professors after the qual and their defense, which should not be tolerated.
+	\item “This department needs to work harder at seeing women as equals. I have little to no experiences here where that is the case. A "code of conduct" does nothing to help. The value of students from highest to lowest has always been male grads, male undergrads, then the female grads \& undergrads. Leads to a really crappy department, and that doesn't take into account any other factors like race, socioeconomic background, sexual orientation, etc. which is also an issue here. Most of us knew this, and fully realized that 	was a way to cover the departments butt and make it look good while changing nothing.” The student goes on to say that this has to start in classes, for example: if someone asks a professor for help on something that a female student has also had clarified, the professor can point them to the female student for help instead. This can lead to female students being seen more as intellectual equals. “But since lots of sexism comes from the patriarchal society we live in and the unconscious bias that is passed along it would be a small way to plant the seed that women have value, rather than the present case where they seem to do not here. Obviously this will not help when working in research groups where there is little to no care about the treatment of biases against students.”
+	\item “I've been complimented on my physical [appearance] by members of the department in 	ways that have made me feel uncomfortable. I've been asked about my relationship status in ways that made me feel uncomfortable. I've been told to behave ‘like a lady’ by members of the staff. I've been told that I'm not acting ‘cheery’ enough when trying to address a concern about an issue I was having. And these are the ones that I can remember off the top of my head.”
+	\item “A physics professor made derogatory remarks concerning another person's religious beliefs[...] This has made me uneasy about expressing my religious beliefs for fear of being discredited.”
+	\item “Considered slow learning.”
+	\item “We have a very sexist and bigoted faculty member who makes inappropriate comments to most women in the department, and really needs to retire.”
+\end{itemize}
+
+\subsection{Free Response to ``Do you have any suggestions or comments you would like the Physics Department to consider?"}
+
+\begin{itemize}
+	\item “Professors should keep their websites up to date, and make it clear if/when they are looking for students. I know the standard response is ‘just talk to the professor’, but that is difficult for people with anxiety, and students who don't yet know how to advocate for themselves, especially first-generation college students.”
+	\item “I would like the department and community to remember that while physics is an important part of our lives it should never be the thing from which we solely define our self worth. Pursuing activities outside of physics like hobbies, friends, and family are all important parts of a healthy lifestyle, and spending time on them should not be considered a waste of time by the community. The constant one-upmanship of students and professors competing to have spent the most time working often gives rise to an unhealthy environment where no one can live up to the standards of work 	believed to be 'normal'. Most people work far better, and are far happier, when they have some balance in their lives.”
+	\item “Please get rid of the qualifying exam. Replace with oral defense based on 	research.
+
+“Also actively attempt to build relationships with companies in industry. Most jobs are attained from direct connections. The faculty should attempt to make connections with companies to allow for better placement of their students who choose not to follow the ‘traditional’ (or should I say non-traditional) path of 	employment post degree. Don't just rely on the ‘Careers Center’. Physics professors should have direct contact with members in companies across the USA.
+
+“Consider allowing students enter the program to only attain a masters in 	physics or a masters in combination with computer science or applied 	physics programs. Or for undergrads to attain a masters with one year extension to their undergrad degree. Since the college doesn't presently have an engineering school you could potentially greatly increase your roll of students which effectively increases the amount of possible money the department has access to. That is if the dean and college plays nice! :D”
+	\item “The department has been welcoming without sacrificing rigor and academia. I would like this to continue. I would like the Physics Department's excellent professors and research facilities/opportunities to continue to be at the forefront of our focus and concerns. Climate is important and focusing on it will hopefully not adversely affect other areas of the department.”
+	\item “Make clear in our contracts a commitment to service to the department. The PGSA is effectively dead without volunteers and without any incentive we get the same handful of volunteers organizing everything.”
+	\item “Be context sensible. Each person is unique. What works for A may not only fail for B but it can also be detrimental if applied to B.”
+	\item “I feel that some international students do have some issues with talking with staff or professor, due to the language. This may let them feel diffident.”
+\end{itemize}
+
+\subsection{Free Response to ``Have you ever considered leaving the graduate program?"}
+\label{subsec:leave}
+\begin{itemize}
+	\item “It's hard to explain. I don't think I can without revealing who I am, and I'd rather not do that while I depend on the department for my livelihood. If there's an exit interview when I graduate, I'll explain then.”
+	\item “Numerous current and former students who are friends of mine have been treated poorly in the department, often as a result of their gender. One was even forced to leave the program as a result of harassment and the school’s response was completely inadequate. Even though the professor and postdoc directly involved were ultimately asked to leave there was never any action taken that would warn the community about them. They weren’t fired so they quickly found other employment where they can offend again. In fact the postdoc now has a position at ODU and remains in a position where he could assault or harass people again. I do not think W\&M or any of our department ever warned ODU that this person is a serious threat to their community. We have also kept a professor in the department who retaliated against the student when they made a Title IX report. Title IX also made the reporting process a bureaucratic hell for the 	reporting student and was a large part of their reason to leave. The people in our community who harm others in these ways must be publicly expelled from the community, and not merely swept under the rug and moved to different universities. These types of events have made me strongly question whether physics is a community I wish to be belong to.”
+	\item “There are so many and they won't be here. One example is being told that I 	shouldn't be here. Just a few examples of this: I am too stupid, don't come from an ‘educated’ family by WM standards, my gender/race, not looking like physics person should, grad school is something that some either deserves or doesn't regardless of what they are capable of and I don't deserve it for (insert various reasons here). I have not been here for a single year when it this hasn't happened.
+
+“Another is the overall treatment I have seen and gotten from people here. No one wants to be in an environment like this.”
+	\item “Over the course of my research, I have felt uncertain of my funding situation and whether or not my research would reach fruition in a timely manner, or at all. When I joined my research group, it was with the impression that the group would acquire grant funding soon, but unfortunately I have never had the good fortune of being supported by a grant. Instead I have been continually funded by teaching assistantships. While I am grateful for the teaching assistantships providing my stipend, I believe that the teaching burden has hampered my research and delayed my graduation [...] Over the past year I have attempted to ignore any professional activities that I deem peripheral to my graduation, such as attending conferences, long group meetings, and the William \& Mary Graduate Research Symposium. I have done this because I felt the necessity to focus on research and also that those activities provided a negligible advantage to my career. I currently believe that my research project is a dead-end, but I have progressed too far to change the topic. I have ultimately stayed in the physics program at William \& Mary hoping to graduate based on the considerable effort I have put forth towards my research, while being extremely skeptical over whether or not my experiment will reach its goal. I have stayed in the program hoping to justify the past several years of work and hoping to achieve a brighter future for my career after graduation. My goal is now to graduate as quickly as possible and use the skills I acquired here to pursue a more lucrative career in industry, and hopefully avoiding dead-end projects. I am not open to considering accepting any postdoctoral positions or any job prospects in academia. I have felt as though I have had little control over the outcome of my experiment and that it has negatively affected my time to graduate, and I wish the department had more power and ability to intervene and expedite the graduation process.”
+	\item “There have been several times when I've felt like the guidance I have received has not been in my best interest, but instead in the best interest of the research group, or the university. At those times, I've seriously considered leaving the program.”
+	\item “Was extended a job offer, but decided that I wanted to complete the program in the end.”
+	\item “Frustration in my research and a feeling of lack of support towards finishing. My PhD was delayed by about a year from what I had originally planned. Early in my experiment I proposed spending [a few thousand dollars] to acquire tools and equipment to build the experiment. My advisor said hard work and borrowing from others would suffice and opted to not spend the money. My feeling is not spending the money early in the experiment cost me time (slowing down the experiment) and ultimately cost my advisor and the department more money by keeping me here longer.”
+	\item “Stress.”
+	\item “Imposter syndrome and feeling like I'm not here for the right reasons.”
+	\item “It's stressful, I don't know what I'm doing here, I don't think I could be successful even if I knew what I wanted.”
+\end{itemize}
+
+\subsection{Free Response to ``Do you have any opinions or suggestions on the Physics Department's graduate qualifying examination  (i.e. ``the qual") or the possibility of replacing the current exam with an alternative such as an oral discussion on your summer research or a thesis proposal with committee?"}
+\label{subsec:qual}
+
+\begin{itemize}
+	\item ``I would have preferred an oral examination on my research that summer. I hated having to quit research to study for the qual."
+	\item ``I find the current iteration of the qualifying exam to be an outdated model. It is designed to assess a student's knowledge of physics up through their first year of classes, but it tests nothing that wasn't already examined in classes. Passing your graduate classes and your research activities should be how we evaluate physics ability. Cramming for a month to briefly recall material is not a productive use of time, and in no way reflects how physics is actually done. When research is being done a physicist has access to all their resources and can take their time to carefully understand them instead of attempting to recall them from memory in a high stress timed environment. 
+
+
+``Qualifying exams seem to survive as a form of academic hazing with a "We had to do it and so should you" mentality. These exams are extremely stressful and I have seen numerous students break down from the strain. Nothing is gained from this practice and no one becomes a better scientist. These gateway exams have also been shown to have a discriminatory effect on women and make reaching gender parity in our field even more difficult. Further these exams are geared solely towards theorists who are not the majority of physicists. Nowhere does this exam ask a theorist how to run or design an experiment, but experimentalists are asked to prove only that they can complete theory problems. 
+
+``I am strongly in favor of removing the current qualifying exam as it serves little purpose that classes cannot adequately serve. It is an artificial and discriminatory barrier that wastes large amounts of time that could be better spent on research. If the department still believes a student passing their graduate courses is not sufficient proof of their worthiness to continue on to a PhD, then I believe that it would be far better to have an oral discussion with a student on their first summer of research to examine their ability to complete the research needed to earn a PhD. If a qualifying test must be applied we must ensure that it is testing the student's ability to become a scientist, and not their ability to memorize many equations and techniques for a brief period of time."
+	\item ``The qual like defenses should take into account that some students have disabilities or are not good test takers. Presently, they are completely discriminated and shamed. This adds way too much pressure to these specific students. I am not sure how to recommend working around this, and one would have to worry about people hearing about some "shortcut" or help and using it when they really don't qualify for it.
+
+``I am not a huge fan of replace it with something that is a discussion of one's summer research or thesis proposal. That is the definition of the first annual review, making that a seemingly pointless proposal or a backwards way of saying we are just getting rid of it.
+
+``I have heard of some places that have a mix of written and oral testing, only written test, only oral test, and some that don't have one at all. Depending upon the student there is a different option on each, one will never find a solution that everyone likes. But while the qual is a daunting and stressful task, it is something that everyone who passes it is very proud of.
+
+``In talking with students outside WM, often places without a qual are seen as watering down their departments. In some ways that is going with the horrify culture of education at WM and other places of giving out A's for grads, students never having to learn things, really having no value towards education and giving degrees to anyone like candy on Halloween."
+	\item ``The department's qualifying exam should be discontinued and replaced with an oral defence of the student's upcoming dissertation work. The present system puts to much weight in book or theoretical knowledge. This one fact causes the test to favor students with a higher theoretical aptitude. Which effectively negatively reinforces which skill sets are valued in the department. Some students have a more hands on approach and excel at experimental based problem solving. The current qualifying exam format doesn't allow for "hand-on problem solving" based testing. An oral defence could provide a platform where both theoretical and experimental skill sets could be held in equal regard. The prep for such an oral defence would require considerable theoretical background reading but also could require some physical deliverable. Such a deliverable could be based either on an initial period of research where both theory and experimental students could apply their skills to show that they could be a Ph.D candidate." 
+	\item ``I like the qual, would prefer it to an oral presentation."
+	\item ``I believe some measure like the qual needs to exist as a final check before letting graduate students transition to full time academic research. For a successful doctoral candidate they need three things.
+
+``1) They need to be proficient in graduate level physics knowledge which can be assess by their performance in their courses.
+
+``2) They need clearly define research goals. This need not be a detail multiyear plan; however it needs to state who their advisor is, what their research project is about, and if possible a timeline to degree.
+
+``3) They need to demonstrate the ability to learn new material and communicate their findings. I suggest short group research meetings twice a month where students discuss a recent paper in their field with their research group.
+
+``My opinion is that the qualifying exam (as is) only addresses issue one which is a redundant check of the first year classes."
+	\item ``I think a qualifying exam is more appropriate in a more competitive environment. The qual, from what I heard from professors and other graduate students, is more of a formality which needs to be studied for but will not really impact one's future in the department. I think a thesis proposal would be more interesting and a better use of my time."
+	\item ``Oral discussion with a committee"
+	\item ``I believe that, as long as the student taking the qualifying exam is kept anonymous to the people grading the test, the qualifying exam is a good way to measure the test taking and problem solving ability of the graduate student.
+
+``However, if an individual is not a good test taker or does not perform well under stressful timed activities, this might disqualify an otherwise promising student. An individual's ability to take a test might not directly correspond to their ability to successfully carry out original research.
+
+``This could be where an oral thesis proposal could help. This might be more of a direct measure of a student's aptitude and interest in the research they intend to carry out. However, this would take away the anonymity of the student and might introduce bias and (completely hypothetically) certain prejudices when judging the student.
+
+``It might be better to introduce both and work on some kind of a points system. The qualifier and thesis proposal could count towards a combined score. The anonymous qualifier would measure the raw problem solving ability while the thesis proposal could measure the students research preparedness, interest, and most importantly excitement about the research they want to do here at William and Mary."
+	\item ``I understand that the first round of grading is done anonymously, but there is clearly some form of gender bias buried in the test. Based on my informal surveys and discussions, women pass for the first time at an alarmingly lower rate than men. I don't know what causes this discrepancy, but there is clearly some underlying problem that
+needs to be addressed.
+
+``An oral discussion seems problematic, because I don't see how that can be as transparent as grading a written qual. With a written qual, you are initially graded anonymously, and that is followed by a holistic analysis of your performance in the program; however, if you have simply an oral discussion with a committee, whether or not you pass is determined entirely by your small committee pool, and the possibility of personal biases and varying expectations among faculty members affecting whether or not a specific student passes is much higher."
+	\item ``I think either an oral discussion of summer research (I'm really a fan of this idea) or a thesis proposal would be fantastic alternatives to the qual. This would should the student's aptitude for research much more than a written test."
+	\item ``The qual starts too early. We never have classes starting before 9:30 am, so starting the qual at 9:00 am is difficult."
+\end{itemize}
+
+\subsection{Free Response to ``Why have your career plans changed?"}
+
+\begin{itemize}
+	\item “My experience here has shown me [how] horrible college education can be. And how discriminatory large university are. Also work life balance, people like it and that seen or allowed.”
+	\item “Originally wanted to move into full time research, but due to federal funding for basic science research at the university level that really is no longer an option. Combine that with the true number of full tenure positions that open up during a given year and the number of qualified candidates that apply. The university system just doesn't have enough of a turn over to be a viable option any more for permanent full time employment.”
+	\item “With the age increasing, I realized that what I planned to get is not really what my interests are.”
+	\item ``I used to know exactly what I wanted to do and now I'm not sure if I can succeed at it or if I even want to."
+	\item ``Just talking with some older graduates and the job they got after they graduate, I think it might be better to switch to industry."
+\end{itemize}
+
+\subsection{Free Response to ``What would make you feel more safe at work?"}
+
+\begin{itemize}
+	\item ``There are specific people I wish would leave me alone, but I don't want to deal with the fallout of saying this."
+	\item ``Regularly changing the grad student office access codes (maybe annually?), and communicating to grad students that these codes should not be shared, the doors should not be propped open, and that strangers should not be let in."
+\end{itemize}
+
+\section{Appendix B: Undergraduate Majors}
+\label{sec:free_response_majors}
+
+\subsection{Free Response to ``In what ways were you made to feel uncomfortable in the Department?"}
+\begin{itemize}
+	\item “It has really only been one professor I’ve had in my time with the department who just made sexist comments.”
+	\item “A professor asked me an inappropriate question.”
+	\item “I'm a transfer student from an outside major and I feel like I don't really belong in my physics classes. I've been shut down in my homework groups (even when I am right), but I don't know if that's because I'm a non-major, or because I'm a woman (the group was mostly all guys), or because they happen to be jerks.” This student also feels like they are an outsider and do not have the same opportunity to interact with physics peers because they are not in the same lab course as their peers.
+\end{itemize}
+
+\subsection{Free Response to ``Do you have any suggestions or comments you would like the physics department to consider?"}
+\begin{itemize}
+	\item “More resources and preparation for students intending to continue in Physics (career options, typical portfolios of alumni, graduate application guidance, earlier Physics GRE prep assistance, etc)”
+	\item “Please allow access to the roof for astronomical research. Also, if the department could implement a more straightforward path to get involved in research, that would help many majors.”
+	\item “I appreciate how some of the departments professors will adjust the scaling of the various aspects of a total grade, like midterms finals and homework, in order to benefit the student. It takes away a great deal of pressure about having to be perfect for every assignment or exam in order to get a good grade."
+	\item “Be clear about resources within the physics department with regard to climate issues. Also, be clear about how safe those resources are and how willing they are to help. I am not expecting the department to ask students once a week if they have been harassed, but I wish it seemed as though professors and other faculty wanted to know when there is something they could do.”
+	\item “While I understand the need for upholding standards of education, perhaps be better prepared to deal with students whose academic backgrounds deviate from the norm, not subjecting him or her to months of [bureaucratic] hassle.”
+	\item “I appreciate how accommodating many of my professors in this department have been. I [haven't] had this experience with other departments. Thank you for understanding my situation professors.”
+	\item “Small Hall is my home and I love spending time in it... that said I think it could use some lockers.”
+	\item “Making the program more friendly to students uninterested in physics graduate school since there is no engineering school here.”
+	\item “I feel like some of the physics undergrads [feel] like they are at the pinnacle of science and they are a bit arrogant as a result.”
+\end{itemize}
+
+\section{Appendix c: Undergraduate Intro Courses}
+\label{sec:free_response_intro}
+
+\subsection{Free Response to ``Do you have any suggestions or comments you would like the physics department to consider?"}
+\begin{itemize}
+	\item “More availability for help in PHYS 101.”
+	\item “Please warn people before loud noises in demonstrations, because loud noises are not good for many people”, such as those with autism.
+	\item “Josh Erlich did a great job of making his intro class as welcoming and interesting as possible for all of his students”
+	\item “I think the intro physics lab course could be greatly improved.”
+\end{itemize}
+
+\end{document}

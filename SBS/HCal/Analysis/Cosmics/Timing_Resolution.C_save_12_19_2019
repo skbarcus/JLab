@@ -1,0 +1,696 @@
+#include <TH2F.h>
+#include <TChain.h>
+#include <TCanvas.h>
+#include <vector>
+#include <iostream>
+#include <TSystem.h>
+#include "hcal.h"
+#include <vector>
+#include <TStopwatch.h>
+#include <TMath.h>
+#include <TF1.h>
+#include<TStyle.h>
+#include<TList.h>
+#include<TChain.h>
+using namespace std;
+
+Int_t timing_method = 2; //0 = TDC timing using trigger copy as ref ch. 1 = fADC timing using a Landau to find the peak location for each hit (require a TDC hit too). 2 = TDC timing with fADC cuts above and below target PMT requiring an fADC peak and the 6 surrounding tubes requiring no fADC peak. Ref ch is avg of above and below TDC times. 3 = fADC integrals. Takes integral of each fADC hit (requiring TDC hit too) and makes a histo for each PMT. 
+Double_t entry;
+Int_t gCurrentEntry = 0;
+Int_t DISP_MIN_SAMPLE = 0;
+Int_t DISP_MAX_SAMPLE = 20;
+const Int_t DISP_FADC_SAMPLES = (DISP_MAX_SAMPLE-DISP_MIN_SAMPLE);
+Int_t min_time = -300;
+Int_t max_time = 50;
+Int_t bins = 100;
+Double_t fadc_int_max_cut = 1000;
+Double_t fadc_int_min_cut = 500;
+Int_t r,c,n,idx;
+Int_t nevt;
+Int_t refrow = 100;     //Counting from 1. 
+Int_t refcol = 100;     //Counting from 1.
+Int_t timerow = 1;    //Counting from 1.
+Int_t timecol = 9;    //Counting from 1.
+const Int_t kNrows = 12;
+const Int_t kNcols = 12;
+const Int_t channels = kNrows * kNcols;
+const Int_t maxevts = 10000;
+Double_t ind_res[144];
+//vector<double> temp(0,0);
+//vector<vector<double>> timing(144,temp);
+//Double_t times[1000000][144] = {};
+Double_t f1_res = 0.112;//0.112
+Double_t fadc_res = 4.;
+TChain *T = 0;
+std::string user_input;
+Int_t skip = 3;                            //Gives number of lines to skip at top of data file. 
+Int_t nlines = 0;                          //Counts number of lines in the data file. 
+Int_t ncols;                               //Set how many columns of data we have in the data file.
+char str[1000];                           //Variable to read lines of the data file.
+Float_t mod[channels], pedestal[channels];
+Float_t mod_temp, pedestal_temp;
+
+//Create Gaussian to fit the timing resolution.
+Double_t fit_gaus(Double_t *X,Double_t *par) 
+{
+  Double_t fitval = par[0]*TMath::Exp(-0.5*pow(((X[0]-par[1])/par[2]),2));
+  return fitval;
+}
+
+TH1F *histos[kNrows][kNcols];
+
+TH1F* MakeHisto(Int_t row, Int_t col, Int_t bins)
+{
+  TH1F *h = new TH1F(TString::Format("h%02d%02d",row,col),
+		     TString::Format("%d-%d",row+1,col+1),bins,DISP_MIN_SAMPLE,DISP_MAX_SAMPLE);
+  h->SetStats(0);
+  h->SetLineWidth(2);
+  return h;
+}
+
+//Create Gaussian to fit the timing resolution.
+Double_t fit_landau(Double_t *X, Double_t *par) 
+{
+  //Double_t landau =0;
+  //Double_t landau = TMath::Gaus(par[0],par[1],par[2]);
+  Double_t landau = par[0]*TMath::Landau(X[0],par[1],par[2])+par[3];
+  return landau;
+}
+
+//TF1 **func_landau = new TF1*[channels];
+//TF1 *func_landau[channels] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 3);
+
+void Timing_Resolution(Int_t run = 501)
+//Int_t Test_Display(Int_t run = 290)
+{
+  //Define a new stopwatch.
+  TStopwatch *st=new TStopwatch();
+  st->Start(kTRUE);
+
+  FILE *fp;
+  fp = fopen("/home/daq/test_fadc/Pedestals.txt","r");
+ //Read in data.
+  while (1) 
+    {
+      //Skips the first skip lines of the file. 
+      if (nlines < skip)
+	{
+	  fgets(str,1000,fp);
+	  nlines++;
+	}
+      //Reads the two columns of data into x and y.
+      else
+	{
+	  //Read in the number of columns of data in your data file. 
+	  ncols = fscanf(fp,"%f %f", &mod_temp, &pedestal_temp);
+	  
+	  if (ncols < 0) break;    
+	  
+	  mod[nlines-skip] = mod_temp;
+	  pedestal[nlines-skip] = pedestal_temp;
+
+	  nlines++;
+	}
+    }
+
+  if(!T) 
+    { 
+      T = new TChain("T");
+      //T->Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));//325
+      //T->Add(TString::Format("rootfiles/fadc_f1tdc_%d_1.root",run));
+
+
+      //TChain chain("T");
+      //chain.Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));
+      //chain.Add(Form("rootfiles/fadc_f1tdc_%d.root",run));
+
+      
+      //============  Reading the Rootfile =======================//
+      
+      const TString rootfilePath = "/home/daq/test_fadc/rootfiles/";
+      std::ostringstream str;
+      str << rootfilePath<<"fadc_f1tdc_"<<run;
+      TString basename = str.str().c_str();
+      TString rootfile = basename + ".root";
+      cout<<basename<<endl;
+      //TChain* T;
+      //T = new TChain("T");
+      
+      Long_t split=0;
+      char* file = 0;
+      
+      //====adding splits rootfiles =======================//
+      
+      Long_t u=0;
+      while ( !gSystem->AccessPathName(rootfile.Data()) ) 
+	{
+	  T->Add(rootfile.Data());
+	  cout << "ROOT file " << rootfile << " added to TChain." << endl;
+	  u++;
+	  rootfile = basename + "_" + u + ".root";
+	}
+      
+      if(!T->GetEntries())
+	{
+	  cerr<< "No root file was found" << endl;
+	  return;
+	}
+      //==finish adding splits rootfiles=====================//
+
+
+
+
+      //T->Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));
+      T->SetBranchStatus("*",0);
+      T->SetBranchStatus("sbs.hcal.*",1);
+      T->SetBranchAddress("sbs.hcal.nsamps",hcalt::nsamps);       //Number of samples for given row-col
+      T->SetBranchAddress("sbs.hcal.a",hcalt::a);                 //Raw ADC amplitudes
+      T->SetBranchAddress("sbs.hcal.tdc",hcalt::tdc);             //Raw TDC value
+      //T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);
+      //T->SetBranchAddress("sbs.hcal.ledcount",&hcalt::ledcount);
+      T->SetBranchAddress("sbs.hcal.samps",hcalt::samps);         //RAW ADC samples
+      T->SetBranchAddress("sbs.hcal.samps_idx",hcalt::samps_idx); //Index in samples vector for given row-col module 
+      T->SetBranchAddress("sbs.hcal.row",hcalt::row);             //Row for block in data vectors
+      T->SetBranchAddress("sbs.hcal.col",hcalt::col);             //Col for block in data vectors
+      T->SetBranchStatus("Ndata.sbs.hcal.row",1);
+      T->SetBranchAddress("Ndata.sbs.hcal.row",&hcalt::ndata);    //???
+      std::cerr << "Opened up tree with nentries=" << T->GetEntries() << std::endl;
+      }
+
+  for(Int_t r = 0; r < kNrows; r++) 
+    {
+      for(Int_t c = 0; c < kNcols; c++) 
+	{
+	  histos[r][c] = MakeHisto(r,c,DISP_FADC_SAMPLES);
+	}
+    }
+
+  //idx = hcalt::samps_idx[m];
+  //n = hcalt::nsamps[m];
+  //gCurrentEntry = entry;
+  cout<<"Hello"<<endl;
+  //T->GetEntry(0);
+  //T->GetEntry(345345);
+  T->GetEntry(gCurrentEntry);
+  cout<<"There!"<<endl;
+  cout << "Displaying event " << gCurrentEntry << endl;
+  cout<<"ndata = "<<hcalt::ndata<<endl;                                  //Number of channels.
+  cout<<"row[] = "<<hcalt::row[16]<<"   col[] = "<<hcalt::col[16]<<endl;
+  cout<<"a[] = "<<hcalt::a[1]<<endl;
+  cout<<"tdc[] = "<<hcalt::tdc[1]<<endl;
+
+  n = hcalt::nsamps[0];
+  cout<<"n = "<<n<<endl;
+
+  idx = hcalt::samps_idx[0];
+  cout<<"idx = "<<idx<<endl;
+
+  nevt = T->GetEntries();
+  cout<<"Number of events = "<<nevt<<endl;
+
+  Float_t peak[kNrows][kNcols];
+  Double_t adc[kNrows][kNcols];
+  Double_t tdc[kNrows][kNcols];
+
+  TF1 **func_landau = new TF1*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      func_landau[i] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 4);
+    }
+
+  TH1F **htimes = new TH1F*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      htimes[i] = new TH1F(Form("htimes%d",i),Form("TDC Timing for Module %d",i),bins,min_time,max_time);
+    }
+  
+  TH1F **htimes_fadc = new TH1F*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      htimes_fadc[i] = new TH1F(Form("htimes_fadc%d",i),Form("fADC Timing for Module %d",i),bins,DISP_MIN_SAMPLE+10,DISP_MAX_SAMPLE*fadc_res);
+    }
+
+  TH1F **hfadc_integrals = new TH1F*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      hfadc_integrals[i] = new TH1F(Form("hfadc_integrals%d",i),Form("Integral of fADC for Module %d",i),1000,-2000,15000);
+    }
+
+  TH1F **htdc_fadc_cuts = new TH1F*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      htdc_fadc_cuts[i] = new TH1F(Form("htdc_fadc_cuts%d",i),Form("TDC times with avg of above and below TDCs for ref time with cuts on integral of fADC for Module %d",i),bins,-20,20);
+    }
+
+  /*
+  TCanvas* c1=new TCanvas("c1");
+  c1->SetGrid();
+
+  
+  TH1F *h1 = new TH1F("h1","h1",100,DISP_MIN_SAMPLE,DISP_MAX_SAMPLE);
+  h1->SetStats(0);
+  h1->SetLineWidth(2);
+  //return h1;
+
+  for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++)  
+    {
+      //cout<<"hello"<<endl;
+      h1->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+      //cout<<hcalt::samps[idx+s]<<endl;
+    }
+  h1->Draw();
+  */
+
+  /*
+  TH1F *htiming = new TH1F("htiming",Form("Timing Resolution for Ch r%d-c%d (ref ch r%d-c%d time - raw time)",timerow,timecol,refrow,refcol),bins,min_time,max_time);
+  //htiming->SetStats(0);
+  htiming->SetLineWidth(2);
+  */
+  Int_t hits[144] = {};
+  Double_t pedestals[144] = {};
+  Int_t no_tdc[144] = {};
+  
+  //Loop over all events.
+  //for(Int_t i=0; i<50000 ;i++)
+  for(Int_t i=0; i<nevt ;i++)
+    {
+      T->GetEntry(gCurrentEntry);
+      //T->GetEntry(11);
+      //T->GetEntry(665);
+
+      //Set arrays to zero;
+      for(r  = 0; r < kNrows; r++) 
+	{
+	  for(c  = 0; c < kNcols; c++) 
+	    {
+	      peak[r][c] = 0.0;
+	      adc[r][c] = 0.0;
+	      tdc[r][c] = 0.0;
+	    }
+	}
+
+      Double_t fadc_int[channels] = {};
+      //Find reference time.
+      //Loop over all channels and fill the arrays. Do this seperately so reference time is set for all channels.
+      for(Int_t j=0; j<hcalt::ndata; j++)
+	{
+	  r = hcalt::row[j]-1;
+	  c = hcalt::col[j]-1;
+	  idx = hcalt::samps_idx[j];
+	  n = hcalt::nsamps[j];
+	  adc[r][c] = hcalt::a[j];
+	  tdc[r][c] = hcalt::tdc[j];
+	  for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+	    {
+	      histos[r][c]->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+	      fadc_int[j] = fadc_int[j] + histos[r][c]->GetBinContent(s+1-DISP_MIN_SAMPLE);
+	    }
+	  //Subtract off avg pedestals.
+	  fadc_int[j] = fadc_int[j] - pedestal[j]*DISP_MAX_SAMPLE;
+	  //func_landau[j] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 4);
+	}
+
+      for(Int_t j=0; j<hcalt::ndata; j++)
+	{
+	  r = hcalt::row[j]-1;
+	  c = hcalt::col[j]-1;
+	  idx = hcalt::samps_idx[j];
+	  n = hcalt::nsamps[j];
+	  //adc[r][c] = hcalt::a[j];
+	  //tdc[r][c] = hcalt::tdc[j];
+	  
+	  //	  Double_t fadc_int[channels] = {};
+	  //Fill each PMT channel with its fADC data.
+	  /*
+	  for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+	    {
+	      histos[r][c]->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+	      fadc_int[j] = fadc_int[j] + histos[r][c]->GetBinContent(s+1-DISP_MIN_SAMPLE);
+	    }
+	  */
+	  Double_t ped_val = 0;
+	  //Get the pedestals.
+	  if(tdc[r][c] == 0)
+	    {
+	      for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++)
+		{
+		  ped_val = ped_val + histos[r][c]->GetBinContent(s+1);
+		}
+	      ped_val = ped_val/DISP_FADC_SAMPLES;
+	      pedestals[j] = pedestals[j] + ped_val;
+	      no_tdc[j] = no_tdc[j]+1;
+	    }
+	  //	  func_landau[j] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 4);//This kills code if many evts.
+	  if(timing_method == 1)
+	    {
+	      func_landau[j]->SetParameter(0,histos[r][c]->GetMaximum()*4.0);//Parameter setting the height scale (not 1:1). ~4800
+	      func_landau[j]->SetParameter(1,15);//Parameter finding the location of the peak. ~15
+	      func_landau[j]->SetParameter(2,1);//Parameter setting the width. ~1
+	      func_landau[j]->SetParameter(3,250);//Parameter measuring the pedestal. ~250
+	    }
+	  //cout<<"histos->GetMaximum() = "<<histos[r][c]->GetMaximum()<<endl;
+
+	  //func_landau[j]->SetParameter(0,histos[r][c]->GetMaximum());
+	  //func_landau[j]->SetParameter(1,histos[r][c]->GetMean());
+	  //func_landau[j]->SetParameter(2,histos[r][c]->GetStdDev());
+	  //	  histos[r][c]->Fit("func_landau","QM");
+
+	  //Fill the timing vector with the corrected times for each channel.
+	  if(tdc[r][c] !=  0)
+	    {
+	      //	      timing[j].push_back((tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res);
+	      //	      times[i][j] = (tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res;
+	      if((r != (refrow - 1) || c != (refcol - 1)))
+		{
+		  //cout<<"Event = "<<i<<"Module = "<<j<<endl;
+		  //		  histos[r][c]->Fit("func_landau","M");
+		  if(timing_method == 1)
+		    {
+		      histos[r][c]->Fit(func_landau[j],"Q");//Don't use M or get some issues that make code take forever.
+		    }
+		  if(timing_method == 3)
+		    {
+		      hfadc_integrals[j]->Fill(fadc_int[j]);
+		      /*
+		      if(j==76 && fadc_int[j]>100)
+			{
+			  cout<<"Event # "<<i<<" fadc_int[j] = "<<fadc_int[j]<<endl;
+			}
+		      */
+		    }
+		  //cout<<"Event "<<i<<" module "<<j<<". Peak position = "<<func_landau[j]->GetMaximumX()<<endl;
+		  //cout<<"par[0] = "<<func_landau[j]->GetParameter(0)<<", par[1] = "<<func_landau[j]->GetParameter(1)<<", par[2] = "<<func_landau[j]->GetParameter(2)<<", par[3] = "<<func_landau[j]->GetParameter(3)<<endl;
+		}
+	    }
+	  //Fill the histogram with the TDC times for the chosen channel (ref time - raw time).
+	  //if(tdc[r][c] !=  0 && (r != (refrow - 1) || c != (refcol - 1)) && (r == (timerow - 1) && c == (timecol - 1)) && tdc[r+1][c] != 0 && tdc[r-1][c] != 0)
+	  if(tdc[r][c] !=  0 && (r != (refrow - 1) || c != (refcol - 1)) && tdc[r+1][c] != 0 && tdc[r-1][c] != 0)
+	    {
+	      //	      htiming->Fill((tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res);
+	      if(timing_method == 0)
+		{
+		  htimes[j]->Fill((tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res);
+		}
+	      if(timing_method == 1)
+		{
+		  htimes_fadc[j]->Fill((func_landau[j]->GetMaximumX())*fadc_res);
+		}
+	      hits[j] = hits[j] + 1;
+	      //timing[j].push_back((tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res);
+	      //cout<<"Event "<<gCurrentEntry<<": Corrected time for hit in r"<<r+1<<"-c"<<c+1<<" = "<<"(tdc["<<refrow<<"]["<<refcol<<"] - tdc["<<r+1<<"]["<<c+1<<"])*"<<f1_res<<" ns = "<<(tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res<<"."<<endl;
+	      //cout<<"**** "<<(tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res<<" ****"<<endl;
+	    }
+	  //Cut on fADC integral, three vertical PMTs, and none of the six surounding PMTs. 
+	  
+	  //if(fadc_int[j]>5500. && fadc_int[j-12]>5500. && fadc_int[j+12]>5500. && tdc[r][c]!=0 && tdc[r+1][c]!=0 && tdc[r-1][c]!=0 && fadc_int[j-1]<5100 && fadc_int[j-13]<5100 && fadc_int[j+11]<5100 && fadc_int[j+1]<5100 && fadc_int[j-11]<5100 && fadc_int[j+13]<5100)
+	  if(timing_method == 2)
+	    {
+	      if(fadc_int[j]>fadc_int_max_cut && fadc_int[j-12]>fadc_int_max_cut && fadc_int[j+12]>fadc_int_max_cut && tdc[r][c]!=0 && tdc[r+1][c]!=0 && tdc[r-1][c]!=0 && fadc_int[j-1]<fadc_int_min_cut && fadc_int[j-13]<fadc_int_min_cut && fadc_int[j+11]<fadc_int_min_cut && fadc_int[j+1]<fadc_int_min_cut && fadc_int[j-11]<fadc_int_min_cut && fadc_int[j+13]<fadc_int_min_cut)
+		{
+		  htdc_fadc_cuts[j]->Fill((tdc[r][c] - (tdc[r+1][c]+tdc[r-1][c])/2.)*f1_res);
+		  //cout<<"&&&&&&&&&&&&&&&&&&&& "<<(tdc[r][c] - (tdc[r+1][c]+tdc[r-1][c])/2.)*f1_res<<endl;
+		}
+	    }
+	}
+      if(i%5000==0)
+	{
+	  cout<<i<<" events processed. "<<((double)i/(double)nevt)*100.<<" % complete."<<endl;
+	}
+      gCurrentEntry++;
+    }
+
+  /*
+  htiming->GetXaxis()->SetTitle("Time (ns)");
+  htiming->GetXaxis()->CenterTitle(true);
+  htiming->GetXaxis()->SetLabelSize(0.05);
+  htiming->GetXaxis()->SetTitleSize(0.06);
+  htiming->GetXaxis()->SetTitleOffset(0.75);
+  htiming->GetYaxis()->SetTitle("Number of Measurements");
+  htiming->GetYaxis()->CenterTitle(true);
+  htiming->GetYaxis()->SetLabelSize(0.05);
+  htiming->GetYaxis()->SetTitleSize(0.06);
+  htiming->GetYaxis()->SetTitleOffset(0.85);
+  */
+
+  if(timing_method == 1)
+    {
+      TCanvas* c1=new TCanvas("c1");
+      c1->SetGrid();
+      //func_landau[0]->Draw();
+      //histos[0][0]->Draw("same");
+      histos[timerow-1][timecol-1]->Draw();
+      
+      //func_landau[15]->Draw("same");
+      cout<<"func_landau par[0] = "<<func_landau[0]->GetParameter(0)<<", func_landau par[1] = "<<func_landau[0]->GetParameter(1)<<", func_landau par[2] = "<<func_landau[0]->GetParameter(2)<<endl;
+      cout<<"Peak Max = "<<func_landau[0]->GetMaximum()<<", Peak Height = "<<func_landau[0]->GetMaximum()-func_landau[0]->GetParameter(3)<<", Peak Location = "<<func_landau[0]->GetMaximumX()<<endl;
+    }
+
+  /*
+  TCanvas* ctiming=new TCanvas("ctiming");
+  ctiming->SetGrid();
+
+  htiming->Draw();
+*/
+
+  //Calculate and print timing resolutions for each channel. 
+  //TF1 **func_gaus = new TF1*[nfunc];
+  TF1 *func_gaus = new TF1("func_gaus",fit_gaus, min_time, max_time, 3);
+  /*
+  for(Int_t i=0; i<hcalt::ndata; i++)
+    {
+      TH1F *h = new TH1F(TString::Format("h%02d",i),TString::Format("h%02d",i),bins,min_time,max_time);
+      cout<<"Gaussian fit for timing in module "<<i<<" (from 0)."<<endl;
+      for(Int_t j=0; j<timing[i].size(); j++)
+	{
+	  h->Fill(times[i][j]);
+	}
+      func_gaus->SetParameter(0,h->GetMaximum());
+      func_gaus->SetParameter(1,h->GetMean());
+      func_gaus->SetParameter(2,h->GetStdDev());
+      h->Fit("func_gaus","R 0 M");
+      ind_res[i] = fabs(func_gaus->GetParameter(2));
+      cout<<"The timing resolution is "<<fabs(func_gaus->GetParameter(2))<<" ns."<<endl;
+      }*/
+
+  /*
+  //TDC times for each tube using ref ch that is a copy of the trigger.
+  for(Int_t i=0; i<hcalt::ndata; i++)
+    {
+      TH1F *h = new TH1F(TString::Format("h%02d",i),TString::Format("h%02d",i),bins,min_time,max_time);
+      //      cout<<"Gaussian fit for timing in module "<<i<<" (from 0)."<<endl;
+      //func_gaus[i] = new TF1("func_gaus",fit_gaus, min_time, max_time, 3);
+      for(Int_t j=0; j<timing[i].size(); j++)
+	{
+	  h->Fill(timing[i][j]);
+	}
+      func_gaus->SetParameter(0,h->GetMaximum());
+      func_gaus->SetParameter(1,h->GetMean());
+      func_gaus->SetParameter(2,h->GetStdDev());
+      h->Fit("func_gaus","R 0 M Q");
+      ind_res[i] = fabs(func_gaus->GetParameter(2));
+      //      cout<<"The timing resolution is "<<fabs(func_gaus->GetParameter(2))<<" ns."<<endl;
+    }
+  */
+  
+  /*
+  for(Int_t i=0; i<hcalt::ndata; i++)
+    {
+            cout<<"Timing resolution for module "<<i<<" (from 0) = "<<ind_res[i]<<" with "<<hits[i]<<" hits used for timing calculation."<<endl;
+    }
+  */
+
+  /*
+  //Fit the histo containing the timing data with a Gaussian fit for the channel chosen to be displayed..
+  //TF1 *func_gaus = new TF1("func_gaus",fit_gaus, min_time, max_time, 3);
+  cout<<"**** Single module to be displayed: Ch r"<<timerow<<"-c"<<timecol<<". ****"<<endl;
+  func_gaus->SetLineColor(2);
+  func_gaus->SetNpx(1000);
+  func_gaus->SetParameter(0,htiming->GetMaximum());
+  func_gaus->SetParameter(1,htiming->GetMean());
+  func_gaus->SetParameter(2,htiming->GetStdDev());
+  htiming->Fit("func_gaus","R 0 M");
+  func_gaus->Draw("same");
+  cout<<"The timing resolution is "<<fabs(func_gaus->GetParameter(2))<<" ns."<<endl;
+  */
+
+  /*
+  TCanvas* c2=new TCanvas("c2");
+  c2->SetGrid();
+  //func_landau[48]->Draw();
+  c2->Divide(3,2);
+  c2->cd(1);
+  htimes[24]->Draw();
+  c2->cd(2);
+  htimes[25]->Draw();
+  c2->cd(3);
+  htimes[26]->Draw();
+  c2->cd(4);
+  htimes[27]->Draw();
+  c2->cd(5);
+  htimes[28]->Draw();
+  c2->cd(6);
+  htimes[29]->Draw();
+  */
+
+  /*
+  TCanvas* c3=new TCanvas("c3");
+  c3->SetGrid();
+  //func_landau[48]->Draw();
+  c3->Divide(3,2);
+  c3->cd(1);
+  htimes_fadc[24]->Draw();
+  c3->cd(2);
+  htimes_fadc[25]->Draw();
+  c3->cd(3);
+  htimes_fadc[26]->Draw();
+  c3->cd(4);
+  htimes_fadc[27]->Draw();
+  c3->cd(5);
+  htimes_fadc[28]->Draw();
+  c3->cd(6);
+  htimes_fadc[29]->Draw();
+*/
+
+  /*
+  TCanvas* c4=new TCanvas("c4");
+  c4->SetGrid();
+  //func_landau[48]->Draw();
+  c4->Divide(3,2);
+  c4->cd(1);
+  hfadc_integrals[24]->Draw();
+  c4->cd(2);
+  hfadc_integrals[25]->Draw();
+  c4->cd(3);
+  hfadc_integrals[26]->Draw();
+  c4->cd(4);
+  hfadc_integrals[27]->Draw();
+  c4->cd(5);
+  hfadc_integrals[28]->Draw();
+  c4->cd(6);
+  hfadc_integrals[29]->Draw();
+*/
+
+  /*
+  TCanvas* c5=new TCanvas("c5");
+  c5->SetGrid();
+  //func_landau[48]->Draw();
+  c5->Divide(3,2);
+  c5->cd(1);
+  htdc_fadc_cuts[24]->Draw();
+  c5->cd(2);
+  htdc_fadc_cuts[25]->Draw();
+  c5->cd(3);
+  htdc_fadc_cuts[26]->Draw();
+  c5->cd(4);
+  htdc_fadc_cuts[27]->Draw();
+  c5->cd(5);
+  htdc_fadc_cuts[28]->Draw();
+  c5->cd(6);
+  htdc_fadc_cuts[29]->Draw();
+  */
+
+  TCanvas *cTimes[12];
+
+  gStyle->SetOptFit(1111);
+  /*
+  // Retrieve the stat box
+  TPaveStats *ps = (TPaveStats*)cTimes[0]->GetPrimitive("stats");
+  ps->SetName("mystats");
+  TList *listOfLines = ps->GetListOfLines();
+  ps->SetAllWith("....","size",1.04);
+  */
+
+  TF1 **func_gaus_fit = new TF1*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      func_gaus_fit[i] = new TF1("func_gaus_fit",fit_gaus, -20, 20, 3);
+    }
+
+  for(Int_t i=0; i<12; i++)
+    {
+      cTimes[i] = new TCanvas(Form("cTimes_Row_%d",i));
+      cTimes[i]->SetGrid();
+      cTimes[i]->Divide(4,3);
+      /*
+      cTimes[i]->cd(1);
+      htdc_fadc_cuts[0]->Draw();
+      cTimes[i]->cd(2);
+      htdc_fadc_cuts[0]->Draw();
+      cTimes[i]->cd(7);
+      htdc_fadc_cuts[0]->Draw();
+      */
+
+       for(Int_t j=0;j<12;j++)
+	{
+	  cTimes[i]->cd(j+1);
+
+	  if(timing_method == 0)
+	    {
+	      htimes[i*12+j]->Draw();
+	    }
+	  if(timing_method == 1)
+	    {
+	      htimes_fadc[i*12+j]->Draw();
+	    }
+	  if(timing_method == 2)
+	    {
+	      htdc_fadc_cuts[i*12+j]->Draw();
+	      func_gaus_fit[i*12+j]->SetLineColor(2);
+	      func_gaus_fit[i*12+j]->SetNpx(1000);
+	      func_gaus_fit[i*12+j]->SetParameter(0,htdc_fadc_cuts[i*12+j]->GetMaximum());
+	      func_gaus_fit[i*12+j]->SetParameter(1,htdc_fadc_cuts[i*12+j]->GetMean());
+	      func_gaus_fit[i*12+j]->SetParameter(2,htdc_fadc_cuts[i*12+j]->GetStdDev());
+	      //func_gaus_fit[i*12+j]->SetParameter(0,htdc_fadc_cuts[i*12+j]->GetMaximum());
+	      //func_gaus_fit[i*12+j]->SetParameter(1,htdc_fadc_cuts[i*12+j]->GetMean());
+	      //func_gaus_fit[i*12+j]->SetParameter(2,htdc_fadc_cuts[i*12+j]->GetStdDev());
+	      htdc_fadc_cuts[i*12+j]->Fit(func_gaus_fit[i*12+j],"Q");
+	      func_gaus_fit[i*12+j]->Draw("same");
+	      cout<<"Module "<<i*12+j<<" Initial Max "<<htdc_fadc_cuts[i*12+j]->GetMaximum()<<" Initial Mean "<<htdc_fadc_cuts[i*12+j]->GetMean()<<" Initial StdDev "<<htdc_fadc_cuts[i*12+j]->GetStdDev()<<" Final Max "<<func_gaus_fit[i*12+j]->GetParameter(0)<<" Final Mean "<<func_gaus_fit[i*12+j]->GetParameter(1)<<" Final StdDev "<<func_gaus_fit[i*12+j]->GetParameter(2)<<endl;
+	    }
+	  if(timing_method == 3)
+	    {
+	      hfadc_integrals[i*12+j]->Draw();
+	    }
+	  //htdc_fadc_cuts[0]->Draw();
+	  //	  htdc_fadc_cuts[i*12+j]->Draw();    //
+	  //       	  htimes_fadc[i*12+j]->Draw();       //
+       	  //hfadc_integrals[i*12+j]->Draw();   //
+	  //	  htimes[i*12+j]->Draw();            //
+	}
+       if(timing_method == 0)
+	 {
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/TDC_Time_Trig/TDC_Time_Run%d_Row%d.png",run,i));
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/TDC_Time_Trig/TDC_Time_Run%d_Row%d.C",run,i));
+	 }
+       if(timing_method == 1)
+	 {
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/fADC_Time/fADC_Time_Run%d_Row%d.png",run,i));
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/fADC_Time/fADC_Time_Run%d_Row%d.C",run,i));
+	 }
+       if(timing_method == 2)
+	 {
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/TDC_Time_fADC_Cuts/TDC_Time_fADC_Cuts_Run%d_Row%d.png",run,i));
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/TDC_Time_fADC_Cuts/TDC_Time_fADC_Cuts_Run%d_Row%d.C",run,i));
+	 }
+       if(timing_method == 3)
+	 {
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/fADC_Integrals/fADC_Integrals_Run%d_Row%d.png",run,i));
+	   cTimes[i]->SaveAs(Form("./Timing_Resolution_Plots/fADC_Integrals/fADC_Integrals_Run%d_Row%d.C",run,i));
+	 }
+    }
+
+  //Print the pedestal values.
+  /*
+  for(Int_t i=0; i<hcalt::ndata; i++)
+    {
+      pedestals[i] = pedestals[i]/no_tdc[i];
+      cout<<"Pedestals["<<i<<"] = "<<pedestals[i]<<endl;
+      pedestal[i] = pedestal[i];
+      cout<<"Pedestal["<<i<<"] = "<<pedestal[i]<<endl;
+    }
+  */
+
+  //Stop and print out stopwatch information.
+  st->Stop();
+  cout<<"CPU time = "<<st->CpuTime()<<" s = "<<st->CpuTime()/60.<<" min   Real time = "<<st->RealTime()<<" s = "<<st->RealTime()/60.<<" min"<<endl;
+}

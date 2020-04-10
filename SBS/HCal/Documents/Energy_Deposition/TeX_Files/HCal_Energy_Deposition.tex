@@ -1,0 +1,229 @@
+% Template for PLoS
+% Version 1.0 January 2009
+%
+% To compile to pdf, run:
+% latex plos.template
+% bibtex plos.template
+% latex plos.template
+% latex plos.template
+% dvipdf plos.template
+
+\documentclass[10pt]{article}
+
+% amsmath package, useful for mathematical formulas
+\usepackage{amsmath}
+% amssymb package, useful for mathematical symbols
+\usepackage{amssymb}
+
+% graphicx package, useful for including eps and pdf graphics
+% include graphics with the command \includegraphics
+\usepackage{graphicx}
+
+%Allow captions for figures
+\usepackage{caption}
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+% cite package, to clean up citations in the main text. Do not remove.
+\usepackage{cite}
+
+\usepackage{color} 
+\usepackage{indentfirst}
+\usepackage{wrapfig}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for use of long table that can go over multiple slides.
+\usepackage{longtable}
+
+%allows for multiple pictures in one figure.
+%\usepackage{subfigure}
+
+% Use doublespacing - comment out for single spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+%\usepackage{cleveref} %Load this package last.
+
+% Text layout
+\topmargin 0.0cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\textwidth 16cm 
+\textheight 21cm
+
+% Bold the 'Figure #' in the caption and separate it with a period
+% Captions will be left justified
+\usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
+%Import graphics package
+
+% Use the PLoS provided bibtex style
+\bibliographystyle{plos2009}
+
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+
+% Leave date blank
+\date{}
+
+%\pagestyle{myheadings}
+%\usepackage{fancyhdr}
+%\lfoot{Hello}
+%\pagestyle{fancy}
+%% ** EDIT HERE **
+
+
+%% ** EDIT HERE **
+%% PLEASE INCLUDE ALL MACROS BELOW
+
+%% END MACROS SECTION
+
+\begin{document}
+
+% Title must be 150 characters or less
+\begin{flushleft}
+{\Large
+\textbf{HCal Energy Deposition Study}
+}
+% Insert Author names, affiliations and corresponding author email.
+\\
+\vspace{4mm}
+\hrule height 0.8pt \relax
+\vspace{2mm}
+\textbf{Scott Barcus}, April 7$^{\text{th}}$ 2020, E-mail: skbarcus@jlab.org
+\end{flushleft}
+\vspace{-2mm}
+\hrule height 0.8pt \relax
+\vspace{6mm}
+%\hline
+% Please keep the abstract between 250 and 300 words
+%\section*{Educational Objectives and Professional Goals}
+%\begin{flushleft}
+%{\large\bf{Educational Objectives and Professional Goals}}
+%\end{flushleft}
+
+\setlength{\parindent}{0.5cm}
+
+%\newcommand{\xtimes}[1]{#1{\Rx}}
+
+{\large \noindent \bf{Introduction}}
+\vspace{3mm}
+
+This document describes the expected energy deposition in the HCal scintillators for each of the seven $G_M^n$ kinematics. The goal of this analysis is to estimate the maximum energy deposited in a single PMT for each kinematic. This will make it possible to calibrate HCal's PMT HV to not saturate the fADCs during events in which the maximum energy for a kinematic is deposited in a single PMT. These calculations will also be performed for the maximum total energy deposited in an entire event in case it were decided that recording the summing module output to the fADCs would be useful.
+\vspace{3mm}
+
+{\large \noindent \bf{Simulation Methodology}}
+\vspace{3mm}
+
+These values were determined using G4SBS simulations of the full $G_M^n$ experiment. Each kinematic was simulated according to the run plan with 10,000 elastic electrons incident upon a 15 cm LD$_2$ target at 44$\mu$A. The placement of HCal and other equipment was set in accordance with the run plan. Electrons were generated in a wide area to fully cover the acceptance. The electrons were generated with $\theta = \pm10^{\circ}$ of the BigBite set angle and $\phi = \pm30^{\circ}$.
+\vspace{3mm}
+
+{\large \noindent \bf{Simulation Results}}
+\vspace{3mm}
+
+	An example output from the G4SBS simulation of $G_M^n$ kinematic 13.5 GeV$^2$ is shown below. Figure \ref{fig:cell_hits} shows the distribution of hits on the surface of HCal based on the row and column of the PMT module that observed the hit. All hits are treated identically, i.e. there is no weighting based on the energy deposited by a hit. The module with a * in it represents the module which saw the greatest energy deposited in a single PMT throughout the entire run. Note there is currently a bug in G4SBS where the rows of the PMT modules are flipped in space. This is being investigated and resolved, but for the purposes of this document take any directions from the next plot in Figure \ref{fig:xy_hits} with explicit X-Y directions and rotate the PMT module orientation to match.
+	\vspace{3mm}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{HCal_Cell_Hits_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Distribution of Hits on the HCal by PMT Module.}} The distribution of hits on the surface of HCal based on the row and column of the PMT module in which the hit was detected. This plot is not weighted by energy deposition. The module with a * in it represents the module which saw the greatest energy deposited in a single PMT throughout the entire run.}
+	\label{fig:cell_hits}
+	\end{figure}	
+	
+	Figure \ref{fig:xy_hits} shows the local X-Y coordinates of the nucleon hits on HCal in meters. These hits are weighted by the energy deposited in the scintillator for each hit. In this plot the +X direction is to beam left which for the HCal position in $G_M^n$ is towards the beamline. The +Y direction is vertically up, and the +Z direction is along the beam direction. Note that G4SBS gives the global X-Y coordinates which have been transformed into the local X-Y coordinates with an origin at the center of HCal via the following coordinate transformations:
+	
+	\begin{align}
+		&X_{local} = X_{global}\times\cos\left(\theta_{SBS}\right) + Z_{global}\times\sin\left(\theta_{SBS}\right) \\
+		&Y_{local} = Y_{global} - 0.45
+	\end{align}
+	
+	\noindent The X-coordinate is transformed by a rotation, and the Y-coordinate has a value of 0.45 m subtracted to account for the HCal vertical offset. Figure \ref{fig:xy_hits} shows that the energy weighted hits on HCal are concentrated on the +X side (closer to the beamline).  
+	\vspace{3mm}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{HCal_XY_Hits_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Energy Weighted Distribution of Hits on the HCal in Local X-Y Coordinates.}} The distribution of hits on the surface of HCal based on the local (X,Y) location of the hit. These hits are weighted by the amount of energy deposited in the scintillator.}
+	\label{fig:xy_hits}
+	\end{figure}	
+	
+	Figure \ref{fig:sumedep} shows the energy deposited per individual hit in the HCal scintillators for the entire run. Note that there is a global 10 MeV threshold applied here so there are no events recorded below this threshold. The maximum energy deposited in the scintillator for a single hit (seen by one PMT) is found to be 740 MeV. The energy deposited by a total event is given by summing the energy deposited during each of the individual hits during a single event.
+	\vspace{3mm}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{Sumedep_per_Hit_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Energy Deposited per Hit in the HCal Scintillators.}} Energy deposited on a hit-by-hit basis in the HCal scintillators. The energy deposited by a total event is given by summing the energy deposited during each of the individual hits during a single event.}
+	\label{fig:sumedep}
+	\end{figure}	
+
+Table \ref{tab:edep} gives the results of the energy deposition study. The column titled \textit{Kine} gives the $Q^2$ value for each of the seven $G_M^n$ kinematics in GeV$^2$. The \textit{HCal Events} column gives the number of events that reached the HCal to be recorded. The \textit{Total Hits} column gives the total number of hits across all events for the run. The \textit{PMT with Max Edep} column lists the row and column number of the PMT in which the maximum energy was deposited (row and column numbers begin counting from zero). The \textit{Max Edep in PMT} column gives the maximum energy deposited in a single PMT during the run in MeV. The \textit{NPE for Max Edep in PMT} column gives the number of photoelectrons expected to be seen by the PMT with maximal energy deposition. It is assumed from previous simulation results that there are $\approx$5.5 PE per MeV. The \textit{Max Edep All PMTs} column gives the maximum energy deposited in all PMTs for a single event in MeV. Note that this event is generally not the same event in which the maximal energy was deposited in a single PMT. The \textit{NPE for Max Edep All PMTs} gives the number of PE deposited in all PMTs for a single event ($\approx$5.5 PE per MeV). 
+\vspace{3mm}
+
+	\begin{table}[!ht]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|c|ccccccc|}
+	\hline
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{HCal\\Events} & \makecell{Total\\Hits} & \makecell{PMT with\\Max Edep\\ $[$row-col$]$} & \makecell{Max Edep\\in PMT\\$[$MeV$]$} & \makecell{NPE for\\Max Edep\\in PMT} & \makecell{Max Edep\\All PMTs\\$[$MeV$]$} & \makecell{NPE for\\Max Edep\\All PMTs}\\
+	\hline
+	3.5 & 5082 & 11747 & r13c5 & 267 & 1469 & 407 & 2236 \\
+    4.5 & 6070 & 18859 & r12c4 & 308 & 1694 & 465 & 2559 \\
+    5.7 & 7690 & 30942 & r11c1 & 418 & 2302 & 493 & 2712 \\
+    8.1 & 7874 & 38803 & r14c3 & 497 & 2733 & 726 & 3893 \\
+    10.2 & 7539 & 41205 & r10c3 & 570 & 3132 & 797 & 4383 \\
+    12.0 & 8781 & 53540 & r18c7 & 669 & 3682 & 960 & 5280 \\
+    13.5 & 6711 & 34567 & r10c0 & 740 & 4070 & 977 & 5373 \\
+	\hline
+	\end{tabular}
+	\caption{{\bf{HCal G4SBS Simulation Energy Deposition.}} Maximal energy deposited in a single PMT and entire event for each of the seven $G_M^n$ kinematics.} %Caption* supresses printing of second caption saying Table number again.
+	\label{tab:edep}
+	\end{table}
+	
+{\large \noindent \bf{Data Analysis for PMT HV Calibration}}
+\vspace{3mm}
+	
+	The signals out of the HCal PMTs pass through a 10x amplifier on the front end. One copy of this signal is then sent to the fADCs over a long (~100m) cable. The fADCs have an adjustable dynamic range of 0.5 V, 1 V, and 2 V which are selected using jumpers on the fADC board itself. Assuming the 2 V fADC range is used then any signals out of the amplifier up to 2 V can be recorded without saturating the fADCs. This means that the maximum allowable signal out of a single PMT is 200 mV (200mV$\times$10 = 2 V) without saturating the fADC channel. Note that this neglects the signal attenuation over the long cables. Attenuation studies were performed for the long cables by CMU. Unfortunately, I do not currently have these results, but I believe that the long cables attenuated the signal by a factor of $\approx$2 times. This document will be updated when a more reliable number is found. 
+	\vspace{3mm}
+	
+	A second copy of the PMT signal out of the 10x amplifiers goes to a 50-50 splitter panel. Of the two outputs from the splitter panel one goes to the F1TDCs and is not relevant for this analysis. The other output with 50\% of the amplified signal goes to the summing modules. These modules sum 4x4 blocks of HCal PMT signals. Their output can be used as a trigger, but it could also be sent to an fADC to be recorded if desired. Neglecting the long cable attenuation again, the summing modules can output a maximum of 2 V of signal from the 16 PMT signals they sum without saturating the fADCs. Since the inputs to the summing module come from a 50-50 splitter after the 10x amplifier that means a maximum combined signal directly out of the 16 summed PMTs can total 400 mV before saturating the fADC channel. For this analysis we will consider all of the energy to have been deposited in the 4x4 block of PMTs going to the summing module to represent the most energy that could be summed at once. 
+	\vspace{3mm}
+	
+	Table \ref{tab:max_outputs} gives the maximal signal allowed out of the PMTs without saturating the fADCs based on the maximum energy deposited in the scintillators. The column titled \textit{Kine} gives the $Q^2$ value for each of the seven $G_M^n$ kinematics in GeV$^2$. The \textit{Max Edep in PMT} column gives the maximum energy deposited in a single PMT during the run in MeV. The column titled \textit{Max mV/MeV from PMT [2 V/1.5 V]} gives the maximum output signal in mV that can be produced from the PMT per MeV deposited in the scintillator without saturating the fADC. For example, at kinematic 1 the maximum PMT output signal without fADC saturation is 200 mV divided by the maximum energy deposited in a single PMT of 267 MeV gives a PMT HV calibration maximum of 0.75 mV signal output per MeV deposited in the PMT's scintillator.  Two values are given. The first is assuming the full 2 V range of the fADC is utilized and the second assuming only 1.5 V of the fADC range is used to allow for some overhead. The column titled \textit{Max mV/MeV from PMT with Attenuation [2 V/1.5 V]} gives the same value as the previous column except it accounts for a factor of two signal attenuation due to the long BNC cable. The \textit{Max Edep All PMTs} column gives the maximum energy deposited in all PMTs for a single event in MeV. The \textit{Max mV/MeV All PMTs $[$2 V/1.5 V$]$} column gives the maximum sum of output signals in mV that can be produced from all PMTs per MeV deposited in all scintillators without saturating the fADC. Again, a value for an fADC range of 2 V and 1.5 V is given. Finally the \textit{Max mV/MeV All PMTs $[$2 V/1.5 V$]$ with Attenuation} column is the same as the one preceding it except that it accounts for a factor of two signal attenuation due to the long BNC cables.
+	
+	\begin{table}[h]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|c|cccccc|}
+	\hline
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{Max Edep\\in PMT\\$[$MeV$]$} & \makecell{Max $[$mV/MeV$]$\\from PMT\\(2 V/1.5 V)} & \makecell{Max $[$mV/MeV$]$\\from PMT\\with Cable\\Attenuation\\(2 V/1.5 V)} & \makecell{Max Edep\\All PMTs\\$[$MeV$]$} & \makecell{Max $[$mV/MeV$]$\\All PMTs\\(2 V/1.5 V)} & \makecell{Max $[$mV/MeV$]$\\All PMTs\\with Cable\\Attenuation\\(2 V/1.5 V)}\\
+	\hline
+	3.5 & 267 & 0.75/0.56 & 1.50/1.12 & 407 & 0.98/0.74 & 1.97/1.47\\
+    4.5 & 308 & 0.65/0.49 & 1.30/0.97 & 465 & 0.86/0.65 & 1.72/1.29 \\
+    5.7 & 418 & 0.48/0.36 & 0.96/0.72 & 493 & 0.81/0.61 & 1.62/1.22 \\
+    8.1 & 497 & 0.40/0.30 & 0.80/0.60 & 726 & 0.55/0.41 & 1.10/0.83 \\
+    10.2 & 570 & 0.35/0.26 & 0.70/0.53 & 797 & 0.50/0.38 & 1.00/0.75\\
+    12.0 & 669 & 0.30/0.22 & 0.60/0.45 & 960 & 0.42/0.31 & 0.83/0.63\\
+    13.5 & 740 & 0.27/0.20 & 0.54/0.41 & 977 & 0.41/0.31 & 0.82/0.61\\
+	\hline
+	\end{tabular}
+	%\label{tab:edep}
+	\caption{{\bf{PMT HV Calibration Limits.}} PMT output signal [mV] limits per MeV for each of the seven $G_M^n$ kinematics. Values for fADC ranges of 2 V and 1.5 V are given as well as values with and without signal attenuation due to the long cables.} %Caption* supresses printing of second caption saying Table number again.
+	\label{tab:max_outputs}
+	\end{table}
+	
+	
+
+\end{document}
+

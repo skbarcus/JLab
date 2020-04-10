@@ -1,0 +1,177 @@
+#include <TH2F.h>
+#include <TChain.h>
+#include <TCanvas.h>
+#include <vector>
+#include <iostream>
+#include <TSystem.h>
+#include "hcal.h"
+#include <vector>
+#include <TStopwatch.h>
+#include <TDatime.h>
+using namespace std;
+
+Double_t entry;
+Int_t gCurrentEntry = 0;
+Int_t DISP_MIN_SAMPLE = 0;
+Int_t DISP_MAX_SAMPLE = 20;
+const Int_t DISP_FADC_SAMPLES = (DISP_MAX_SAMPLE-DISP_MIN_SAMPLE);
+Int_t min_time = -300;
+Int_t max_time = 50;
+Int_t bins = 100;
+Int_t r,c,n,idx;
+Int_t nevt;
+const Int_t kNrows = 12;
+const Int_t kNcols = 12;
+const Int_t channels = kNrows * kNcols;
+Double_t ind_res[144];
+TChain *T = 0;
+std::string user_input;
+
+TH1F *histos[kNrows][kNcols];
+
+TH1F* MakeHisto(Int_t row, Int_t col, Int_t bins)
+{
+  TH1F *h = new TH1F(TString::Format("h%02d%02d",row,col),
+		     TString::Format("%d-%d",row+1,col+1),bins,DISP_MIN_SAMPLE,DISP_MAX_SAMPLE);
+  h->SetStats(0);
+  h->SetLineWidth(2);
+  return h;
+}
+
+void Pedestals(Int_t run = 501)
+//Int_t Test_Display(Int_t run = 290)
+{
+  //Define a new stopwatch.
+  TStopwatch *st=new TStopwatch();
+  st->Start(kTRUE);
+
+  //Create a date object.
+  TDatime time;
+
+  //Open file to write output to.
+  std::ofstream output1 (Form("./Pedestals.txt"), std::ofstream::out);
+  output1<<"These pedestals were generated from run "<<run<<"."<<endl;
+  output1<<"They were generated at "<<time.GetHour()<<":"<<time.GetMinute()<<" on "<<time.GetMonth()<<"/"<<time.GetDay()<<"/"<<time.GetYear()<<"."<<endl;
+  output1<<"Module,"<<" Avg Pedestal Value"<<" Avg Peak Height"<<endl;
+
+  if(!T) 
+    { 
+      T = new TChain("T");
+      T->Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));//325
+      //T->Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));
+      T->SetBranchStatus("*",0);
+      T->SetBranchStatus("sbs.hcal.*",1);
+      T->SetBranchAddress("sbs.hcal.nsamps",hcalt::nsamps);       //Number of samples for given row-col
+      T->SetBranchAddress("sbs.hcal.a",hcalt::a);                 //Raw ADC amplitudes
+      T->SetBranchAddress("sbs.hcal.tdc",hcalt::tdc);             //Raw TDC value
+      //T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);
+      //T->SetBranchAddress("sbs.hcal.ledcount",&hcalt::ledcount);
+      T->SetBranchAddress("sbs.hcal.samps",hcalt::samps);         //RAW ADC samples
+      T->SetBranchAddress("sbs.hcal.samps_idx",hcalt::samps_idx); //Index in samples vector for given row-col module 
+      T->SetBranchAddress("sbs.hcal.row",hcalt::row);             //Row for block in data vectors
+      T->SetBranchAddress("sbs.hcal.col",hcalt::col);             //Col for block in data vectors
+      T->SetBranchStatus("Ndata.sbs.hcal.row",1);
+      T->SetBranchAddress("Ndata.sbs.hcal.row",&hcalt::ndata);    //???
+      std::cerr << "Opened up tree with nentries=" << T->GetEntries() << std::endl;
+      }
+
+  for(Int_t r = 0; r < kNrows; r++) 
+    {
+      for(Int_t c = 0; c < kNcols; c++) 
+	{
+	  histos[r][c] = MakeHisto(r,c,DISP_FADC_SAMPLES);
+	}
+    }
+
+  nevt = T->GetEntries();
+  Double_t adc[kNrows][kNcols];
+  Double_t tdc[kNrows][kNcols];
+  Double_t pedestals[channels] = {};
+  Int_t no_tdc[channels] = {};
+  Int_t yes_tdc[channels] = {};
+  Double_t fadc_int[channels] = {};
+  Double_t peak_height[channels] = {};
+
+  //Loop over all events.
+  for(Int_t i=0; i<100000 ;i++)
+    //for(Int_t i=0; i<nevt ;i++)
+    {
+      T->GetEntry(gCurrentEntry);
+      //T->GetEntry(11);
+      //T->GetEntry(665);
+      
+      //Set arrays to zero;
+      for(r  = 0; r < kNrows; r++) 
+	{
+	  for(c  = 0; c < kNcols; c++) 
+	    {
+	      adc[r][c] = 0.0;
+	      tdc[r][c] = 0.0;
+	    }
+	}
+
+      //Loop over all channels and fill the arrays. Do this seperately so reference time is set for all channels.
+      for(Int_t j=0; j<hcalt::ndata; j++)
+	{
+	  r = hcalt::row[j]-1;
+	  c = hcalt::col[j]-1;
+	  idx = hcalt::samps_idx[j];
+	  n = hcalt::nsamps[j];
+	  adc[r][c] = hcalt::a[j];
+	  tdc[r][c] = hcalt::tdc[j];
+	  Double_t ped_val = 0;
+	  
+	  if(tdc[r][c] == 0 || j==36 || j==96)
+	    {
+	      for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+		{
+		  histos[r][c]->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+		  fadc_int[j] = fadc_int[j] + histos[r][c]->GetBinContent(s+1-DISP_MIN_SAMPLE);
+		  //ped_val = ped_val + histos[r][c]->GetBinContent(s+1);
+		}
+	      if(fadc_int[j]<6000)
+		{
+		  for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+		    {
+		      ped_val = ped_val + histos[r][c]->GetBinContent(s+1);
+		    }
+		  ped_val = ped_val/DISP_FADC_SAMPLES;
+		  pedestals[j] = pedestals[j] + ped_val;
+		  no_tdc[j] = no_tdc[j]+1;
+		}
+	      //func_landau[j] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 4);
+	    }
+
+	  //Find average fadc integral peak height for time over threshold calculations.
+	  if(tdc[r][c] != 0)
+	    {
+	      //Make fadc histo for each event and each pmt.
+	      for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+		{
+		  histos[r][c]->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+		  //peak_height[j] = histos[r][c]->GetMaximum() + peak_height[j];
+		  //yes_tdc[j] = yes_tdc[j]+1;
+		}
+	      //Find and store the maximum peak height in the histo.
+	      peak_height[j] = histos[r][c]->GetMaximum() + peak_height[j];
+	      yes_tdc[j] = yes_tdc[j]+1;
+	    }
+	}
+      gCurrentEntry++;
+    }
+  
+  //Print the pedestal values and average peak height values.
+  for(Int_t i=0; i<hcalt::ndata; i++)
+    {
+	  pedestals[i] = pedestals[i]/no_tdc[i];
+	  peak_height[i] = peak_height[i]/yes_tdc[i];
+	  cout<<"Module "<<i<<" has an average pedestal of "<<pedestals[i]<<" and an average peak height of "<<peak_height[i]<<endl;
+	  output1<<i<<"   "<<pedestals[i]<<"   "<<peak_height[i]<<endl;
+    }
+
+  output1.close();
+
+  //Stop and print out stopwatch information.
+  st->Stop();
+  cout<<"CPU time = "<<st->CpuTime()<<" s = "<<st->CpuTime()/60.<<" min   Real time = "<<st->RealTime()<<" s = "<<st->RealTime()/60.<<" min"<<endl;
+}

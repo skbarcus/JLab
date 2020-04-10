@@ -1,0 +1,218 @@
+\documentclass[oneside]{book}   %Oneside makes the document one sided. Without this chapters always start on odd numbered pages.
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+ 
+\usepackage[bookmarksopen]{hyperref}   %Bookmarks adds index on the sidebar in the PDF viewer.
+\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{multirow,bigstrut}
+\usepackage{caption}
+\usepackage{cleveref} %Load this package last.
+ 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Sharelatex Example},
+    bookmarks=true,
+    hyperindex=true,
+    pdfpagemode=UseOutlines,
+    pdfstartpage=1,
+}
+
+%\setlength{\parindent}{10ex}
+
+\begin{document}
+ 
+\frontmatter
+
+\begin{titlepage} % Suppresses displaying the page number on the title page and the subsequent page counts as page 1
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for horizontal lines, change thickness here
+	
+	\center % Centre everything on the page
+	
+	%------------------------------------------------
+	%	Headings
+	%------------------------------------------------
+	
+	\textsc{\LARGE Instructions for}\\[1.5cm] % Main heading such as the name of your university/college
+	
+	\textsc{\Large The Thomas Jefferson National Accelerator Facility}\\[0.5cm] % Major heading such as course name
+	
+	\textsc{\large Hall A SBS Program's}\\[0.5cm] % Minor heading such as course title
+	
+	%------------------------------------------------
+	%	Title
+	%------------------------------------------------
+	
+	\HRule\\[0.4cm]
+	
+	{\huge\bfseries Hadron Calorimeter}\\[0.4cm] % Title of your document
+	
+	\HRule\\[1.5cm]
+	
+	%------------------------------------------------
+	%	Author(s)
+	%------------------------------------------------
+	
+	\begin{minipage}{0.5\textwidth}
+		\begin{center}
+			\large
+			\textit{Contact Person:}
+			Scott \textsc{Barcus}\footnote{email: skbarcus@jlab.org} \newline
+		\end{center}
+	\end{minipage}
+	
+	
+	% If you don't want a supervisor, uncomment the two lines below and comment the code above
+	%{\large\textit{Author}}\\
+	%John \textsc{Smith} % Your name
+	
+	%------------------------------------------------
+	%	Date
+	%------------------------------------------------
+	
+	\vfill\vfill\vfill % Position the date 3/4 down the remaining page
+	
+	{\large\today} % Date, change the \today to a set date if you want to be precise
+	
+	%------------------------------------------------
+	%	Logo
+	%------------------------------------------------
+	
+	%\vfill\vfill
+	%\includegraphics[width=0.2\textwidth]{placeholder.jpg}\\[1cm] % Include a department/university logo - this will require the graphicx package
+	 
+	%----------------------------------------------------------------------------------------
+	
+	\vfill % Push the date up 1/4 of the remaining page
+	
+\end{titlepage}
+
+\tableofcontents
+ 
+\mainmatter
+ 
+\chapter{Introduction: The Hadron Calorimeter for the Hall A SBS Program}
+
+
+
+\chapter{Computers}
+\label{ch:computers}
+\section{Overview}
+\label{sec:computers_overview}
+
+Numerous computers are employed to operate the HCal. Currently they are enpcamsonne and intelsbshcal1 on the daq account and intelsbshcal2 on the adaq account. The main PC used to run CODA and analysis scripts is enpcamsonne. The readout controllers (ROCs) that control each of the two crates containing the F1TDCs and fADCs are intelsbshal1 and intelsbshcal2. These contain the readout lists (ROLs) that CODA downloads to control the F1TDCs and fADCs. The lower VXS crate is ROC21 and is controlled by intelsbshcal1 and the upper VME64x crate is ROC22 and is controlled by intelsbshcal2.\\
+
+\textbf{\large{Note:}} 
+Passwords may not be written down or transmitted electronically so they are not listed in this document. To learn them please contact someone who knows such as Scott Barcus, Alexandre Camsonne, or Bob Michaels.
+
+\section{Logging On}
+\label{sec:logging_on}
+
+\textbf{\large{enpcamsonne:}}
+\begin{enumerate}
+	\item This PC is located in RR5 which is a rack containing only this PC and two monitors.
+	\item Wake the PC and select the daq account.
+	\item Input the password for the daq account then you will have access to this PC.
+\end{enumerate}
+
+\textbf{\large{intelsbshcal1 \& intelsbshcal2:}}
+\begin{enumerate}
+	\item First log on to enpcamsonne as described above.
+	\item On enpcamsonne open a terminal and type ``ssh -Y daq@intelsbshcal1" for intelsbshcal1 (ROC21/lower VXS crate) or ``ssh -Y adaq@intelsbshcal2" for intelsbshcal2 (ROC22/upper VXS crate).
+	\item Input the password for either the daq or adaq account accordingly then you will have access to the ROC containing the ROLs.
+\end{enumerate}
+
+\textbf{\large{Remote Access:}}
+Sometimes you will not physically be at the HCal to access these computers. In this case if one wishes to use the computers one must log onto them remotely.
+
+\begin{enumerate}
+	\item To access these computers one must be on the JLab network. This can be logged into by typing ``ssh -Y your-JLab-user-name@login.jlab.org" and then entering your personal JLab password. 
+	\item Once on the JLab network these computers can be accessed by typing ``ssh -Y daq@encamsonne", ``ssh -Y  daq@intelsbshcal1", or ``ssh -Y  adaq@intelsbshcal2" depending on the computer one wishes to access. Enter the appropriate password when prompted and access to the computer will be granted.
+\end{enumerate}
+
+
+\chapter{Data Acquisition System}
+\label{ch:daq}
+\section{High Voltage}
+\label{sec:hv}
+
+\subsection{Overview}
+\label{ssec:hv_overview}
+
+The high voltage (HV) system for the HCal uses LeCroy 1461 N high voltage cards run off of a Raspberry Pi running the HV server located inside the HV crates themselves. There are two HV crates for the HCal and each provides voltage for 144 of the 288 PMTs. The HV cards have 12 channels each with the top crate containing 12 HV cards and the lower crate containing 13. The lower crate's extra card contains two HV channels for the paddle scintillators located above both halves of the detector. The upper crate runs server rpi20, and the lower crate rpi21. 
+
+\subsection{HV GUI}
+\label{ssec:gui}
+
+The HV crates and their individual channels are controlled via a graphical user interface (GUI) that can be run from a terminal. This GUI loads its configuration from a server run on the Raspberry Pi inside the crate. Before the GUI can be used the server must be running. To activate the server:
+
+\begin{enumerate}
+	\item Open a terminal on a computer that is on the same network as the HV server.
+	\item Log into the Raspberry Pi by typing ``ssh ***" in the terminal.
+	\item You will be prompted for the password. If you do not know the password ask someone who does as passwords cannot be shared electronically. 
+	\item Once logged in to the Raspberry Pi the server is started by going to the *** directory by typing ``cd ***" in the terminal. Then type ``./***" which will start the server running in that terminal.
+	\item To activate the GUI return to the computer on the same network as the crate that you plan to control the HV with and go to the slowc directory by typing ``cd /slowc***". Then activate the GUI by typing either ``./hvs ***" or if you wish to run only a single crate ``./hvs UPPER" or ``./hvs LOWER".
+	\item The GUI will then load each of the HV cards each with 12 individual channels. To turn on the HV so that individual channels can be powered click "HV ON" on the left side and the button will turn yellow.
+	\item To set an individual channel's HV enter the desired voltage for the channel in its "target voltage" column. Then to activate the channel click the check box in the "***" column. A check mark will appear and the voltage will begin ramping up. You can see the current voltage in the "current voltage" column.
+	\item Note: You can leave the channels checked as on and turn off the voltage with the button on the left hand side to deactivate all channels. The button will change from yellow to grey and all voltages will read zero after a few seconds. Then if the voltage is turned back on with the same button all channels with checked boxes will begin supplying voltages again. 
+\end{enumerate}
+
+\section{Cebaf Online Data Acquisition (CODA)}
+\label{sec:coda}
+
+\subsection{Overview}
+\label{ssec:coda_overview}
+
+The DAQ system is controlled by the Cebaf Online Data Acquisition (CODA) system. CODA is used to start and stop data collection runs. Data generated from the fADCs and F1TDCs is collected by CODA in the CODA data format and stored in the *** directory. This raw data file can later be decoded using the Hall A Analyzer which converts the raw data into ROOT files for analysis. The current version of CODA being used is CODA 2.7.2*** and it will be necessary to upgrade to CODA 3 before the SBS program begins.
+
+\subsection{Starting and Running CODA}
+\label{ssec:running_coda}
+
+\begin{enumerate}
+	\item Log into the DAQ PC, currently the daq account on enpcamsonne, as described in ***, and open a terminal in the /home/daq/ directory and type ``msqld" to start the database holding the CODA configurations? 
+	\item In two separate terminals log into ROCs 21 and 22 (CPUs on the crates holding the fADCs and F1TDCs) as described in \cref{sec:logging_on}. Then on ROC 22 in directory /home/adaq/ type ``.\textbackslash startroc22" and on ROC 21 directory /home/daq/ type ".\textbackslash startroc21" to start both ROCs. %In both terminals set the environment variables from the home directory *** by typing ``source setup\_enpcamsonne".  
+	\item Back on the DAQ PC in the /home/daq/ directory start CODA by typing ``.\textbackslash startcoda". After a few seconds four small colored windows will pop up followed by the main CODA GUI.
+	\item In the top left of the CODA GUI click ``Platform" then select ``Connect". 
+	\item Then push the button in the top left that looks like a wrench and screwdriver crossed that says ``Configure" when you hover it. In the center left of the CODA GUI there should be four rows that say ``ER21", ``EB21", ``ROC21", and ``ROC22". In their status columns the state should say ``configured" after a few seconds. At the bottom of the CODA GUI under the ``Message" column it should say ``Configure is started." and then ``"Configure succeeded". 
+	\item Next click on the floppy disk icon in the top left of the CODA GUI that says ``Download" when hovered. This button downloads the read-out lists (ROLs) for the fADCs and F1TDCs. After a few seconds the status column's rows should all read ``downloaded" and the message column should say ``Download is started." followed by``Download succeeded." perhaps with a few waiting messages in between.
+	\item To then start a run click button that looks like two right facing arrows (or triangles) that says ``Start" when hovered at the top of the CODA GUI. This will begin a data run.
+	\item A run can be stopped by clicking the square button at the top that says ``Stop" when hovered.\\
+	\\
+	Notes:
+	\item If changes are made to the ROLs they must be re-downloaded. Once a run is stopped click the button at the top that looks like two left facing arrows (or triangles) that says ``Reset" when hovered. After the system has reset then hit the ``Download" button again and resume running as usual.
+\end{enumerate}
+
+\chapter{Important Scripts}
+\label{ch:scripts}
+
+\section{Overview}
+\label{sec:scripts_overview}
+
+There are several important scripts used for creating analysis data files and analyzing the resultant data files. The most important of these are located on daq@enpcamsonne (see Section \cref{sec:logging_on}).
+
+\section{Replaying a Run}
+\label{sec:replay}
+
+After a CODA run is completed it creates a .dat datafile in the /home/daq/data/ directory containing the run's number. These data files must be replayed (decoded) such that the CODA data format can be translated into a ROOT file for analysis. This is done using the Hall A Analyzer.
+
+\begin{enumerate}
+	\item On daq@enpcamsonne go to the /home/daq/test\_fadc/ directory. 
+	\item The script that replays a CODA data file and produces a ROOT file is called. 
+\end{enumerate}
+
+\chapter{Schematics and Cable Maps}
+\label{ch:schematics}
+
+\section{Overview}
+\label{sec:schematics_overview}
+
+This section aggregates numerous schematics and cable maps for HCal. The actual cabling of the detector should closely mirror these maps, but please be aware that minor changes are occasionally implemented based on physical limitations or convenience. 
+
+\section{Cable Maps}
+\label{sec:cable_maps}
+
+\end{document}

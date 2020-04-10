@@ -1,0 +1,97 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=authoryear,% Author , Date style citations.
+  %style=phys,% APS Style citations.
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+\addbibresource{references.bib}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for use of long table that can go over multiple slides.
+\usepackage{longtable}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{HCal Energy Deposition Study}
+\subtitle{}
+\date{April 2\textsuperscript{st} 2020}
+\author{Scott Barcus}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Current Status}
+
+	\begin{table}[t]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|c|ccccccc|}
+	\hline
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{HCal\\Evts} & \makecell{Tot.\\Hits} & \makecell{Max Edep\\PMT\\ $[$row-col$]$} & \makecell{Max\\Edep\\PMT\\$[$MeV$]$} & \makecell{Max\\Edep\\PMT\\NPE} & \makecell{Max\\Edep\\All\\PMTs\\$[$MeV$]$} & \makecell{Max\\Edep\\All\\PMTs\\NPE}\\
+	\hline
+	3.5 & 5082 & 11747 & r13c5 & 267 & 1469 & 407 & 2236 \\
+    4.5 & 6070 & 18859 & r12c4 & 308 & 1694 & 465 & 2559 \\
+    5.7 & 7690 & 30942 & r11c1 & 418 & 2302 & 493 & 2712 \\
+    8.1 & 7874 & 38803 & r14c3 & 497 & 2733 & 726 & 3893 \\
+    10.2 & 7539 & 41205 & r10c3 & 570 & 3132 & 797 & 4383 \\
+    12.0 & 8781 & 53540 & r18c7 & 669 & 3682 & 960 & 5280 \\
+    13.5 & 6711 & 34567 & r10c0 & 740 & 4070 & 977 & 5373 \\
+	\hline
+	\end{tabular}
+	\label{tab:status}
+	%\caption*{Current Status}
+	%\caption*{For the high rate kinematics, these measurements will not be statistics limited and those points 		will be used to check systematics. For the lowest Q$^2$, this measurement can be used to precisely determine 	the product of beam-target polarization.} %Caption* supresses printing of second caption saying Table number again.
+	\end{table}
+	
+\end{frame}
+
+
+
+\end{document}

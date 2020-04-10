@@ -1,0 +1,274 @@
+#include <TH2F.h>
+#include <TChain.h>
+#include <TCanvas.h>
+#include <vector>
+#include <iostream>
+#include <TSystem.h>
+#include "hcal.h"
+#include <vector>
+#include <TStopwatch.h>
+#include <TMath.h>
+#include <TF1.h>
+#include<TStyle.h>
+#include<TList.h>
+#include<TChain.h>
+using namespace std;
+
+Double_t entry;
+Int_t gCurrentEntry = 0;
+Int_t max_evts = 1000;
+Int_t DISP_MIN_SAMPLE = 0;
+Int_t DISP_MAX_SAMPLE = 20;
+const Int_t DISP_FADC_SAMPLES = (DISP_MAX_SAMPLE-DISP_MIN_SAMPLE);
+Int_t min_time = -300;
+Int_t max_time = 50;
+Int_t bins = 100;
+Int_t r,c,n,idx;
+Int_t nevt;
+const Int_t kNrows = 12;
+const Int_t kNcols = 12;
+const Int_t channels = kNrows * kNcols;
+Double_t ind_res[144];
+Double_t f1_res = 0.112;//0.112
+Double_t fadc_res = 4.;
+TChain *T = 0;
+std::string user_input;
+
+Int_t skip = 3;                            //Gives number of lines to skip at top of data file. 
+Int_t nlines = 0;                          //Counts number of lines in the data file. 
+Int_t ncols;                               //Set how many columns of data we have in the data file.
+char str[1000];                           //Variable to read lines of the data file.
+Float_t mod[channels], pedestal[channels], threshold[channels];
+Float_t mod_temp, pedestal_temp, threshold_temp;
+
+TH1F *histos[kNrows][kNcols];
+
+TH1F* MakeHisto(Int_t row, Int_t col, Int_t bins)
+{
+  TH1F *h = new TH1F(TString::Format("h%02d%02d",row,col),
+		     TString::Format("%d-%d",row+1,col+1),bins,DISP_MIN_SAMPLE,DISP_MAX_SAMPLE);
+  h->SetStats(0);
+  h->SetLineWidth(2);
+  return h;
+}
+
+//Create Landau to fit fADC pulses.
+Double_t fit_landau(Double_t *X, Double_t *par) 
+{
+  Double_t landau = par[0]*TMath::Landau(X[0],par[1],par[2])+par[3];
+  return landau;
+}
+
+//Create function to fit time walk correction.
+Double_t fit_log(Double_t *X, Double_t *par) 
+{
+  Double_t log = par[0]*TMath::Log(X[0])+par[1];
+  return log;
+}
+
+//Create function to fit time walk correction.
+Double_t fit_poly3(Double_t *X, Double_t *par) 
+{
+  Double_t poly3 = par[0]+par[1]*X[0]+par[2]*pow(X[0],2.)+par[3]*pow(X[0],3.);
+  return poly3;
+}
+
+void Time_Walk(Int_t run = 501)
+//Int_t Test_Display(Int_t run = 290)
+{
+  //Define a new stopwatch.
+  TStopwatch *st=new TStopwatch();
+  st->Start(kTRUE);
+
+  //Create a date object.
+  TDatime time;
+
+  FILE *fp;
+  fp = fopen("/home/daq/test_fadc/Pedestals.txt","r");
+ //Read in data.
+  while (1) 
+    {
+      //Skips the first skip lines of the file. 
+      if (nlines < skip)
+	{
+	  fgets(str,1000,fp);
+	  nlines++;
+	}
+      //Reads the two columns of data into x and y.
+      else
+	{
+	  //Read in the number of columns of data in your data file. 
+	  ncols = fscanf(fp,"%f %f %f", &mod_temp, &pedestal_temp, &threshold_temp);
+	  
+	  if (ncols < 0) break;    
+	  
+	  mod[nlines-skip] = mod_temp;
+	  pedestal[nlines-skip] = pedestal_temp;
+	  //Threshold is defined as 1/4 of the average peak height minus the pedestal during a real event. Then add back in the pedestal value since the Landau fit I use doesn't subtract the pedestal.
+	  threshold[nlines-skip] = (threshold_temp-pedestal[nlines-skip])/4.0+pedestal[nlines-skip];
+
+	  nlines++;
+	}
+    }
+
+  for(Int_t i=0;i<channels;i++)
+    {
+      cout<<"Module "<<i<<": pedestal = "<<pedestal[i]<<" threshold = "<<threshold[i]<<endl;
+    }
+
+  if(!T) 
+    { 
+      T = new TChain("T");
+      T->Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));//325
+      //T->Add(TString::Format("rootfiles/fadc_f1tdc_%d.root",run));
+      T->SetBranchStatus("*",0);
+      T->SetBranchStatus("sbs.hcal.*",1);
+      T->SetBranchAddress("sbs.hcal.nsamps",hcalt::nsamps);       //Number of samples for given row-col
+      T->SetBranchAddress("sbs.hcal.a",hcalt::a);                 //Raw ADC amplitudes
+      T->SetBranchAddress("sbs.hcal.tdc",hcalt::tdc);             //Raw TDC value
+      //T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);
+      //T->SetBranchAddress("sbs.hcal.ledcount",&hcalt::ledcount);
+      T->SetBranchAddress("sbs.hcal.samps",hcalt::samps);         //RAW ADC samples
+      T->SetBranchAddress("sbs.hcal.samps_idx",hcalt::samps_idx); //Index in samples vector for given row-col module 
+      T->SetBranchAddress("sbs.hcal.row",hcalt::row);             //Row for block in data vectors
+      T->SetBranchAddress("sbs.hcal.col",hcalt::col);             //Col for block in data vectors
+      T->SetBranchStatus("Ndata.sbs.hcal.row",1);
+      T->SetBranchAddress("Ndata.sbs.hcal.row",&hcalt::ndata);    //???
+      std::cerr << "Opened up tree with nentries=" << T->GetEntries() << std::endl;
+      }
+
+  for(Int_t r = 0; r < kNrows; r++) 
+    {
+      for(Int_t c = 0; c < kNcols; c++) 
+	{
+	  histos[r][c] = MakeHisto(r,c,DISP_FADC_SAMPLES);
+	}
+    }
+
+  nevt = T->GetEntries();
+  Double_t adc[kNrows][kNcols];
+  Double_t tdc[kNrows][kNcols];
+  Double_t pedestals[channels] = {};
+  Int_t no_tdc[channels] = {};
+  Int_t yes_tdc[channels] = {};
+  Double_t fadc_int[channels] = {};
+  Double_t peak_height[channels] = {};
+
+  //Define Landau functions to fit the fADC peaks and find the time over threshold.
+  TF1 **func_landau = new TF1*[channels];
+  for(Int_t i=0;i<channels;i++)
+    {
+      func_landau[i] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 4);
+    }
+
+  // Create a 2D histogram to hold the time walk correction results.
+  //TH2F *htime_walk = new TH2F("htime_walk","",1000,0.,25000.,1000,0.,80.);
+  TH2F **htime_walk = new TH2F*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      htime_walk[i] = new TH2F(Form("htime_walk%d",i),Form("Time Walk Correction for Module %d",i),1000,0.,25000.,1000,0.,80.);
+    }
+
+  //Loop over all events.
+  //for(Int_t i=0; i<max_evts ;i++)
+  for(Int_t i=0; i<nevt ;i++)
+    {
+      T->GetEntry(gCurrentEntry);
+      
+      //Set arrays to zero;
+      for(r  = 0; r < kNrows; r++) 
+	{
+	  for(c  = 0; c < kNcols; c++) 
+	    {
+	      adc[r][c] = 0.0;
+	      tdc[r][c] = 0.0;
+	    }
+	}
+
+      //Loop over all channels and fill the arrays. Do this seperately so reference time is set for all channels.
+      for(Int_t j=0; j<hcalt::ndata; j++)
+	{
+	  r = hcalt::row[j]-1;
+	  c = hcalt::col[j]-1;
+	  idx = hcalt::samps_idx[j];
+	  n = hcalt::nsamps[j];
+	  adc[r][c] = hcalt::a[j];
+	  tdc[r][c] = hcalt::tdc[j];
+	  fadc_int[j] = 0;
+	  Double_t ped_val = 0;
+	  
+	  //Make histograms of fADC pulses when the TDC also fired.
+	  if(tdc[r][c] != 0)
+	    {
+	      for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+		{
+		  histos[r][c]->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+		  fadc_int[j] = fadc_int[j] + histos[r][c]->GetBinContent(s+1-DISP_MIN_SAMPLE);
+		}
+
+	      //Subtract off avg pedestals.
+	      fadc_int[j] = fadc_int[j] - pedestal[j]*DISP_MAX_SAMPLE;
+
+	      //Fit fADC pulse with a Landau function.
+	      //func_landau[0]->GetParameter(0);
+	      func_landau[j]->SetParameter(0,histos[r][c]->GetMaximum()*4.0);//Parameter setting the height scale (not 1:1). ~4800
+	      func_landau[j]->SetParameter(1,histos[r][c]->GetBinCenter(histos[r][c]->GetMaximumBin()));//Parameter finding the location of the peak. ~15
+	      func_landau[j]->SetParameter(2,1);//Parameter setting the width. ~1
+	      func_landau[j]->SetParameter(3,250);//Parameter measuring the pedestal. ~250
+	      histos[r][c]->Fit(func_landau[j],"Q");//Don't use M or get some issues that make code take forever.
+
+	      //Fill histogram with the fadc integral and the threshold times.
+	      htime_walk[j]->Fill(fadc_int[j],func_landau[j]->GetX(threshold[j],0.,histos[r][c]->GetBinCenter(histos[r][c]->GetMaximumBin()))*fadc_res);
+	      if(j==0)
+		{
+		  //cout<<"Event "<<i<<": Approximate peak location = "<<histos[r][c]->GetBinCenter(histos[r][c]->GetMaximumBin())<<endl;
+		  //cout<<"module "<<j<<" fadc_int = "<<fadc_int[j]<<" threshold x value (ns) = "<<func_landau[j]->GetX(threshold[j],0.,histos[r][c]->GetBinCenter(histos[r][c]->GetMaximumBin()))*fadc_res<<endl;
+		}
+	    }
+	}
+      //cout<<func_landau[0]->GetX(800.,0.,20.)<<endl;
+      //TCanvas* c1=new TCanvas("c1");
+      //c1->SetGrid();
+      //histos[2][1]->Draw(); //works for event 0 run 586.
+      //histos[0][0]->Draw(); //works for event 0 run 586.
+
+      gCurrentEntry++;
+    }
+
+  //Define functions to fit the time walk corrections.
+  //log
+  TF1 **func_log = new TF1*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      func_log[i] = new TF1("func_log",fit_log, 0., 25000, 2);
+    }
+
+  //Third order polynomial.
+  TF1 **func_poly3 = new TF1*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      func_poly3[i] = new TF1("func_poly3",fit_poly3, 0., 25000, 4);
+    }
+
+  //Plot the time walk correction plots for each pmt.
+  TCanvas *ctime_walk[kNrows];
+  for(Int_t i=0; i<kNrows; i++)
+    {
+      ctime_walk[i] = new TCanvas(Form("ctime_walk_Row_%d",i));
+      ctime_walk[i]->SetGrid();
+      ctime_walk[i]->Divide(4,3);
+
+       for(Int_t j=0;j<12;j++)
+	{
+	  ctime_walk[i]->cd(j+1);
+	  htime_walk[i*12+j]->Draw();
+	  htime_walk[i*12+j]->Fit(func_log[i*12+j],"Q");
+	  htime_walk[i*12+j]->Fit(func_poly3[i*12+j],"Q");
+	}
+
+    }
+  
+  //Stop and print out stopwatch information.
+  st->Stop();
+  cout<<"CPU time = "<<st->CpuTime()<<" s = "<<st->CpuTime()/60.<<" min   Real time = "<<st->RealTime()<<" s = "<<st->RealTime()/60.<<" min"<<endl;
+}
