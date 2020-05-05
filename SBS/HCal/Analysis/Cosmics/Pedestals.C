@@ -14,10 +14,10 @@ Double_t entry;
 Int_t gCurrentEntry = 0;
 Int_t DISP_MIN_SAMPLE = 0;
 Int_t DISP_MAX_SAMPLE = 20;
-Int_t update_pedestals_file = 1;          //0-> Doesn't update the Pedestals.txt file with new values. 1-> Updates the Pedestals.txt file with the newly calculated values.
+Int_t update_pedestals_file = 1;          //DOesn't work! 0-> Doesn't update the Pedestals.txt file with new values. 1-> Updates the Pedestals.txt file with the newly calculated values.
 Int_t limit_evts = 0;                     //0-> analyze all events. 1-> only analyze events up until max_evts.
 Int_t loop_max = 0;                       //Dummy variable set equal to max_evts or nevt for the loop.
-Int_t max_evts = 50000;                   //Maximum number of events to analyze if limit_evts = 1.
+Int_t max_evts = 5000;                   //Maximum number of events to analyze if limit_evts = 1.
 const Int_t DISP_FADC_SAMPLES = (DISP_MAX_SAMPLE-DISP_MIN_SAMPLE);
 Int_t min_time = -300;
 Int_t max_time = 50;

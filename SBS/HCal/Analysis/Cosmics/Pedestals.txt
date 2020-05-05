@@ -1,5 +1,5 @@
 These pedestals were generated from run 820.
-They were generated at 10:30 on 3/19/2020.
+They were generated at 16:37 on 5/4/2020.
 Module, Avg Pedestal Value Avg Peak Height
 0   238.107   1162.52
 1   192.793   1095.84

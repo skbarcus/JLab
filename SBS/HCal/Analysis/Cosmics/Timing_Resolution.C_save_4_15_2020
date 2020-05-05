@@ -14,7 +14,7 @@
 #include<TChain.h>
 using namespace std;
 
-Int_t timing_method = 3; //0 = TDC timing using trigger copy as ref ch. 1 = fADC timing using a Landau to find the peak location for each hit (require a TDC hit too). 2 = TDC timing with fADC cuts above and below target PMT requiring an fADC peak and the 6 surrounding tubes requiring no fADC peak. Ref ch is avg of above and below TDC times. 3 = fADC integrals. Takes integral of each fADC hit (requiring TDC hit too) and makes a histo for each PMT. 4 = Plot just one module fADC integral, TDC time spectrum with channel below as ref time, and same fADC integral with optional cut on TDC time. 5 = TDC time with reference time subtracted when ref is avg of above and below tubes vs. fadc integral. 6 = Top PMT of three vertically - bottom PMT's TDC times vs. fADC integrals. 7 = Calculate time over threshold using only fADCs and a Landau fit of the signal.
+Int_t timing_method = 2; //0 = TDC timing using trigger copy as ref ch. 1 = fADC timing using a Landau to find the peak location for each hit (require a TDC hit too). 2 = TDC timing with fADC cuts above and below target PMT requiring an fADC peak and the 6 surrounding tubes requiring no fADC peak. Ref ch is avg of above and below TDC times. 3 = fADC integrals. Takes integral of each fADC hit (requiring TDC hit too) and makes a histo for each PMT. 4 = Plot just one module fADC integral, TDC time spectrum with channel below as ref time, and same fADC integral with optional cut on TDC time. 5 = TDC time with reference time subtracted when ref is avg of above and below tubes vs. fadc integral. 6 = Top PMT of three vertically - bottom PMT's TDC times vs. fADC integrals. 7 = Calculate time over threshold using only fADCs and a Landau fit of the signal.
 Double_t entry;
 Int_t gCurrentEntry = 0;
 Int_t DISP_MIN_SAMPLE = 0;
@@ -246,7 +246,7 @@ void Timing_Resolution(Int_t run = 501)
 	}
       else
 	{
-	  hfadc_integrals[i] = new TH1F(Form("hfadc_integrals%d",i),Form("Integral of fADC for Module %d",i),250,-1000,20000);//1000,-3000,20000
+	  hfadc_integrals[i] = new TH1F(Form("hfadc_integrals%d",i),Form("Integral of fADC for Module %d",i),1000,-3000,20000);
 	}
     }
 
@@ -416,9 +416,7 @@ TH2F **htdc_verticallity = new TH2F*[channels];
 	  //	  histos[r][c]->Fit("func_landau","QM");
 
 	  //Fill the timing vector with the corrected times for each channel.
-	  if(tdc[r][c] !=  0)   //Remove this TDC firing requirement for mode 4.
-	  //Require 3 vertical PMTs.
-	  //if(tdc[r][c] !=  0 && tdc[r+1][c] != 0 && tdc[r-1][c] != 0 && tdc[r][c-1] == 0 && tdc[r+1][c-1] == 0 && tdc[r-1][c-1] == 0 && tdc[r][c+1] == 0 && tdc[r+1][c+1] == 0 && tdc[r-1][c+1] == 0)
+       if(tdc[r][c] !=  0)   //Remove this TDC firing requirement for mode 4. 
 	    {
 	      //	      timing[j].push_back((tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res);
 	      //	      times[i][j] = (tdc[refrow-1][refcol-1] - tdc[r][c])*f1_res;
@@ -494,15 +492,7 @@ TH2F **htdc_verticallity = new TH2F*[channels];
 	  //if(fadc_int[j]>5500. && fadc_int[j-12]>5500. && fadc_int[j+12]>5500. && tdc[r][c]!=0 && tdc[r+1][c]!=0 && tdc[r-1][c]!=0 && fadc_int[j-1]<5100 && fadc_int[j-13]<5100 && fadc_int[j+11]<5100 && fadc_int[j+1]<5100 && fadc_int[j-11]<5100 && fadc_int[j+13]<5100)
 	  if(timing_method == 2)
 	    {
-	      //if(fadc_int[j]>fadc_int_max_cut && fadc_int[j-12]>fadc_int_max_cut && fadc_int[j+12]>fadc_int_max_cut && tdc[r][c]!=0 && tdc[r+1][c]!=0 && tdc[r-1][c]!=0 && fadc_int[j-1]<fadc_int_min_cut && fadc_int[j-13]<fadc_int_min_cut && fadc_int[j+11]<fadc_int_min_cut && fadc_int[j+1]<fadc_int_min_cut && fadc_int[j-11]<fadc_int_min_cut && fadc_int[j+13]<fadc_int_min_cut)
-	      //3 vertical hits.
-	      //if(tdc[r][c] !=  0 && tdc[r+1][c] != 0 && tdc[r-1][c] != 0 && tdc[r][c-1] == 0 && tdc[r+1][c-1] == 0 && tdc[r-1][c-1] == 0 && tdc[r][c+1] == 0 && tdc[r+1][c+1] == 0 && tdc[r-1][c+1] == 0)
-		//4 vertial hits.
-	      //if(tdc[r][c] !=  0 && tdc[r+1][c] != 0 && tdc[r-1][c] != 0 && tdc[r-2][c] != 0 && tdc[r][c-1] == 0 && tdc[r+1][c-1] == 0 && tdc[r-1][c-1] == 0 && tdc[r-2][c-1] == 0 && tdc[r][c+1] == 0 && tdc[r+1][c+1] == 0 && tdc[r-1][c+1] == 0 && tdc[r-2][c+1] == 0)
-		//5 vertial hits.
-	      //if(tdc[r][c] !=  0 && tdc[r+1][c] != 0 && tdc[r-1][c] != 0 && tdc[r-2][c] != 0 && tdc[r-3][c] != 0 && tdc[r][c-1] == 0 && tdc[r+1][c-1] == 0 && tdc[r-1][c-1] == 0 && tdc[r-2][c-1] == 0 && tdc[r-3][c-1] == 0 && tdc[r][c+1] == 0 && tdc[r+1][c+1] == 0 && tdc[r-1][c+1] == 0 && tdc[r-2][c+1] == 0 && tdc[r-3][c+1] == 0)
-	      //6 vertial hits.
-	      if(tdc[r][c] !=  0 && tdc[r+1][c] != 0 && tdc[r-1][c] != 0 && tdc[r-2][c] != 0 && tdc[r-3][c] != 0 && tdc[r-4][c] != 0 && tdc[r][c-1] == 0 && tdc[r+1][c-1] == 0 && tdc[r-1][c-1] == 0 && tdc[r-2][c-1] == 0 && tdc[r-3][c-1] == 0 && tdc[r-4][c-1] == 0 && tdc[r][c+1] == 0 && tdc[r+1][c+1] == 0 && tdc[r-1][c+1] == 0 && tdc[r-2][c+1] == 0 && tdc[r-3][c+1] == 0 && tdc[r-4][c+1] == 0)
+	      if(fadc_int[j]>fadc_int_max_cut && fadc_int[j-12]>fadc_int_max_cut && fadc_int[j+12]>fadc_int_max_cut && tdc[r][c]!=0 && tdc[r+1][c]!=0 && tdc[r-1][c]!=0 && fadc_int[j-1]<fadc_int_min_cut && fadc_int[j-13]<fadc_int_min_cut && fadc_int[j+11]<fadc_int_min_cut && fadc_int[j+1]<fadc_int_min_cut && fadc_int[j-11]<fadc_int_min_cut && fadc_int[j+13]<fadc_int_min_cut)
 		{
 		  //Fill histo with tdc times minus the reference time.
 		  htdc_fadc_cuts[j]->Fill((tdc[r][c] - (tdc[r+1][c] + tdc[r-1][c])/2.)*f1_res);

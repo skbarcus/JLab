@@ -21,6 +21,8 @@ vdc*
 *.zip
 *.svg
 *.JPG
+*.bbl
+*.blg
 
 #unignore 
 !vdc*.*
