@@ -23,7 +23,7 @@ Int_t loop_max = 0;                   //Dummy variable set equal to max_evts or 
 Int_t max_evts = 2;                   //Maximum number of events to analyze if limit_evts = 1.
 Int_t hard_thr = 1;                   //0 = use thresholds calculated as a % of max edep in a single event for BB and HCal. 1 = use the hard coded threshold values below.
 Double_t hard_hcal_thr = 0.15;        //Hard coded energy threshold for HCal GeV.
-Double_t hard_bb_thr = 2.;            //Hard coded energy threshold for BB GeV.
+Double_t hard_bb_thr = 2.5;            //Hard coded energy threshold for BB GeV.
 Int_t bins = 250;
 Int_t nevt;
 const Int_t kNrows = 24;
@@ -31,7 +31,6 @@ const Int_t kNcols = 12;
 const Int_t channels = kNrows * kNcols;
 
 Double_t theta = 14.8;                 //SBS theta in degrees.
-Double_t thr_eng = 0.1*0.977;          //Minimal energy threshold GeV. Default 10 MeV theshold in G4sbs unless otherwise specified.
 Double_t max_edep = 0.;                //Maximum energy deposited in a module GeV.
 Int_t max_edep_evt = 0;                //Event containing maximum edep module hit. 
 Int_t max_edep_row = 0;                //Row of maximum energy deposited in a module.
@@ -52,7 +51,7 @@ Double_t edep_tot_bb_sh = 0.;          //Total energy deposited in a single BB s
 Double_t edep_tot_bb = 0.;             //Total energy deposited in a single BB event (preshower + shower) GeV.
 Double_t edep_tot_bb_max = 0.;         //Maximum energy deposited in BB preshower and shower for a single event.
 Double_t bb_thr = 0.;                  //Energy threshold for accepting HCal events based on a coincident BB hit.
-Double_t bb_thr_lvl = 0.4;             //What fraction of the maximum BB energy for a single event defines the BB threshold.
+Double_t bb_thr_lvl = 0.5;             //What fraction of the maximum BB energy for a single event defines the BB threshold.
 Double_t hcal_thr = 0.;                //Energy threshold for accepting HCal events based on removing low eng HCal events.
 Double_t hcal_thr_lvl = 0.1;           //What fraction of the maximum HCal energy for a single event defines the HCal threshold.
 vector<Double_t> hcal_hit_eng;         //Vector to store the energies of each individual hcal hit.
@@ -325,7 +324,6 @@ void Energy_Deposition()
 	}
 
       //Apply an energy threshold to HCal hits and events based on BB PS+SH energy and HCal energy. .
-      //if(edep_tot > thr_eng && bb_ps_nhits > 0)
       if(edep_tot > hcal_thr && edep_tot_bb > bb_thr)
 	{
 	  //Fill histo with total event energies.
@@ -472,15 +470,15 @@ void Energy_Deposition()
     }
   */
 
-  cout<<"Max energy for a single event passing thresholds = "<<hcal_evt_eng.back()*1000.<<" MeV."<<endl;
-  Int_t hcal_evt_995;
-  hcal_evt_995 = tot_evts * 0.995;
-  cout<<"hcal_evt_995 = "<<hcal_evt_995<<" has an energy of "<<hcal_evt_eng[hcal_evt_995]*1000.<<" MeV."<<endl;
-
   cout<<"Max energy for a single hit passing thresholds = "<<hcal_hit_eng.back()*1000.<<" MeV."<<endl;
   Int_t hcal_hit_995;
   hcal_hit_995 = tot_hits * 0.995;
   cout<<"hcal_hit_995 = "<<hcal_hit_995<<" has an energy of "<<hcal_hit_eng[hcal_hit_995]*1000.<<" MeV."<<endl;
+
+  cout<<"Max energy for a single event passing thresholds = "<<hcal_evt_eng.back()*1000.<<" MeV."<<endl;
+  Int_t hcal_evt_995;
+  hcal_evt_995 = tot_evts * 0.995;
+  cout<<"hcal_evt_995 = "<<hcal_evt_995<<" has an energy of "<<hcal_evt_eng[hcal_evt_995]*1000.<<" MeV."<<endl;
  
   //Stop and print out stopwatch information.
   st->Stop();
