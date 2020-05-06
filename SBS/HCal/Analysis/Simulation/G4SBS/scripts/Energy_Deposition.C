@@ -6,6 +6,7 @@
 #include <TSystem.h>
 //#include "hcal.h"
 #include <vector>
+#include <algorithm> 
 #include <TStopwatch.h>
 #include <TDatime.h>
 
@@ -21,7 +22,7 @@ Int_t limit_evts = 0;                 //0-> analyze all events. 1-> only analyze
 Int_t loop_max = 0;                   //Dummy variable set equal to max_evts or nevt for the loop.
 Int_t max_evts = 2;                   //Maximum number of events to analyze if limit_evts = 1.
 Int_t hard_thr = 1;                   //0 = use thresholds calculated as a % of max edep in a single event for BB and HCal. 1 = use the hard coded threshold values below.
-Double_t hard_hcal_thr = 0.15;          //Hard coded energy threshold for HCal GeV.
+Double_t hard_hcal_thr = 0.15;        //Hard coded energy threshold for HCal GeV.
 Double_t hard_bb_thr = 2.;            //Hard coded energy threshold for BB GeV.
 Int_t bins = 250;
 Int_t nevt;
@@ -51,9 +52,11 @@ Double_t edep_tot_bb_sh = 0.;          //Total energy deposited in a single BB s
 Double_t edep_tot_bb = 0.;             //Total energy deposited in a single BB event (preshower + shower) GeV.
 Double_t edep_tot_bb_max = 0.;         //Maximum energy deposited in BB preshower and shower for a single event.
 Double_t bb_thr = 0.;                  //Energy threshold for accepting HCal events based on a coincident BB hit.
-Double_t bb_thr_lvl = 0.1;             //What fraction of the maximum BB energy for a single event defines the BB threshold.
+Double_t bb_thr_lvl = 0.4;             //What fraction of the maximum BB energy for a single event defines the BB threshold.
 Double_t hcal_thr = 0.;                //Energy threshold for accepting HCal events based on removing low eng HCal events.
 Double_t hcal_thr_lvl = 0.1;           //What fraction of the maximum HCal energy for a single event defines the HCal threshold.
+vector<Double_t> hcal_hit_eng;         //Vector to store the energies of each individual hcal hit.
+vector<Double_t> hcal_evt_eng;         //Vector to store the energies of each hcal event.
 
 TChain *T = 0;
 std::string user_input;
@@ -221,8 +224,6 @@ void Energy_Deposition()
   //Switch SBS angle from degrees to radians.
   theta = theta * TMath::Pi()/180.;
 
-  Int_t evts_pass_thr = 0;
-
   //Loop over all events.
   if(limit_evts==1)
     {
@@ -297,7 +298,7 @@ void Energy_Deposition()
       //Sum total BB preshower and shower energies deposited.
       edep_tot_bb = edep_tot_bb_ps + edep_tot_bb_sh;
 
-      //Find maximum energy deposited in BB shower and preshower. Have say 10% of this be threshold.
+      //Find maximum energy deposited in BB shower and preshower. Have a given % of this be the threshold.
       if(edep_tot_bb > edep_tot_bb_max)
 	{
 	  edep_tot_bb_max = edep_tot_bb;
@@ -311,47 +312,48 @@ void Energy_Deposition()
 	  bb_thr = hard_bb_thr;
 	}
 
-      //Fill BB preshower +shower energies histo.
-      if(bb_ps_nhits > 0 || bb_sh_nhits > 0)
+      //Fill BB preshower + shower energies histo.
+      if(bb_ps_nhits > 0 || bb_sh_nhits > 0)    //Require a hit in either preshower or shower.
       	{
 	  hsumedep_bb_edep_tot->Fill(edep_tot_bb);
 	}
 
-      //Fill BB preshower + shower energies histo.
+      //Fill HCal energies histo. No cuts other than ignoring events with no hits.
       if(hcal_nhits > 0)
       	{
 	  hsumedep_evt->Fill(edep_tot);
 	}
 
-      //Count total HCal events passing threshold.
+      //Apply an energy threshold to HCal hits and events based on BB PS+SH energy and HCal energy. .
       //if(edep_tot > thr_eng && bb_ps_nhits > 0)
       if(edep_tot > hcal_thr && edep_tot_bb > bb_thr)
 	{
 	  //Fill histo with total event energies.
 	  hsumedep_evt_cuts->Fill(edep_tot);
-	  evts_pass_thr++;
+
+	  //Fill HCal event energies vector.
+	  hcal_evt_eng.push_back(edep_tot);
+
+	  //Count total HCal events passing threshold and sum total energy for average energy calculation.
 	  tot_evt_eng = tot_evt_eng + edep_tot;
 	  tot_evts++;
-	}
-
-      //Loop over all individual hits in all events.
-      for(Int_t j=0; j<(*hcal_row).size(); j++)
-	{
-	  //Add threshold cut for energy deposited in the event and require a hit in the BB preshower.
-	  //if(edep_tot > thr_eng  && bb_ps_nhits > 0)
-	  if(edep_tot > hcal_thr && edep_tot_bb > bb_thr)
+	  
+	  //Loop over all individual hits in all HCal events.
+	  for(Int_t j=0; j<(*hcal_row).size(); j++)
 	    {
 	      //Fill (row,col) hits, (X,Y) hits, and edep histos.
 	      hcell_hits->Fill((*hcal_col)[j],(*hcal_row)[j]);
 	      //hxy_hits->Fill((*hcal_xhitg)[j],(*hcal_yhitg)[j]);
 	      hxy_hits->Fill((*hcal_xhitg)[j]*cos(theta)+(*hcal_zhitg)[j]*sin(theta),(*hcal_yhitg)[j]-0.45);
 	      hsumedep->Fill((*hcal_sumedep)[j]);
-	      
+	  
+	      //Fill HCal hit energies vector.
+	      hcal_hit_eng.push_back((*hcal_sumedep)[j]);
+
+	      //Sum total hit energy (should match total event energy) and count number of hits passing threshold.
 	      tot_hit_eng = tot_hit_eng + (*hcal_sumedep)[j];
 	      tot_hits++;
-	      //Sum total energy deposited for all hits in event.
-	      //edep_tot = edep_tot + (*hcal_sumedep)[j];
-
+	      
 	      //Find maximal energy deposited in a module.
 	      if((*hcal_sumedep)[j] > max_edep)
 		{
@@ -360,7 +362,7 @@ void Energy_Deposition()
 		  max_edep_col = (*hcal_col)[j];
 		  max_edep_evt = i;
 		}
-	    }
+	    }  
 	}
 
       if(i%5000==0)
@@ -413,17 +415,22 @@ void Energy_Deposition()
   func_gaus_fit_edep_evt->Draw("same");
 
   TCanvas* csumedep_bb_ps=new TCanvas("csumedep_bb_ps");
+  csumedep_bb_ps->Divide(1,3);
+  csumedep_bb_ps->cd(1);
   csumedep_bb_ps->SetGrid();
   hsumedep_bb_ps->Draw("");
 
-  TCanvas* csumedep_bb_sh=new TCanvas("csumedep_bb_sh");
-  csumedep_bb_sh->SetGrid();
+  //TCanvas* csumedep_bb_sh=new TCanvas("csumedep_bb_sh");
+  //csumedep_bb_sh->SetGrid();
+  csumedep_bb_ps->cd(2);
   hsumedep_bb_sh->Draw("");
 
-  TCanvas* csumedep_bb_edep_tot=new TCanvas("csumedep_bb_edep_tot");
-  csumedep_bb_edep_tot->SetGrid();
+  //TCanvas* csumedep_bb_edep_tot=new TCanvas("csumedep_bb_edep_tot");
+  //csumedep_bb_edep_tot->SetGrid();
+  csumedep_bb_ps->cd(3);
   hsumedep_bb_edep_tot->Draw("");
-  csumedep_bb_edep_tot->Update();//Need update to get gPad->GetUymax() to work.
+  //csumedep_bb_edep_tot->Update();//Need update to get gPad->GetUymax() to work.
+  csumedep_bb_ps->Update();
   TLine *line_bb_thr = new TLine(bb_thr,0,bb_thr,gPad->GetUymax());
   line_bb_thr->SetLineColor(2);
   line_bb_thr->SetLineWidth(2);
@@ -437,7 +444,7 @@ void Energy_Deposition()
   cout<<"Maximum energy deposited for all hits in a single event = "<<max_edep_tot*1000.<<" MeV ("<<max_edep_tot*1000.*npe_mev<<" PE) for event "<<max_edep_tot_evt<<"."<<endl;
 
   //Print number of events that passed the threshold.
-  cout<<"Number of events passing threshold = "<<evts_pass_thr<<endl;
+  cout<<"Number of events passing threshold = "<<tot_evts<<endl;
 
   //Print the average energy deposited in a PMT's scintillator and the average energy deposited in an event.
   cout<<"Total hits accepted = "<<tot_hits<<". Total energy deposited in scintillators of accepted hits = "<<tot_hit_eng<<" GeV. Average energy deposited in a PMT's scintillator per hit = "<<(tot_hit_eng/tot_hits)*1000.<<" MeV."<<endl;
@@ -447,6 +454,34 @@ void Energy_Deposition()
 
   cout<<"Max energy deposited in BB preshower and shower for a single event = "<<edep_tot_bb_max<<". BB threshold = "<<bb_thr*1000<<" MeV."<<endl;
 
+  //Sort the HCal accepted event energies in ascending order.
+  sort(hcal_evt_eng.begin(), hcal_evt_eng.end());
+  /*
+  for(Int_t i=0;i<hcal_evt_eng.size();i++)
+    {
+      cout<<hcal_evt_eng[i]<<" ";
+    }
+  */
+
+  //Sort the HCal accepted hit energies in ascending order.
+  sort(hcal_hit_eng.begin(), hcal_hit_eng.end());
+  /*
+  for(Int_t i=0;i<hcal_hit_eng.size();i++)
+    {
+      cout<<hcal_hit_eng[i]<<" ";
+    }
+  */
+
+  cout<<"Max energy for a single event passing thresholds = "<<hcal_evt_eng.back()*1000.<<" MeV."<<endl;
+  Int_t hcal_evt_995;
+  hcal_evt_995 = tot_evts * 0.995;
+  cout<<"hcal_evt_995 = "<<hcal_evt_995<<" has an energy of "<<hcal_evt_eng[hcal_evt_995]*1000.<<" MeV."<<endl;
+
+  cout<<"Max energy for a single hit passing thresholds = "<<hcal_hit_eng.back()*1000.<<" MeV."<<endl;
+  Int_t hcal_hit_995;
+  hcal_hit_995 = tot_hits * 0.995;
+  cout<<"hcal_hit_995 = "<<hcal_hit_995<<" has an energy of "<<hcal_hit_eng[hcal_hit_995]*1000.<<" MeV."<<endl;
+ 
   //Stop and print out stopwatch information.
   st->Stop();
   cout<<"CPU time = "<<st->CpuTime()<<" s = "<<st->CpuTime()/60.<<" min   Real time = "<<st->RealTime()<<" s = "<<st->RealTime()/60.<<" min"<<endl;
