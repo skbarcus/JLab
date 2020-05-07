@@ -433,6 +433,11 @@ void Energy_Deposition()
   line_bb_thr->SetLineColor(2);
   line_bb_thr->SetLineWidth(2);
   line_bb_thr->Draw("same");
+
+  TCanvas* csumedep_bb_edep_tot=new TCanvas("csumedep_bb_edep_tot");
+  csumedep_bb_edep_tot->SetGrid();
+  hsumedep_bb_edep_tot->Draw("");
+  line_bb_thr->Draw("same");
    
 
   //Print the module with the maximal edep and its location.
