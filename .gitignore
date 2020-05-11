@@ -23,6 +23,8 @@ vdc*
 *.JPG
 *.bbl
 *.blg
+*.bst
+*.spl
 
 #unignore 
 !vdc*.*

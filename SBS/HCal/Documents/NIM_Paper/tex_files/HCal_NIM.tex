@@ -1,0 +1,125 @@
+\documentclass[review]{elsarticle}
+
+\usepackage{lineno,hyperref}
+\modulolinenumbers[5]
+
+\journal{Journal of \LaTeX\ Templates}
+
+\newcommand{\hcal}{HCAL-J }
+\newcommand{\jlab}{Jefferson Lab }
+\newcommand{\q}{$Q^2$ }
+
+%%%%%%%%%%%%%%%%%%%%%%%
+%% Elsevier bibliography styles
+%%%%%%%%%%%%%%%%%%%%%%%
+%% To change the style, put a % in front of the second line of the current style and
+%% remove the % from the second line of the style you would like to use.
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Numbered
+%\bibliographystyle{model1-num-names}
+
+%% Numbered without titles
+%\bibliographystyle{model1a-num-names}
+
+%% Harvard
+%\bibliographystyle{model2-names.bst}\biboptions{authoryear}
+
+%% Vancouver numbered
+%\usepackage{numcompress}\bibliographystyle{model3-num-names}
+
+%% Vancouver name/year
+%\usepackage{numcompress}\bibliographystyle{model4-names}\biboptions{authoryear}
+
+%% APA style
+%\bibliographystyle{model5-names}\biboptions{authoryear}
+
+%% AMA style
+%\usepackage{numcompress}\bibliographystyle{model6-num-names}
+
+%% `Elsevier LaTeX' style
+\bibliographystyle{elsarticle-num}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{A Hadron Calorimeter for Nucleon Form Factor Measurements}
+%\tnotetext[mytitlenote]{Fully documented templates are available in the elsarticle package on \href{http://www.ctan.org/tex-archive/macros/latex/contrib/elsarticle}{CTAN}.}
+
+%% Group authors per affiliation:
+\author[jlab]{S. Barcus\corref{mycorrespondingauthor}}
+\cortext[mycorrespondingauthor]{Corresponding author}
+\ead{skbarcus@jlab.org}
+%\address{Radarweg 29, Amsterdam}
+%\author[jlab]{S. Barcus\fnref{myfootnote}}
+%\fntext[myfootnote]{Jefferson Lab.}
+
+%% or include affiliations in footnotes:
+%\author[mymainaddress,mysecondaryaddress]{Elsevier Inc}
+%\ead[url]{www.elsevier.com}
+
+%\author[jlab]{Jefferson Lab}
+\address[jlab]{Jefferson Laboratory}
+
+%\author[mysecondaryaddress]{Global Customer Service\corref{mycorrespondingauthor}}
+%\ead{support@elsevier.com}
+
+%\address[mymainaddress]{1600 John F Kennedy Boulevard, Philadelphia}
+%\address[mysecondaryaddress]{360 Park Avenue South, New York}
+
+\begin{abstract}
+\hcal is a sampling calorimeter designed to measure the energy of several GeV protons and neutrons. It will be used for measuring hadron energy and triggering purposes in the upcoming Super BigBite Spectrometer (SBS) program to study nucleon form factors at the Thomas Jefferson National Accelerator Facility (Jefferson Lab). \hcal has an energy resolution of ***\% and a position resolution of *** cm. 
+\end{abstract}
+
+\begin{keyword}
+calorimetry\sep nucleon form factors \sep \hcal
+%\MSC[2010] 00-01\sep  99-00
+\end{keyword}
+
+\end{frontmatter}
+
+\linenumbers
+
+\section{Introduction}
+
+\jlab uses the Continuous Electron Beam Accelerator Facility (CEBAF) to accelerate electrons for scattering experiments. After a recently completed upgrade CEBAF is capable of accelerating electrons up to 12 GeV. This increased maximum energy allows the lab to probe higher \q regions than previously available. One aspect of this 12 GeV era is the Super BigBite Spectrometer (SBS) program in Hall A. SBS consists of the SBS dipole magnet which curves the trajectory of scattered hadrons, the \hcal for energy measurements, Gas Electron Multipliers (GEMs) for particle tracking, polarimeters, a coordinate detector, and the refurbished BigBite detector package which includes a hodoscope, gas Cherenkov, and shower calorimeters \cite{brio_2018}. The SBS program will measure the nucleon form factors $G_M^n$ \cite{gmn_proposal}, $G_E^n$ \cite{gen_proposal}, and $G_E^p$ \cite{gep_proposal} at significantly higher \q than has been done before. 
+
+\section{Hadron Calorimeter}
+
+\hcal consists of 288 individual modules arranged in 12 columns and 24 rows as shown in Figure \ref{fig:HCal}. These modules are spread across four craneable subassemblies, and the detector weighs approximately 40 tons in total. Each module is made up of 40 layers of 1 cm thick scintillator (PPO only, 2,5-Diphenyloxazole) alternating with 40 layers of 1.5 cm thick iron absorbers as shown in Figure \ref{fig:HCal_interior}, and each module measures 15$\times$15 cm$^2$ with a length of 1 m. The hadrons strike the iron causing them to shower, and the scintillators produce photons from these shower particles. In the center of the iron and scintillators is a St. Gobain BC-484 wavelength shifter, decay time 3 ns, which improves light collection efficiency and uniformity \cite{brio_2018}. The photons in the wavelength shifter are transported to photomultiplier tubes (PMTs) on one end of the modules via custom built light guides that can be seen in \ref{fig:HCal_interior}.
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.4\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_External_Clean.png}
+	\end{center}
+	\caption{
+	{\bf{SBS Hadron Calorimeter.}} \hcal is composed of 288 PMT modules divided into four separate subassemblies which can be moved by crane (total weight $\approx$40 tons). The fully assembled HCal will have 12 columns and 24 rows of modules with PMTs attached. Image from \cite{brio_2018}.}
+	\label{fig:HCal}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.65\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_Interior_Clean.png}
+	\includegraphics[width=0.85\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/HCal_Interior_Light_Guide_Clean.png}
+	\end{center}
+	\caption{
+	{\bf{SBS Hadron Calorimeter Module Interior.}} The interior of each \hcal module is comprised of alternating layers of iron absorbers and scintillators. The hadrons shower in the iron and then these showers create photons in the scintillators. These photons pass through a wavelength shifter before being transported into the PMTs via light guides. Image from \cite{brio_2018}.}
+	\label{fig:HCal_interior}
+	\end{figure}	
+	
+
+\section{High Voltage System}
+
+\section{Data Acquisition}
+
+\section{\hcal Performance}
+
+\section{Summary}
+
+\section*{References}
+
+\bibliography{mybibfile}
+
+\end{document}
