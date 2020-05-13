@@ -2,6 +2,9 @@
 
 \usepackage{lineno,hyperref}
 \modulolinenumbers[5]
+\usepackage{amsmath} %Use \text in math mode.
+%Allows for the making of cells in tables.
+\usepackage{makecell}
 
 \journal{Journal of \LaTeX\ Templates}
 
@@ -86,9 +89,40 @@ calorimetry\sep nucleon form factors \sep \hcal
 
 \jlab uses the Continuous Electron Beam Accelerator Facility (CEBAF) to accelerate electrons for scattering experiments. After a recently completed upgrade CEBAF is capable of accelerating electrons up to 12 GeV. This increased maximum energy allows the lab to probe higher \q regions than previously available. One aspect of this 12 GeV era is the Super BigBite Spectrometer (SBS) program in Hall A. SBS consists of the SBS dipole magnet which curves the trajectory of scattered hadrons, the \hcal for energy measurements, Gas Electron Multipliers (GEMs) for particle tracking, polarimeters, a coordinate detector, and the refurbished BigBite detector package which includes a hodoscope, gas Cherenkov, and shower calorimeters \cite{brio_2018}. The SBS program will measure the nucleon form factors $G_M^n$ \cite{gmn_proposal}, $G_E^n$ \cite{gen_proposal}, and $G_E^p$ \cite{gep_proposal} at significantly higher \q than has been done before. \\
 
-Since the initial measurement of the proton's electromagnetic form factors in the 1950's \cite{hofstadter_1956} great strides have been made in understanding the nucleon form factors. By the 1990's the nucleon form factors: $G_E^p$, $G_M^p$, $G_E^n$, and $G_M^n$ were found to generally follow a dipole description $F_{dipole} = \left( 1+\frac{Q^2}{0.71 \;GeV^2}\right)^{-2}$ \cite{bosted_1995}. The ratio of the proton's Sachs form factors, $R_p(Q^2) = \mu_{p}\frac{G_E^p}{G_M^p}$, was found to be approximately unity up to $Q^2$ $\approx$ 1 GeV. However, the nucleon form factor data up until the the mid 1990's all came from unpolarized Rosenbluth separations.
+Since the initial measurement of the proton's electromagnetic form factors in the 1950's \cite{hofstadter_1956} great strides have been made in understanding the nucleon form factors. By the 1990's the nucleon form factors: $G_E^p$, $G_M^p$, $G_E^n$, and $G_M^n$ were found to generally follow a dipole description $F_{dipole} = \left( 1+\frac{Q^2}{0.71 \;GeV^2}\right)^{-2}$ \cite{bosted_1995}. The ratio of the proton's Sachs form factors, $R_p(Q^2) = \mu_{p}\frac{G_E^p}{G_M^p}$, was found to be approximately unity up to $Q^2$ $\approx$ 1 GeV. However, the nucleon form factor data up until the the mid 1990's all came from unpolarized Rosenbluth separations.\\
 
-At the turn of the century physicists began measuring the nucleon form factors using the polarization transfer method first proposed in the late 1950's \cite{polarization_transfer} as well as the double polarization method proposed in the early 1980's \cite{double_polarization} ***(check correct paper). 
+At the turn of the century physicists began measuring the nucleon form factors using the polarization transfer method first proposed in the late 1950's \cite{polarization_transfer} as well as the double polarization method proposed in the early 1980's \cite{double_polarization} ***(check correct paper). These polarization techniques are far less sensitive to two photon exchange effects than traditional Rosenbluth separations. Since the early 2000's many such polarization measurements of the nucleon form factors have been made in the high \q region of $1\; \text{GeV}^2 < Q^2 < 10\; \text{GeV}^2$. These new polarization measurements were in stark disagreement with form factor measurements from Rosenbluth techniques in this higher $Q^2$ region. Polarization methods indicated that the ratio of the proton's form factors, $R_p(Q^2)$, diverged from unity with the proton electric form factor falling off far more rapidly than the magnetic form factor as shown in Figure \ref{fig:polarization_vs_rosenbluth}. Whereas, the Rosenbluth results remained consistent with an $R_p(Q^2) \approx 1$, albeit with larger uncertainties than the polarized measurements.\\
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.6\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/Rosenbluth_vs_Polarized_FFs_Clean.png}
+	\end{center}
+	\caption{
+	{\bf{Ratio of Proton's Sachs Form Factors, $R_p(Q^2)$.}} The dotted line at unity indicates adherence to dipole form factors. The solid and dashed lines are fits to the data. The experiments listed in the top half of the image are unpolarized Rosenbluth separations, and the experiments in the lower half of the image used polarization techniques. Image from \cite{cisbani_2014}***need clearer image or maybe the ones from other paper.}
+	\label{fig:polarization_vs_rosenbluth}
+	\end{figure}	
+
+The SBS nucleon form factor experiments will explore even higher \q regions than previously. The $G_M^n$ experiment with measure the magnetic form factor of the neutron by measuring quasielastic electron scattering cross section ratios d(e,e'n)p/d(e,e'p)n off of liquid deuterium \cite{gmn_proposal}. The $G_E^n$ experiment will measure the $G_E^n$/$G_M^n$ ratio using the double polarization technique to measure the asymmetry of electron scattering off of polarized $^3$He \cite{gen_proposal}. Using the high-precision $G_M^n$ data acquired by SBS $G_E^n$ can be directly extracted from this ratio. The $G_E^p$ experiment will measure the ratio $G_E^p$/$G_M^p$ at high $Q^2$ using the polarization transfer method to scatter electrons from a liquid(***check) hydrogen target \cite{gep_proposal}. Table \ref{tab:q2_ranges} summarizes the \q ranges to be measured by the SBS nucleon form factor experiments. 
+
+ 	\begin{table}[h]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|cc|}
+	\hline
+	\makecell{Nucleon\\ Form Factor} & \makecell{\q Range\\ $[$GeV$^2]$}\\
+	\hline
+	$G_E^p$ & 5.0-12.0\\
+    $G_M^p$ & 4.8-14.0\\
+    $G_E^n$ & 1.5-10.2\\
+    $G_M^n$ & 3.5-13.5\\
+	\hline
+	\end{tabular}
+	%\label{tab:edep}
+	\caption{{\bf{Kinematic Ranges of the SBS Nucleon Form Factor Experiments.}} ***check ranges.} %Caption* supresses printing of second caption saying Table number again.
+	\label{tab:q2_ranges}
+	\end{table}
+	
+	Precision measurements of the nucleon form factors will improve uncertainties at lower $Q^2$, while at high \q these measurements will offer important new physics insights. These measurements are a rigorous test for competing lattice QCD, pQCD, VMD models, and effective field theory predictions which have large disagreements in the high \q region (*** add plot showing theory curves?). This new data will also increase the \q range of the form factor flavor decompositions. Additionally, because the nucleon form factors $F_1$ and $F_2$ equal the first moments of the $H^q$ and $E^q$ generalized parton distribution functions (GPDs), the nucleon form factors provide an important constraint for developing GPD models \cite{gen_proposal}. The $H^q$ and $E^q$ GPDs are directly related to quark orbital angular momentum \cite{cisbani_2014}(***maybe use his ref 5) meaning nucleon form factor measurements will provide tantalizing new insight into this quantity.  
 
 \section{Hadron Calorimeter}
 
