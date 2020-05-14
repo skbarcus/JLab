@@ -239,8 +239,23 @@ The third set of signals leading to the summing modules takes the following path
 \subsection{Triggers}
 \label{triggers}
 
-\subsection{LED System}
+When particles strike \hcal and create showers these showers spread over multiple modules, generally around 3-7***, based on the energy of the incident particle. To reconstruct the energy of the particle the signals from each individual module that measured any energy being deposited must be summed together to find the particle's energy upon striking the detector. The summing modules*** sum the output signals of 4$\times$4 blocks of PMT signals which are each attached to one of the 288 individual detector modules. These 4$\times$4 blocks of 16 modules are then further summed as 8$\times$8 blocks of 64 modules, made up of four adjacent 4$\times$4 blocks of modules, as seen in Figure \ref{fig:sum_trigger}. Any combination of the sums of 16 blocks and/or the sums of 64 blocks can be used to create a trigger from the detector. The \hcal sum trigger will form a coincidence with the BigBite electron detector to create the main experimental trigger for the SBS nucleon form factor experiments.***check if HCal in all main triggers and what specific sums we plan to use.
+
+ 	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.5\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/Summing_Module_Triggers.png}
+	\end{center}
+	\caption{
+	{\bf{\hcal Module Sum Trigger.}} The diagram shows the layout of \hcal with its structure of 12$\times$24 individual detector modules as the small black squares. The summing modules*** sum 4$\times$4 blocks of individual detector module PMT signals. The 18 summed 4$\times$4 blocks are shown as red squares. These groups of 16 modules are then used to create larger sums of 64 individual detector module PMT signals in the form of four adjacent 4$\times$4 blocks of modules. The locations of these 10 sums of 64 modules, organized as 8$\times$8 blocks, are shown by blue circles at their centers surrounding the corners of the four 4$\times$4 blocks they sum together. Note that some 16 block sums are shared by more than one of the 64 block sums.}
+	\label{fig:sum_trigger}
+	\end{figure}	
+
+A cosmic ray trigger is implemented with \hcal as well. This trigger consists of a plastic scintillator placed on top of the detector. When particles from cosmic rays pass through this scintillator a trigger is formed and each of the individual detector modules' fADCs and TDCs each read out. Cosmic rays are useful for calibrating detector settings like the high voltage settings as they are a constant presence with a consistent spectrum that can be measured when the electron beam is unavailable. Cosmic rays are also an excellent source to measure when testing the various electronics of the front-end and DAQ in preparation for upcoming experiments.
+
+\subsubsection{LED System}
 \label{leds}
+
+\hcal is also equipped with an LED pulser system that can be used for triggering purposes. 
 
 \subsection{Dry Air Supply}
 \label{dry_air}
@@ -250,6 +265,8 @@ The third set of signals leading to the summing modules takes the following path
 
 \section{Data Acquisition}
 \label{daq}
+
+\hcal integrates with the standard \jlab Hall A data acquisition system \cite{hall_a}. A core part of this setup is the CEBAF On-line Data Acquisition System (CODA) created by the \jlab data acquisition group. CODA runs on VME and VXS crates containing the individual DAQ modules using the VxWorks operation system as well as on linux workstations. Read-out controllers (ROCs) are a primary feature of CODA that run on the crates containing the DAQ modules. The ROCs hold the software that controls the individual DAQ modules while also taking the experimental data from the modules and holding it in a memory buffer. This buffered data is then transmitted to a workstation via network connection where the Event Builder (EB) arranges the data sent from the ROCs into event groupings. The EB then sends these events to the Event Recorder (ER) which writes the events to the local disk. The data is then transferred to tapes in the \jlab Mass Storage System (MSS). An Event Tranfser (ET) system is used to insert outside data into the event files throughout this process. This typically includes data such as scaler measurements, beam characteristics, and target conditions. CODA is controlled via the RunControl process which allows users to start and stop data runs, reconfigure the DAQ setup, and monitor the status of DAQ components via a GUI interface \cite{coda}.
 
 \section{\hcal Performance}
 \label{results}
