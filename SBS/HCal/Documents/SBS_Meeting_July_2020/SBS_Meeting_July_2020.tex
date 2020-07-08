@@ -1,0 +1,584 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=phys,% 
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+\usepackage{amsmath}
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{HCal Update}
+\subtitle{}
+\date{November 14\textsuperscript{th} 2019}
+\author{Scott Barcus and Juan Carlos Cornejo}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{HCal Hall Layout}
+
+	\begin{itemize}
+		\item Detect multiple GeV protons and neutrons. 
+	\end{itemize}
+
+%	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/HCal_Hall_Layout_Clean.png}
+	\end{center}
+%	\caption{
+%	{\bf{HCal Layout in Hall A.}} }
+%	\label{fig:hall_layout}
+%	\end{figure}
+\end{frame}
+
+\begin{frame}{Detector HV and PMT Cables}
+
+	\begin{itemize}
+		\item Detector cabling completed.
+	\end{itemize}
+	
+	\begin{center}
+  		\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170610.jpg}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{HCal Front End}
+
+	\includegraphics[width=1.0\textwidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBSAugust2019_HCAL_StatusReport/HCal_FE.png}
+
+\end{frame}
+
+\begin{frame}{HCal Front End Cont.}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_FE_RR1.jpg}
+	
+	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_FE_RR3.jpg}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{HCal Front End Cont.}
+    \centering
+	\includegraphics[width=0.43\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_FE_RR2.jpg}
+
+\end{frame}
+
+\begin{frame}{HCal DAQ Side}
+
+	\includegraphics[width=1.0\textwidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBSAugust2019_HCAL_StatusReport/HCal_DAQ.png}
+
+\end{frame}
+
+\begin{frame}{HCal DAQ Side Cont.}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_DAQ_RR4.jpg}
+	
+	\column{0.5\textwidth}
+	\includegraphics[width=.85\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_DAQ_RR5.jpg}
+	\end{columns}
+
+\end{frame}
+
+%\begin{frame}{HCal Front-End Layout}
+%
+%	\begin{itemize}
+%		\item Front end layout.
+%	\end{itemize}
+%
+%	\vspace{-3mm}
+%%	\begin{figure}[!ht]
+%	\begin{center}
+%	\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Update/HCal_Front_End_Clean.png}
+%	\end{center}
+%%	\caption{
+%%	{\bf{HCal Front-End Layout.}} }
+%%	\label{fig:front_end}
+%%	\end{figure}
+%\end{frame}
+
+%\begin{frame}{HCal Front-End Layout RR1 $\&$ RR3}
+%	
+%	\begin{columns}[T,onlytextwidth]
+%	\column{0.5\textwidth}
+%	\vspace{6mm}
+%	\begin{itemize}
+%		\item RR1 and RR3 are nearly identical and contain:
+%			\begin{itemize}
+%				\item[--] Bottom crate \alert{9 amplifiers}. 16 ch in 16X2 ch out. Outputs to FADC and splitter panels.
+%				\item[--] \alert{9 splitter panels}. 16 ch in 16X2 ch out.  A = output to summers, B = input from amps, C = output to discriminators. 
+%				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{RR1} top crate has \alert{8 summers + 1 discriminator}. \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{RR3} top crate has \alert{7 summers}.\setbeamercolor{alerted text}{fg=mLightBrown}
+%			\end{itemize}
+%	\end{itemize}
+%	
+%  	\column{0.5\textwidth}
+%  	
+%  		\begin{center}
+%  		\includegraphics<1>[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg}
+%  		\includegraphics<2>[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170802.jpg}
+%  		\end{center}
+%  		
+%  		%\begin{center}
+%		%\begin{figure}[!ht]
+%		%\begin{overprint}[12cm]
+%		
+%%		\onslide<1>\includegraphics[width=0.3\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg}
+%%		\caption{{\bf{RR1 Uncabled.}} }
+%%		\label{fig:RR1}
+%%		\onslide<2>\includegraphics[width=0.3\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170802.jpg}
+%%		\caption{{\bf{RR2 Partially Cabled}} }
+%%		\label{fig:RR2}
+%		
+%%		\includegraphics<1>[width=0.3\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg} \caption{{\bf{RR1 Uncabled.}} }
+%%		\label{fig:RR1}
+%%		\includegraphics<2>[width=0.3\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170802.jpg}%\captionof{figure}{RR2} 
+%%		%\caption{{\bf{RR2 Partially Cabled}} }
+%%		\label{fig:RR2}
+%		
+%		%\end{overprint}
+%%		\end{figure}
+%		%\end{center}
+%  	
+%%	\begin{figure}[!ht]
+%%	\begin{center}
+%%	\includegraphics[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170713.jpg}
+%%	\end{center}
+%%	\caption{
+%%	{\bf{RR1 Uncabled.}} }
+%%	\label{fig:front_end}
+%%	\end{figure}
+%	
+%	\end{columns}
+%	
+%\end{frame}
+
+%\begin{frame}{HCal Front-End Layout RR2}
+%
+%	\begin{columns}[T,onlytextwidth]
+%	\column{0.5\textwidth}
+%	\vspace{8mm}
+%	\begin{itemize}
+%		\item RR2 takes inputs from RR1 and RR3.
+%		\item RR2 contains:
+%		\begin{itemize}
+%			\item[--] An upper and lower crate each with 9 discriminators.
+%			\begin{enumerate}
+%			
+%				\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{RR1} uses the \alert{bottom 9 discriminators}. 
+%				\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{RR3} uses the \alert{top 9 discriminators}. 
+%			
+%			\end{enumerate}
+%			\item[--] 10 16X4 ch patch panels (still need one more).
+%			\begin{enumerate}
+%				\item Bottom 5 PPs go to \alert{FADC}.
+%				\item Top 5 PPs go to \alert{TDC}.
+%			\end{enumerate}
+%		\end{itemize}
+%	\end{itemize}
+%	
+%	\column{0.5\textwidth}
+%	  	\begin{center}
+%  		\includegraphics[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170743.jpg}
+%  		\end{center}
+%	\end{columns}
+%
+%\end{frame}
+
+\begin{frame}{Current Status}
+
+	\begin{itemize}
+		\item \alert{Detector}:
+			\begin{itemize}
+				\item[--] Cabling completed.
+				\item[--] PMTs need gain matching (some measurements already made).
+			\end{itemize}
+		\item \alert{Front-End}:
+			\begin{itemize}
+				\item[--] Electronics are tested (some minor repairs outstanding) except summing modules.
+				\item[--] Half of FE is cabled (several cables being repaired still).
+			\end{itemize}
+		\item \alert{DAQ Side}:
+			\begin{itemize}
+				\item[--] 3/4 cabled.
+				\item[--] Electronics tested and operational.
+				\item[--] 18 operational fADCs.
+				\item[--] 5 operational F1TDCs.
+			\end{itemize}
+		\item \alert{Software}:
+			\begin{itemize}
+				\item[--] Decoder operational.
+				\item[--] Still on CODA 2.
+				\item[--] Preliminary event-by-event display.
+				\item[--] Timing resolution analysis instituted. 
+			\end{itemize}
+		\item \alert{Cosmic tests} are under way for calibrating the detector.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Event-by-Event Display}
+
+	\begin{itemize}
+		\item Selected cosmic events. (Module 4-1 is a reference channel.)
+	\end{itemize}
+
+	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Display_run527_evt375.png}
+  		\includegraphics<2>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Display_run527_evt387.png}
+  		\includegraphics<3>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Display_run527_evt383.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Timing Resolution Cuts}
+
+	\begin{columns}[T,onlytextwidth]
+	\column{0.4\textwidth}
+	\begin{itemize}
+		\item Require cosmic to be nearly \alert{vertical}.
+			\begin{itemize}
+				\item[--] Three vertical TDC and fADC signals.
+				\item[--] No signals in surrounding modules.
+			\end{itemize}
+		\item TDC time:
+		\begin{equation*}
+			\text{T}_{\text{cor}}=\text{T}_{\text{meas}} - \frac{\text{TDC\;1}+\text{TDC\;2}}{2}
+		\end{equation*}
+		\item Create histogram of all times and find standard deviation.
+	\end{itemize}
+	
+	\column{0.6\textwidth}
+	\begin{center}
+  		\includegraphics[width=1.3\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Timing_Resolution_Cuts.png}
+  	\end{center}
+  	\end{columns}
+
+\end{frame}
+
+\begin{frame}{fADC Integral Plots}
+
+	\begin{itemize}
+		\item Events at zero are pedestals. fADC recorded when TDC fired.
+	\end{itemize}
+
+	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/fADC_Integrals_540_Row9.png}
+  		\includegraphics<2>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/fADC_Integrals_540_Row3.png}
+  		\includegraphics<3>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/fADC_Integrals_540_Row11.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Timing Resolution Plots}
+
+	\begin{itemize}
+		\item Average timing resolution is 1-1.5 ns for each module.
+	\end{itemize}
+
+	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Timing_Resolution_540_Row9.png}
+  		\includegraphics<2>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Timing_Resolution_540_Row3.png}
+  		\includegraphics<3>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Timing_Resolution_540_Row11.png}
+  	\end{center}
+
+\end{frame}
+
+%\begin{frame}{Cable Tie Bars}
+%
+%	\begin{itemize}
+%		\item Bars help \alert{support cables} without stressing them while also helping with \alert{organization}.
+%	\end{itemize}
+%	
+%	\begin{center}
+%  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190506_141426.jpg}
+%  		\includegraphics<2>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170921.jpg}
+%  		\includegraphics<3>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170849.jpg}
+%    \end{center}
+%
+%\end{frame}
+
+\begin{frame}{Machine Learning Detector Trigger for HCal LDRD Proposal}
+
+	\begin{itemize}
+		\item Motivation:
+			\begin{itemize}
+				\item[--] High background rates obscure physics signals.
+			\end{itemize}
+		\item Traditional Solutions:
+			\begin{itemize}
+				\item[--] Energy threshold cuts.
+				\item[--] Prescaling the data.
+				\item[--] Decreasing the beam current.
+			\end{itemize}
+		\item Machine Learning Solution:
+			\begin{itemize}
+				\item[--] Train a neural network to classify detector events (e.g. p, n, $\pi$).
+				\item[--] Use data from G4SBS converted to detector output to train NN.
+				\item[--] Load trained NN onto VTP FPGA (fast) to use as HCal trigger.
+			\end{itemize}
+		\item Goal:
+			\begin{itemize}
+				\item[--] Demonstrate that NNs can be loaded onto VTPs for triggering JLab detectors.
+				\item[--] Allow HCal to run at higher current with a cleaner trigger.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Brief Neural Network Overview}
+
+	\vspace{-3mm}
+	\begin{center}
+  		\includegraphics<1>[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/neural_network.png}\\
+  		\tiny{Image from https://www.astroml.org/book$\_$figures/chapter9/fig$\_$neural$\_$network.html.}
+  	\end{center}
+  	
+  	\vspace{-5mm}
+  	\begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+  	
+  	\begin{itemize}
+  		\item Feed Forward:
+  			\begin{itemize}
+  				\item[--] Initialize random weights and biases.
+  				\item[--] Enter labeled training data to input layer.
+  				\item[--] Calculate activation of each neuron (did it fire?).
+  				\item[--] Feed forward activation until output layer reached.
+  			\end{itemize}
+  	\end{itemize}
+  	
+  	\column{0.5\textwidth}
+  	
+  	\begin{itemize}
+  		\item Backpropagation:
+  			\begin{itemize}
+  				\item[--] Evaluate loss function. How wrong is the NN's guess?
+  				\item[--] Apply backpropagation algorithm to step back through NN (Chain rule).
+  				\item[--] Adjust weights and biases along the gradient of descent (minimize loss function).
+  				\item[--] Repeat. 
+  			\end{itemize}
+  	\end{itemize}
+
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Convolutional Neural Networks}
+
+	\begin{center}
+  		\includegraphics<1>[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/CNN.png}\\
+  		\tiny{Image from https://www.mdpi.com/2076-3417/9/21/4500.}
+  	\end{center}
+
+	\begin{itemize}
+		\item Started with image classification. 
+		\item Detector traces are essentially images.
+			\begin{itemize}
+				\item[--] For every event each PMT has numerous fADC samples (like pixels) and a TDC value.
+				\item[--] The location of the PMTs relative to one another is important!
+			\end{itemize}
+		\item Dense NNs assume each neuron connection is equally important.
+		\item CNNs scan across the image with a kernel creating filters which identify localized features.
+		\item Pooling layers decrease the dimensionality to keep things manageable.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Overview of Research Plan}
+
+	\begin{enumerate}
+		\item Produce labeled training data from G4SBS.
+		\item Convert G4SBS data into detector signals.
+		\item Design model architecture (probably CNN).
+		\item Train CNN on simulated detector data.
+		\item Optimize model hyperparameters (layers, neurons, learning rate ...).
+		\item Using hls4ml translate the CNN into FPGA compatible code.
+		\item Load CNN onto VTP FPGA where it will use fADC250 and VETROC (3 requested from LDRD) data to form HCal trigger.
+		\item Test the trigger under beam conditions and compare its performance with traditional methods.
+	\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Toy Example HCal Neural Network}
+
+	\begin{itemize}
+		\item Create NN to identify events with probable cosmic signals. (Note: traditional methods work better in this illustative example.)
+		\item Tools: ROOT, Python, Numpy, Scikit-learn, Tensorflow, Keras, Google Colaboratory (GPUs).
+		\item Steps:
+			\begin{enumerate}
+				\item Format HCal data for NN compatibility.
+				\item Split data into train, test, and validate.
+			\end{enumerate}
+	\end{itemize}
+
+	\begin{center}
+  		\includegraphics<1>[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/Read_Data_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Toy Example HCal Neural Network Continued}
+
+  	\begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+  	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/Event_Display_Run820_Event8_Clean.png}
+  	\end{center}
+  	
+  	\column{0.5\textwidth}
+  	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/fADC_Integrals_Run820_Event8.png}
+  	\end{center}
+  	
+  	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Toy Example HCal Neural Network Continued}
+
+	\begin{enumerate}
+		\item[3.] Build model architecture.
+		\item[4.] Train neural network.
+	\end{enumerate}
+	
+	\begin{center}
+  		\includegraphics<1>[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/Training_Start_Clean.png}
+  	\end{center}
+  	
+  	\begin{center}
+  		\includegraphics<1>[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/Training_End_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Toy Example HCal Neural Network Continued}
+
+	\begin{enumerate}
+		\item[5.] Evaluate the model's performance.
+		\begin{itemize}
+			\item Is loss function decreasing?
+			\item Is accuracy increasing?
+			\item Check for overfitting.
+		\end{itemize}
+		\item[6.] Optimize hyperparameters.	
+	\end{enumerate}
+	
+	  \begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/Simple_NN_run820_50k_2layers_128_64_lr0_00001_mini64_epochs250_relu_mse.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Other Machine Learning Applications}
+
+	\begin{itemize}
+		\item Triggers for other detectors.
+		\item Data analysis:
+			\begin{itemize}
+				\item[--] Event classification.
+				\item[--] Track reconstruction.
+				\item[--] Cluster finding.
+				\item[--] Regression.
+			\end{itemize}
+		\item Simulation:
+			\begin{itemize}
+				\item[--] Autoencoder/Generative Adversarial Network to more quickly produce G4SBS and other simulation data.
+			\end{itemize}
+		\item Unsupervised learning for event classification.
+		\item Explore successful pretrained model architectures.
+		\item Much more!
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Summary}
+
+	\begin{itemize}
+		\item Half of detector cabled and operational with a few outstanding repairs.
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{fADCs and F1TDCs are operational}.
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Cosmic tests} on one half of the HCal are under way and being analyzed.
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{To do}:
+		\begin{itemize}
+			\item[--] Finish repairing remaining broken cables on first half of HCal.
+			\item[--] Cable and debug second half of HCal.
+				\begin{itemize}
+					\item[i] 95\%+ cables made by DSG.
+					\item[ii] Installation to begin shortly.
+				\end{itemize}
+			\item[--] Gain match PMTs.
+			\item[--] Test summing module trigger.
+			\item[--] Online analysis needs development.
+			\item[--] Scalers to spot check rates still need to be acquired and integrated.
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\end{document}
