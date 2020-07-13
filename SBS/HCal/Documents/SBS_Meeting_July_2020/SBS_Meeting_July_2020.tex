@@ -88,16 +88,15 @@
   	
 	\begin{itemize}
 		\item Segmented calorimeter designed to detect multiple GeV protons and neutrons.
-		\begin{itemize}\itemsep2pt \parskip0pt \parsep0pt
+		\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
 			\item[--] 288 PMT modules (12$\times$24).
 			\item[--] Four craneable subassemblies.
-			\item[--] 40 layers of iron absorbers.
-			\item[--] 40 layers of scintillators.
 			\item[--] Weighs $\approx$40 tons.
 			\item[--] Wavelength shifter.
 			\item[--] Custom light guides.
 			\item[--] LED fiber optics system.
 		\end{itemize}
+		\item SBS dipole magnet separates scattered hadrons by charge on HCal's surface.
 		\item Designed for \alert{good time resolution} (goal 0.5 ns).
 		\item Energy resolution $\approx$30\%.
 	\end{itemize}
@@ -115,13 +114,13 @@
 
 \end{frame}
 
-\begin{frame}{HCal Interior}
+\begin{frame}{HCal Interior (288 Individual PMT Modules)}
 
     \begin{columns}[T,onlytextwidth]
   	\column{0.48\textwidth}
   	
   	\begin{itemize}
-  		\item SBS dipole magnet separates scattered hadrons by charge on HCal's surface.
+  		\item 40 layers of iron absorbers alternate with 40 layers of scintillator.
 		\item Iron layers cause the hadrons to shower. 
 		\item Scintillator layers sample the energy.
 		\item Photons pass through a wavelength shifter increasing detection efficiency.
@@ -547,9 +546,13 @@ Thanks to \alert{Gregg Franklin} for his many dedicated years designing and over
 			\end{itemize}
 	\end{enumerate}
 	
-	  \begin{center}
+	\begin{center}
   		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/Simple_NN_run820_50k_2layers_128_64_lr0_00001_mini64_epochs250_relu_mse.png}
   	\end{center}
+  	
+  	\begin{itemize}
+  		\item Simple CNN reached 99+\% accuracy in only 20 epochs.
+  	\end{itemize}
 
 \end{frame}
 
