@@ -9,9 +9,9 @@ from keras.utils import np_utils #Utilities to transform data.
 
 from sklearn.preprocessing import normalize
 
-save_data = 0
+save_data = 1
 read_all = 0
-loop = 5
+loop = 100000
 test_evt = 2#31823
 nsamps = 20
 
@@ -112,6 +112,20 @@ adc_arr[:,142:144] = 5000
 
 #adc_arr = normalize(adc_arr)
 #print('Normalized adc_arr = ', adc_arr)
+
+#Plot all fADC integrals as a histogram. 
+"""
+Do NOT use this. If plot more than a few 10000s events will eat up all of laptop's RAM.
+cfadc_int = ROOT.TCanvas("cfadc_int","fADC Integrals for All Events",900,700)
+hfadc_int = ROOT.TH1F("hfadc_int","fADC Integrals for All Events",1000,0,165000)
+for i in range (0,loop):
+    for j in range (0,len(adc_arr[1])):
+        hfadc_int.Fill(adc_arr[i][j])
+cfadc_int.cd(1)
+hfadc_int.Draw("hist")
+cfadc_int.Update()
+input("Please press enter to close images.")  
+"""
 
 #Plot fADC integrals for a single event. 
 fig, ax2 = plt.subplots()
