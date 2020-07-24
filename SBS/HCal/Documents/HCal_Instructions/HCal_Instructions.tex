@@ -283,37 +283,19 @@ This section aggregates numerous schematics and cable maps for HCal. The actual 
 \section{Cable Maps}
 \label{sec:cable_maps}
 
-The cabling scheme for HCal is designed such that all detector channels can be accessed at numerous points between the detector PMTs and where the final signals enter the DAQ electronics. The HCal cable system can be broken into three groups based on whether the physics signals flow to the fADC250s or the F1TDCs discussed in Section \ref{daq} or the summing modules discussed in Section \ref{electronics}. Five racks hold the front-end and DAQ cabling and electronics and a diagrammatic layout of these racks is show in Figures \ref{fig:fe} and \ref{fig:daq}. The front-end racks are labelled RR1, RR2, and RR3. The electronics and cables in RR1 and RR3 are mirrored as each of these racks contains half of the HCal channels. The DAQ side racks are RR4 and RR5. The DAQ side is connected to the front-end via 100 m*** long BNC cables running from RR2 to RR4. \\ 
+The cabling scheme for the \hcal is designed such that all detector channels can be accessed at numerous points between the detector PMTs and where the final signals enter the DAQ electronics. The \hcal cable system can be broken into three groups based on whether the physics signals flow to the fADC250s, the F1TDCs, or the UVA-120 summing modules. This section describes how the signal from the \hcal detector flows through the front-end and DAQ side electronics on each of these three paths before being recorded by the individual DAQ modules. The red arrows in Figures \ref{fig:fe} and \ref{fig:daq} show the direction of these signal flows.\\ %Five racks hold the front-end and DAQ cabling and electronics and a diagrammatic layout of these racks is show in Figures \ref{fig:fe} and \ref{fig:daq}. The front-end racks are labelled RR1, RR2, and RR3. The electronics and cables in RR1 and RR3 are mirrored as each of these racks contains half of the \hcal channels. The DAQ side racks are RR4 and RR5. The DAQ side is connected to the front-end via 100 m*** long BNC cables running from RR2 to RR4. \\ 
 
-	\begin{figure}[!ht]
-	\begin{center}
-	\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/HCal_FE.png}
-	\end{center}
-	\caption{
-	{\bf{HCal Front-End Layout.}} The front-end consists of racks RR1, RR2, and RR3. Signal enters the front-end through the amplifiers at the bottoms of racks RR1 and RR3. RR1 and RR3 are mirrored and each handle half of the 288 HCal channels. The front-end is connected to the DAQ side via 100 m*** long BNC cables connecting RR2 to RR4.}
-	\label{fig:fe}
-	\end{figure}	
-	
-	\begin{figure}[!ht]
-	\begin{center}
-	\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/HCal_DAQ.png}
-	\end{center}
-	\caption{
-	{\bf{HCal DAQ Layout.}} The DAQ side consists of racks RR4 and RR5. Rack RR5 contains the fADC250s and F1TDCs into which the physics signal flows. The DAQ side is connected to the front-end via 100 m*** long BNC cables connecting RR4 to RR2.}
-	\label{fig:daq}
-	\end{figure}	
-
-Beginning at the detector PMTs the physics signal can be traced to the fADC250s, from which both energy and timing measurements can be made. The analog signal exits the detector PMTs and enters the Phillips Scientific 776 amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. The PS776 amplifiers have dual outputs which each produce a 10$\times$ amplified analog signal. From one of these outputs the amplified physics signal flows to patch panels in the bottom of RR2 which connect to DAQ side patch panels at the base of RR4 via 100 m*** long BNC cables. Once emerging from RR4 on the DAQ side the signals flow into the fADC250s in RR5 and are recorded for analysis. The following list gives each component dedicated to processing the fADC signals in the order in which the signal passes through them:\\
+Beginning at the detector PMTs the physics signal can be traced to the fADC250s which make both energy and timing measurements. The analog signal exits the detector PMTs and enters the PS776 amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. The PS776 amplifiers have dual outputs which each produce a 10$\times$ amplified analog signal. From one of these outputs the amplified physics signal flows to patch panels in the bottom of RR2 which connect to DAQ side patch panels at the base of RR4 via 100 m*** long BNC cables. Once emerging from RR4 on the DAQ side the signals flow into the fADC250s in RR5 and are recorded for analysis. The following list gives each component dedicated to processing the fADC signals in the order in which the signal passes through them:\\
 
 \begin{itemize}\itemsep6pt \parskip0pt \parsep0pt
 	\item 288 detector PMTs (192 of the PMTs are 12 stage 2'' Photonis XP2262 PMTs and 96 are 8 stage stage 2'' Photonis XP2282 PMTs).
-	\item 288 5 m***check BNC-LEMO cables. 
+	\item 288 5 m***check BNC-LEMO RG58 A/U cables. 
 	\item 18 PS776 dual output 10$\times$ amplifiers in RR1 and RR3.
-	\item 288 2 m LEMO-BNC cables. 
+	\item 288 2 m LEMO-BNC RG58 A/U cables. 
 	\item 5 BNC-BNC patch panels in RR2. 
-	\item 288 100 m*** BNC-BNC*** cables. 
+	\item 288 100 m*** BNC-BNC*** RG58 A/U cables. 
 	\item 5 BNC-BNC*** patch panels in RR4. 
-	\item 288 2 m BNC-LEMO cables. 
+	\item 288 2 m BNC-LEMO RG58 A/U cables. 
 	\item 18 fADC250s in RR5.
 %	\item 288 5 m***check BNC-LEMO cables. Connect detector PMTs to amplifiers in RR1 and RR3.
 %	\item 18 PS776 dual output 10$\times$ amplifiers. Output signal to 
@@ -324,21 +306,21 @@ Beginning at the detector PMTs the physics signal can be traced to the fADC250s,
 %	\item 288 2 m BNC-LEMO cables. Connect patch panels in RR4 to fADC250s in RR5.
 \end{itemize}
 
-Timing information is derived from F1TDCs and flows through the front-end and DAQ side electronics in the following manner. An analog signal first exits the detector PMTs and flows into the Phillips Scientific 776 10$\times$ amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. Exiting the second of the two PS776 outputs the amplified analog signal travels to a 50-50 splitter panel with two sets of outputs. The halved signal then exits the first set of these outputs and travels to Phillips Scientific 706 discriminators with low ($\approx 11 mV$) thresholds in RR2. This now NIM logic signal passes into patch panels in RR2 and then over 100 m*** long BNC-BNC*** cables which connect to patch panels in RR4. After leaving the patch panels the physics signals enter a second set of LeCroy 2313 discriminators which ensure the signal shape continues to have a sharp leading edge. The second set of discriminators translate the signal into an ECL signal which then flows into the F1TDCs to be recorded. The following list gives each component dedicated to processing the F1TDC signals in the order in which the signal passes through them:\\
+The detector signals flow to the F1TDCs, which make timing measurements, as follows. An analog signal first exits the detector PMTs and flows into the PS776 10$\times$ amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. Exiting the second of the two PS776 outputs the amplified analog signal travels to a 50-50 splitter panel with two sets of outputs. The halved signal then exits the first set of these outputs and travels to PS706 discriminators with low ($\approx 11 mV$) thresholds in RR2. This now NIM logic signal passes into BNC-BNC patch panels in RR2 and then over 100 m*** long BNC-BNC*** cables which connect to BNC-BNC*** patch panels in RR4. After leaving the patch panels the physics signals enter a second set of LeCroy 2313 discriminators which ensure the signal shape continues to have a sharp leading edge. The second set of discriminators translate the signal into an ECL signal which then flows into the F1TDCs over ribbon cables to be recorded. The following list gives each component dedicated to processing the F1TDC signals in the order in which the signal passes through them:\\
 
 \begin{itemize}\itemsep6pt \parskip0pt \parsep0pt
 	\item 288 detector PMTs (192 of the PMTs are 12 stage 2'' Photonis XP2262 PMTs and 96 are 8 stage stage 2'' Photonis XP2282 PMTs).
-	\item 288 5 m***check BNC-LEMO cables. 
+	\item 288 5 m***check BNC-LEMO RG58 A/U cables. 
 	\item 18 PS776 dual output 10$\times$ amplifiers in RR1 and RR3.
-	\item 288 2 m LEMO-BNC cables. 
+	\item 288 2 m LEMO-BNC RG58 A/U cables. 
 	\item 9 50-50 dual output splitter panels in RR1 and RR3. 
-	\item 288 2 m BNC-LEMO cables.
+	\item 288 2 m BNC-LEMO RG58 A/U cables.
 	\item 18 PS706 discriminators in RR2.
-	\item 288 2 m LEMO-BNC cables.
+	\item 288 2 m LEMO-BNC RG58 A/U cables.
 	\item 5 BNC-BNC patch panels in RR2.
-	\item 288 100 m*** BNC-BNC*** cables. 
+	\item 288 100 m*** BNC-BNC*** RG58 A/U cables. 
 	\item 5 BNC-BNC*** patch panels in RR4. 
-	\item 288 2m BNC cables.
+	\item 288 2m BNC ***(what cable types) cables.
 	\item 18 Lecroy 2313 discriminators in RR4.
 	\item 18 16 channel ribbon cables.
 	\item 5 F1TDCs in RR5. 
@@ -349,17 +331,95 @@ Timing information is derived from F1TDCs and flows through the front-end and DA
 %	\item 288 100 m*** BNC-BNC*** cables. Connect front-end patch panels in RR2 to DAQ side patch panels in RR4.
 \end{itemize}
 
-The third set of signals leading to the summing modules takes the following path. An analog signal first exits the detector PMTs and flows into the Phillips Scientific 776 10$\times$ amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. Exiting the second of the two PS776 outputs the amplified analog signal travels to a 50-50 splitter panel with two sets of outputs. The halved signal then exits the second set of these outputs and travels to to the summing modules which sum the analog signal of 16 PMTs for triggering and analysis purposes. The following list gives each component dedicated to processing the summing module signals in the order in which the signal passes through them:\\
+The third set of signals leading to the summing modules takes the following path. An analog signal first exits the detector PMTs and flows into the PS776 10$\times$ amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. Exiting the second of the two PS776 outputs the amplified analog signal travels to a 50-50 splitter panel with two sets of outputs. The halved signal then exits the second set of these outputs and travels to to the UVA-120 summing modules which sum the analog signal of 16 PMTs for triggering and analysis purposes. The following list gives each component dedicated to processing the UVA-120 summing module signals in the order in which the signal passes through them:\\
 
 \begin{itemize}\itemsep6pt \parskip0pt \parsep0pt
 	\item 288 detector PMTs (192 of the PMTs are 12 stage 2'' Photonis XP2262 PMTs and 96 are 8 stage stage 2'' Photonis XP2282 PMTs).
-	\item 288 5 m***check BNC-LEMO cables. 
+	\item 288 5 m***check BNC-LEMO RG58 A/U cables. 
 	\item 18 PS776 dual output 10$\times$ amplifiers in RR1 and RR3.
-	\item 288 2 m LEMO-BNC cables. 
+	\item 288 2 m LEMO-BNC RG58 A/U cables. 
 	\item 9 50-50 dual output splitter panels in RR1 and RR3. 
-	\item 288 2 m BNC-LEMO cables.
+	\item 288 2 m BNC-LEMO RG58 A/U cables.
 	\item 18 summing modules***(better name? UVA?) in RR1 and RR3.
 \end{itemize}
+
+%The cabling scheme for HCal is designed such that all detector channels can be accessed at numerous points between the detector PMTs and where the final signals enter the DAQ electronics. The HCal cable system can be broken into three groups based on whether the physics signals flow to the fADC250s or the F1TDCs discussed in Section \ref{daq} or the summing modules discussed in Section \ref{electronics}. Five racks hold the front-end and DAQ cabling and electronics and a diagrammatic layout of these racks is show in Figures \ref{fig:fe} and \ref{fig:daq}. The front-end racks are labelled RR1, RR2, and RR3. The electronics and cables in RR1 and RR3 are mirrored as each of these racks contains half of the HCal channels. The DAQ side racks are RR4 and RR5. The DAQ side is connected to the front-end via 100 m*** long BNC cables running from RR2 to RR4. \\ 
+%
+%	\begin{figure}[!ht]
+%	\begin{center}
+%	\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/HCal_FE.png}
+%	\end{center}
+%	\caption{
+%	{\bf{HCal Front-End Layout.}} The front-end consists of racks RR1, RR2, and RR3. Signal enters the front-end through the amplifiers at the bottoms of racks RR1 and RR3. RR1 and RR3 are mirrored and each handle half of the 288 HCal channels. The front-end is connected to the DAQ side via 100 m*** long BNC cables connecting RR2 to RR4.}
+%	\label{fig:fe}
+%	\end{figure}	
+%	
+%	\begin{figure}[!ht]
+%	\begin{center}
+%	\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/HCal_DAQ.png}
+%	\end{center}
+%	\caption{
+%	{\bf{HCal DAQ Layout.}} The DAQ side consists of racks RR4 and RR5. Rack RR5 contains the fADC250s and F1TDCs into which the physics signal flows. The DAQ side is connected to the front-end via 100 m*** long BNC cables connecting RR4 to RR2.}
+%	\label{fig:daq}
+%	\end{figure}	
+%
+%Beginning at the detector PMTs the physics signal can be traced to the fADC250s, from which both energy and timing measurements can be made. The analog signal exits the detector PMTs and enters the Phillips Scientific 776 amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. The PS776 amplifiers have dual outputs which each produce a 10$\times$ amplified analog signal. From one of these outputs the amplified physics signal flows to patch panels in the bottom of RR2 which connect to DAQ side patch panels at the base of RR4 via 100 m*** long BNC cables. Once emerging from RR4 on the DAQ side the signals flow into the fADC250s in RR5 and are recorded for analysis. The following list gives each component dedicated to processing the fADC signals in the order in which the signal passes through them:\\
+%
+%\begin{itemize}\itemsep6pt \parskip0pt \parsep0pt
+%	\item 288 detector PMTs (192 of the PMTs are 12 stage 2'' Photonis XP2262 PMTs and 96 are 8 stage stage 2'' Photonis XP2282 PMTs).
+%	\item 288 5 m***check BNC-LEMO cables. 
+%	\item 18 PS776 dual output 10$\times$ amplifiers in RR1 and RR3.
+%	\item 288 2 m LEMO-BNC cables. 
+%	\item 5 BNC-BNC patch panels in RR2. 
+%	\item 288 100 m*** BNC-BNC*** cables. 
+%	\item 5 BNC-BNC*** patch panels in RR4. 
+%	\item 288 2 m BNC-LEMO cables. 
+%	\item 18 fADC250s in RR5.
+%%	\item 288 5 m***check BNC-LEMO cables. Connect detector PMTs to amplifiers in RR1 and RR3.
+%%	\item 18 PS776 dual output 10$\times$ amplifiers. Output signal to 
+%%	\item 288 2 m LEMO-BNC cables. Connect the first amplifier outputs in RR1 and RR3 to patch panels in RR2.
+%%	\item 5 BNC-BNC patch panels (RR2). Patch first amplifier outputs to 100 m* BNC cables.
+%%	\item 288 100 m*** BNC-BNC*** cables. Connect front-end patch panels in RR2 to DAQ side patch panels in RR4.
+%%	\item 5 BNC-BNC*** patch panels (RR4). Patch signal from long BNC cables to cables running to fADC250s.
+%%	\item 288 2 m BNC-LEMO cables. Connect patch panels in RR4 to fADC250s in RR5.
+%\end{itemize}
+%
+%Timing information is derived from F1TDCs and flows through the front-end and DAQ side electronics in the following manner. An analog signal first exits the detector PMTs and flows into the Phillips Scientific 776 10$\times$ amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. Exiting the second of the two PS776 outputs the amplified analog signal travels to a 50-50 splitter panel with two sets of outputs. The halved signal then exits the first set of these outputs and travels to Phillips Scientific 706 discriminators with low ($\approx 11 mV$) thresholds in RR2. This now NIM logic signal passes into patch panels in RR2 and then over 100 m*** long BNC-BNC*** cables which connect to patch panels in RR4. After leaving the patch panels the physics signals enter a second set of LeCroy 2313 discriminators which ensure the signal shape continues to have a sharp leading edge. The second set of discriminators translate the signal into an ECL signal which then flows into the F1TDCs to be recorded. The following list gives each component dedicated to processing the F1TDC signals in the order in which the signal passes through them:\\
+%
+%\begin{itemize}\itemsep6pt \parskip0pt \parsep0pt
+%	\item 288 detector PMTs (192 of the PMTs are 12 stage 2'' Photonis XP2262 PMTs and 96 are 8 stage stage 2'' Photonis XP2282 PMTs).
+%	\item 288 5 m***check BNC-LEMO cables. 
+%	\item 18 PS776 dual output 10$\times$ amplifiers in RR1 and RR3.
+%	\item 288 2 m LEMO-BNC cables. 
+%	\item 9 50-50 dual output splitter panels in RR1 and RR3. 
+%	\item 288 2 m BNC-LEMO cables.
+%	\item 18 PS706 discriminators in RR2.
+%	\item 288 2 m LEMO-BNC cables.
+%	\item 5 BNC-BNC patch panels in RR2.
+%	\item 288 100 m*** BNC-BNC*** cables. 
+%	\item 5 BNC-BNC*** patch panels in RR4. 
+%	\item 288 2m BNC cables.
+%	\item 18 Lecroy 2313 discriminators in RR4.
+%	\item 18 16 channel ribbon cables.
+%	\item 5 F1TDCs in RR5. 
+%%	\item 288 5 m***check BNC-LEMO cables. Connect detector PMTs to dual output front-end amplifiers in RR1 and RR3.
+%%	\item 288 2 m LEMO-BNC cables. Connect the second amplifier outputs in RR1 and RR3 to splitter panels in RR1 and RR3.
+%%	\item 9 50-50 dual output splitter panels in RR1 and RR3. Divide the signal in half with one set of outputs going to 2m BNC-LEMO cables.
+%%	\item 288 2 m BNC-LEMO cables. Connect one set of splitter outputs to PS706 discriminators.
+%%	\item 288 100 m*** BNC-BNC*** cables. Connect front-end patch panels in RR2 to DAQ side patch panels in RR4.
+%\end{itemize}
+%
+%The third set of signals leading to the summing modules takes the following path. An analog signal first exits the detector PMTs and flows into the Phillips Scientific 776 10$\times$ amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. Exiting the second of the two PS776 outputs the amplified analog signal travels to a 50-50 splitter panel with two sets of outputs. The halved signal then exits the second set of these outputs and travels to to the summing modules which sum the analog signal of 16 PMTs for triggering and analysis purposes. The following list gives each component dedicated to processing the summing module signals in the order in which the signal passes through them:\\
+%
+%\begin{itemize}\itemsep6pt \parskip0pt \parsep0pt
+%	\item 288 detector PMTs (192 of the PMTs are 12 stage 2'' Photonis XP2262 PMTs and 96 are 8 stage stage 2'' Photonis XP2282 PMTs).
+%	\item 288 5 m***check BNC-LEMO cables. 
+%	\item 18 PS776 dual output 10$\times$ amplifiers in RR1 and RR3.
+%	\item 288 2 m LEMO-BNC cables. 
+%	\item 9 50-50 dual output splitter panels in RR1 and RR3. 
+%	\item 288 2 m BNC-LEMO cables.
+%	\item 18 summing modules***(better name? UVA?) in RR1 and RR3.
+%\end{itemize}
 
 \bibliographystyle{plain}
 \bibliography{mybibfile}
