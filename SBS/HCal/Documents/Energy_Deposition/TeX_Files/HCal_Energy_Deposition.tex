@@ -125,9 +125,7 @@ The $G_M^n$ experiment aims to extract the neutron magnetic form factor from qua
 	\end{center}
 	\caption{
 	{\bf{$G_M^n$ Experimental Setup.}} The HCal detects the scattered hadrons, and it is positioned to the right of the beamline when facing downstream. HCal sits behind the SBS dipole magnet which is used to separate protons and neutrons. The BigBite spectrometer detects the scattered electrons, and its associated detector package is located to the left of the beamline.}
-\begin{flushleft}
-	•
-	\end{flushleft}	\label{fig:gmn_setup}
+	\label{fig:gmn_setup}
 	\end{figure}	
 	
 	\begin{figure}[!ht]
@@ -260,7 +258,7 @@ Table \ref{tab:thresholds} gives the energy cuts chosen for HCal and the combine
 
 Table \ref{tab:edep} gives the results of the energy deposition study. The column titled \textit{Kine} gives the central BB $Q^2$ value for each of the seven $G_M^n$ kinematics in GeV$^2$. The \textit{SBS Central $\Theta$} column gives the central angle at which the SBS dipole is located. The \textit{Scattered Hadron Energy} column gives the energy of the scattered hadron. The \textit{HCal Events} column gives the number of events that were accepted after passing the thresholds described in Section \ref{ssec:cuts}. The \textit{Total Hits} column gives the total number of hits across all accepted events for the run. The \textit{Avg. Hits/Event} column gives the average number of hits per accepted event.\\
 
-The \textit{Avg. Edep Hit} column gives the average energy deposited in scintillators that was observed by a single PMT hit. The \textit{NPE for Avg. Edep Hit} column gives the average number of photoelectrons seen in a hit. The \textit{99.5\% Energy Hit} column gives the energy threshold below which 99.5\% of hits had lower energy. The \textit{99.5\% NPE Hit} column gives the number of photoelectrons threshold below which 99.5\% of hits had fewer photoelectrons.\\
+The \textit{Avg. Edep Hit} column gives the average energy deposited in scintillators that was observed by a single PMT hit. The \textit{NPE for Avg. Edep Hit} column gives the average number of photoelectrons (NPE) seen in a hit. The \textit{99.5\% Energy Hit} column gives the energy threshold below which 99.5\% of hits had lower energy. The \textit{99.5\% NPE Hit} column gives the number of photoelectrons threshold below which 99.5\% of hits had fewer photoelectrons.\\
 
 The \textit{Avg. Edep Event} column gives the average energy deposited in all scintillators for an entire event (an event is made up of one or more hits). The \textit{NPE for Avg. Edep Event} column gives the average number of photoelectrons seen for an entire event. The \textit{Event Energy Std. Dev.} column gives the standard deviation of the event energies. The \textit{99.5\% Energy Event} column gives the energy threshold below which 99.5\% of events had lower energy. The \textit{99.5\% NPE Event} column gives the number of photoelectrons threshold below which 99.5\% of events had fewer photoelectrons.\\
 
@@ -406,7 +404,7 @@ The \textit{Avg. Edep Event} column gives the average energy deposited in all sc
 	%\caption{Spectrometer Central Kinematics}%Prints title above table.
 	\begin{tabular}{|c|cccccc|}
 	\hline
-	\makecell{Kine\\$[$GeV$^2]$} & \makecell{99.5\%\\NPE\\Hit\\$[$MeV$]$} & \makecell{Max $[$mV/PE$]$\\per Hit\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\per Hit\\with Cable\\Attenuation\\(2 V/1.5 V)} & \makecell{99.5\%\\NPE\\Event\\$[$MeV$]$} & \makecell{Max $[$mV/PE$]$\\per Event\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\per Event\\with Cable\\Attenuation\\(2 V/1.5 V)}\\
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{99.5\%\\NPE\\Hit} & \makecell{Max $[$mV/PE$]$\\per Hit\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\per Hit\\with Cable\\Attenuation\\(2 V/1.5 V)} & \makecell{99.5\%\\NPE\\Event} & \makecell{Max $[$mV/PE$]$\\per Event\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\per Event\\with Cable\\Attenuation\\(2 V/1.5 V)}\\
 	\hline
 	3.5 & 981 & 0.20/0.15 & 0.41/0.31 & 1533 & 0.26/0.20 & 0.52/0.39\\
     4.5 & 1109 & 0.18/0.14 & 0.36/0.27 & 1911 & 0.21/0.16 & 0.42/0.31\\
@@ -449,6 +447,25 @@ The \textit{Avg. Edep Event} column gives the average energy deposited in all sc
 %	\caption{{\bf{PMT HV Calibration Limits.}} PMT output signal [mV] limits per photoelectron for each of the seven $G_M^n$ kinematics. Values for fADC ranges of 2 V and 1.5 V are given as well as values with and without signal attenuation due to the long cables.} %Caption* supresses printing of second caption saying Table number again.
 %	\label{tab:max_outputs}
 %	\end{table}
+
+\section{LED Calibration Procedure}
+
+Inside of HCal are a series of LEDs which can illuminate the PMT faces via fiber optics. These LEDs will be used for calibration purposes. This process will proceed as follows:
+
+\begin{enumerate}
+	\item Select a nominal voltage and take a data run with the PMTs observing the LEDs.
+		\begin{enumerate}
+			\item Use the fADC signals created by the LEDs to calculate the NPE seen by the PMTs using:
+			\begin{equation}
+				NPE = \left( \frac{<ADC>}{RMS} \right)^2.
+			\end{equation}
+			Where $<ADC>$ is the mean ADC value (using either peak ADC value per event or integrated ADC value per event) of the LED spectrum throughout the run, and $RMS$ is the standard deviation of that same spectrum. This will give a calibration of the ADC to NPEs.
+		\end{enumerate}
+		\item Take a cosmic run at the same PMT voltages as the LED run. Use the calibration of NPE to ADC value to calculate the average NPE seen by cosmic rays. This can then be compared with the value from simulation. Note: This will not be an exact calibration as the cosmic rays do not perfectly obey Poisson statistics (they come in at many angles and aren't monoenergetic). Still, if the NPE from cosmics calculated from the LED calibration is in reasonable agreement with the NPEs from cosmics predicted by simulation, that will increase confidence in the simulation's predictions of the NPEs for hadrons.
+		\item Assuming G4SBS simulations are producing reasonably accurate NPE estimates, use the NPE to ADC calibration to estimate the average ADC signals from hadrons based on the NPEs they are expected to produce in the PMTs during the experiments.
+		\item Use the LEDs to do voltage scans by taking LED runs at different voltages to get the calibration of HV to ADC value.
+		\item Use both the NPE to ADC calibration and the HV to ADC calibration to predict a safe HV range that the PMTs can be set at during experiments, based on having the expected hadron signals with 99.5\% of maximum energy produce either 150 mv or 200 mv at the PMT output. (Depending on the safety margin for ADC saturation selected.)
+\end{enumerate}
 
 \end{document}
 
