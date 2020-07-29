@@ -4,6 +4,7 @@ import math
 import time
 from matplotlib.transforms import Transform
 from matplotlib.ticker import(AutoLocator, AutoMinorLocator)
+from collections import OrderedDict
 
 start = time.time() #Start a timer.
 
@@ -82,11 +83,20 @@ def asymmetry(E,x):
         
         asymm.append( ( -2 * pow(tau * (1+tau),0.5) * np.tan(theta/2) ) / ( pow(Fch(E0,theta),2.) + (tau/epsilon) * (pow(muHe3,2.)) * pow(Fm(E0,theta),2.) ) * ( np.sin(theta_pol)*np.cos(phi_pol)*Fch(E0,theta)*Fm(E0,theta)*muHe3 + pow(tau*(1+(1+tau)*pow(np.tan(theta/2),2.)),0.5)*np.cos(theta_pol)*pow(Fm(E0,theta),2.)*pow(muHe3,2.) ) )
         #print("Theta = %.2f degrees = %.3f radians, E0 = %.3f, Ef = %.3f, Q2 = %.3f fm^-2, Q2eff = %.3f fm^-2, tau = %f, epsilon = %f " % (theta/deg2rad,theta,E0,Ef,Q2,Q2eff,tau,epsilon))
-        #print("Asymm Results = ",asymm)
+    #print("Angles (degrees) = ",x)
+    #print("Asymm Results = ",asymm)
+    combined = OrderedDict(zip(x,asymm))
+    #combined = set(combined)
+    print("(Angles, Asymmetries) = ",combined)
     return np.array(asymm)
 
 axtheta = 30
 x = np.linspace(1,axtheta,500)
+#x = np.linspace(18.3,18.5,20)
+#x = []
+#x = [15, 17.13, 18.41, 19.45]
+#x = [8.5,11,13,13.5,14.5,16,16.4,18,18.5,20,22,24]
+
 axtheta = axtheta*pi/180
 Q2max = 4*E0*Ef*pow(np.sin(axtheta/2),2)*GeV2fm
 Q2effmax = Q2max*pow(1+(1.5*Z*alpha)/(E0*1.12*pow(A,1./3.)),2)
@@ -96,12 +106,33 @@ for i in range(0,len(x)):
 
 y = asymmetry(E0,x)
 
+shms_angles = (11,13,15,17.13,19.45)
+shms_asymms = (0.0440913409471518,0.0644137073932522,0.0954473518134784,0.138384487219908,-0.154179671220445)
+shms_asymm_err = (0.0018,0.0023,0.0079,0.0081,0.0153)
+shms_times = ("1 Hour\n $11^{\circ}$","1 Hour\n $13^{\circ}$","1 Hour\n $15^{\circ}$","5 Hours\n $17.13^{\circ}$","16 Hours\n $19.45^{\circ}$")
+hms_angles = []
+hms_asymms = []
+hms_asymm_err = []
+hms_times = []
+hms_angles.append(18.41)
+hms_asymms.append(-0.000458690566384221)
+hms_asymm_err.append(0.0084)
+hms_times.append("24 Hours\n $18.41^{\circ}$")
+
 fig, ax = plt.subplots(figsize=(10,10))
-plt.plot(x,y, 'red')#ax.plot(x,y, 'g') #Also works here.
+plt.plot(x,y, 'red',label="Asymmetry")#ax.plot(x,y, 'g') #Also works here.
 plt.title("3He Asymmetry for %.2f GeV" % E0)
 plt.xlabel("Scattering Angle (degrees)")
 plt.ylabel("Asymmetry")
 ax.xaxis.set_major_locator(plt.MaxNLocator(30))
+plt.errorbar(shms_angles, shms_asymms, yerr=shms_asymm_err,fmt='o',color='b',label='SHMS')
+plt.errorbar(hms_angles, hms_asymms, yerr=hms_asymm_err,fmt='o',color='g',label='HMS')
+for i in range(len(shms_times)):
+    ax.annotate(shms_times[i], (shms_angles[i], shms_asymms[i]), xytext=(shms_angles[i]-1.75, shms_asymms[i]+0.0025))
+for i in range(len(hms_times)):
+    ax.annotate(hms_times[i], (hms_angles[i], hms_asymms[i]), xytext=(hms_angles[i]-1.75, hms_asymms[i]+0.0025))
+#ax.annotate(shms_times, (shms_angles, shms_asymms), xytext=(shms_angles+0.05, shms_asymms+0.3), arrowprops=dict(facecolor='red', shrink=0.05))
+plt.legend(loc="upper left")
 #ax1 = ax.twiny()
 #ax1.set_xlabel('Q^2 fm^-2')
 #ax1.set_xlim(0, Q2effmax)
@@ -110,9 +141,10 @@ plt.show()
 #secax = ax.secondary_xaxis('top',functions=(x*100,x*0.01))#, functions=(x, yax2))
 #secax.set_xlabel('angle [rad]')
 
-x = []
+print(type(x))
+x.clear()
 x.append(18.408)  #Min ~18.408 degrees.
-y = asymmetry(E0,theta0)
+y = asymmetry(E0,x)
 print(y)
 print("Asymmetry at %f degrees = %f " % (x[0],y[0]))
 
