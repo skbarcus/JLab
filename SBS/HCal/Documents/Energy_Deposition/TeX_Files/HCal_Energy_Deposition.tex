@@ -457,14 +457,14 @@ Inside of HCal are a series of LEDs which can illuminate the PMT faces via fiber
 		\begin{enumerate}
 			\item Use the fADC signals created by the LEDs to calculate the NPE seen by the PMTs using:
 			\begin{equation}
-				NPE = \left( \frac{<ADC>}{RMS} \right)^2.
+				NPE = \left( \frac{<ADC>}{\sqrt{RMS^2-RMS_{pedestal}^2}} \right)^2.
 			\end{equation}
-			Where $<ADC>$ is the mean ADC value (using either peak ADC value per event or integrated ADC value per event) of the LED spectrum throughout the run, and $RMS$ is the standard deviation of that same spectrum. This will give a calibration of the ADC to NPEs.
+			Where $<ADC>$ is the mean ADC value (using either peak ADC value per event or integrated ADC value per event) of the LED spectrum throughout the run, $RMS$ is the standard deviation of that same spectrum, and $RMS_{pedestal}$ is the standard deviation of the pedestal value. This will give a calibration of the ADC to NPEs.
 		\end{enumerate}
 		\item Take a cosmic run at the same PMT voltages as the LED run. Use the calibration of NPE to ADC value to calculate the average NPE seen by cosmic rays. This can then be compared with the value from simulation. Note: This will not be an exact calibration as the cosmic rays do not perfectly obey Poisson statistics (they come in at many angles and aren't monoenergetic). Still, if the NPE from cosmics calculated from the LED calibration is in reasonable agreement with the NPEs from cosmics predicted by simulation, that will increase confidence in the simulation's predictions of the NPEs for hadrons.
-		\item Assuming G4SBS simulations are producing reasonably accurate NPE estimates, use the NPE to ADC calibration to estimate the average ADC signals from hadrons based on the NPEs they are expected to produce in the PMTs during the experiments.
+		\item Assuming G4SBS simulations are producing reasonably accurate NPE estimates, use the NPE to ADC calibration to estimate the average ADC signals from hadrons based on the NPEs they are expected to deposit in the PMTs during the experiments.
 		\item Use the LEDs to do voltage scans by taking LED runs at different voltages to get the calibration of HV to ADC value.
-		\item Use both the NPE to ADC calibration and the HV to ADC calibration to predict a safe HV range that the PMTs can be set at during experiments, based on having the expected hadron signals with 99.5\% of maximum energy produce either 150 mv or 200 mv at the PMT output. (Depending on the safety margin for ADC saturation selected.)
+		\item Use both the NPE to ADC calibration and the HV to ADC calibration to predict a safe HV range that the PMTs can be set at during experiments. This will be based on having the expected hadron signals with 99.5\% of maximum energy produce either 150 mv or 200 mv at the PMT output. (Depending on the safety margin for ADC saturation selected.)
 \end{enumerate}
 
 \end{document}

@@ -95,7 +95,9 @@ x = np.linspace(1,axtheta,500)
 #x = np.linspace(18.3,18.5,20)
 #x = []
 #x = [15, 17.13, 18.41, 19.45]
+#x = [15, 17.13, 17.77,18.41]
 #x = [8.5,11,13,13.5,14.5,16,16.4,18,18.5,20,22,24]
+#x = [8.5,11,13,14.5,16,18,18.5,20,22,24,8.5,11,13.5,16.4,18.5,20,22,24]
 
 axtheta = axtheta*pi/180
 Q2max = 4*E0*Ef*pow(np.sin(axtheta/2),2)*GeV2fm
@@ -106,17 +108,23 @@ for i in range(0,len(x)):
 
 y = asymmetry(E0,x)
 
-shms_angles = (11,13,15,17.13,19.45)
-shms_asymms = (0.0440913409471518,0.0644137073932522,0.0954473518134784,0.138384487219908,-0.154179671220445)
-shms_asymm_err = (0.0018,0.0023,0.0079,0.0081,0.0153)
-shms_times = ("1 Hour\n $11^{\circ}$","1 Hour\n $13^{\circ}$","1 Hour\n $15^{\circ}$","5 Hours\n $17.13^{\circ}$","16 Hours\n $19.45^{\circ}$")
+"""
+shms_angles = (11,13,15,17.13,19.45)#High kinematic point.
+shms_asymms = (0.0440913409471518,0.0644137073932522,0.0954473518134784,0.138384487219908,-0.154179671220445)#High kinematic point.
+shms_asymm_err = (0.0039,0.0051,0.0173,0.0175,0.0331)#High kinematic point. #Didn't scale elastics by 4.7 for collimator (0.0018,0.0023,0.0079,0.0081,0.0153)
+shms_times = ("1 Hour\n $11^{\circ}$","1 Hour\n $13^{\circ}$","1 Hour\n $15^{\circ}$","5 Hours\n $17.13^{\circ}$","16 Hours\n $19.45^{\circ}$")#High kinematic point.
+"""
+shms_angles = (11,13,15,17.13,17.77)#New lower kinematic point.
+shms_asymms = (0.0440913409471518,0.0644137073932522,0.0954473518134784,0.138384487219908,0.11392821942502)#New lower kinematic point.
+shms_asymm_err = (0.0039,0.0051,0.0122,0.0138,0.0163)#New lower kinematic point.
+shms_times = ("1 Hour\n $11^{\circ}$","1 Hour\n $13^{\circ}$","2 Hour\n $15^{\circ}$","8 Hours\n $17.13^{\circ}$","12 Hours\n $17.77^{\circ}$")#New lower kinematic point.
 hms_angles = []
 hms_asymms = []
 hms_asymm_err = []
 hms_times = []
 hms_angles.append(18.41)
 hms_asymms.append(-0.000458690566384221)
-hms_asymm_err.append(0.0084)
+hms_asymm_err.append(0.0182)#Didn't scale elastics by 4.7 for collimator hms_asymm_err.append(0.0084)
 hms_times.append("24 Hours\n $18.41^{\circ}$")
 
 fig, ax = plt.subplots(figsize=(10,10))
