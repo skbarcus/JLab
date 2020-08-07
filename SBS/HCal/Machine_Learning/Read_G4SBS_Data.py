@@ -7,14 +7,16 @@ import ROOT
 import sys
 
 from keras.utils import np_utils #Utilities to transform data.
-
 from sklearn.preprocessing import normalize
 #from root_numpy import root2array, testdata
 #root2array(testdata.get_filepath('single1.root'))[:20]
 
-save_data = 1
-read_all = 0
-loop = 20
+import time
+start = time.time() #Start a timer.
+
+save_data = 0
+read_all = 1
+loop = 30000
 test_evt = 2#31823
 nsamps = 20
 
@@ -58,6 +60,8 @@ for entryNum in range (0, loop):
     tavg_evt = np.array(tavg_evt)
     tavg.append(tavg_evt)
     #fnucl_evt = getattr(chain,"Harm.HCalScint.hit.yhit")
+    if entryNum%10000==0:
+        print("Read in %d events." % entryNum)
     
 fnucl = np.array(fnucl)
 print(fnucl)
@@ -80,3 +84,5 @@ if save_data == 1:
     np.save(data + "g4sbs_kin7_pmt", pmt)
     np.save(data + "g4sbs_kin7_pmt_edep", pmt_edep)
     np.save(data + "g4sbs_kin7_tavg", tavg)
+
+print("The script took %.2f seconds (%.2f minutes or %.2f hours) to run." % (time.time() - start, (time.time() - start)/60.,(time.time() - start)/60./60.)) #Print time to run.

@@ -26,13 +26,69 @@ def plot_learning_curve(history):
     ax[1].xaxis.set_major_locator(MaxNLocator(integer=True))
     ax[1].legend()
     plt.show()
+    # plt.plot(history["loss"], label="training loss")
+    # plt.plot(history["val_loss"], label="validation loss")
+    # plt.xlabel("Epoch")
+    # plt.ylabel("Loss")
+    # plt.yscale('log')
+    # plt.legend()
+    # plt.show()
 
-data = "/home/skbarcus/JLab/SBS/HCal/Analysis/Simulation/G4SBS/rootfiles/"
+adc = np.load("/home/skbarcus/JLab/SBS/HCal/Analysis/Simulation/G4SBS/rootfiles/g4sbs_kin7_pmt_edep_preprocessed.npy")
+tdc = np.load("/home/skbarcus/JLab/SBS/HCal/Analysis/Simulation/G4SBS/rootfiles/g4sbs_kin7_tavg_preprocessed.npy")
+hits = np.load("/home/skbarcus/JLab/SBS/HCal/Analysis/Simulation/G4SBS/rootfiles/g4sbs_kin7_fnucl.npy")
 
-fnucl = np.load(data+"g4sbs_kin7_fnucl.npy")
-front_nhits = np.load(data+"g4sbs_kin7_front_nhits.npy")
-nhits = np.load(data+"g4sbs_kin7_nhits.npy")
-pmt = np.load(data+"g4sbs_kin7_pmt.npy", allow_pickle=True)
-pmt_edep = np.load(data+"g4sbs_kin7_pmt_edep.npy", allow_pickle=True)
-tavg = np.load(data+"g4sbs_kin7_tavg.npy", allow_pickle=True)
+#print('adc matrix = ', adc)
+print('adc.shape = ', adc.shape)
+adc = np.reshape(adc, (adc.shape[0], 24, 12, 1))
+print('adc.shape = ', adc.shape)
+print('tdc.shape = ', tdc.shape)
+tdc = np.reshape(tdc, (tdc.shape[0], 24, 12, 1))
+print('tdc.shape = ', tdc.shape)
+print('hits matrix = ', hits)
+print('hits.shape = ', hits.shape)
 
+#Split data into training and test.
+adc_train, adc_test, tdc_train, tdc_test, hits_train, hits_test = train_test_split(adc, tdc, hits, test_size=0.90)
+
+print('adc_train.shape, adc_test.shape = ', adc_train.shape, adc_test.shape)
+print('tdc_train.shape, tdc_test.shape = ', tdc_train.shape, tdc_test.shape)
+print('hits_train.shape, hits_test.shape = ', hits_train.shape, hits_test.shape)
+
+unique, counts = np.unique(hits_train, return_counts=True)
+counts = dict(zip(unique, counts))
+print('Counts = ', counts)
+
+model = tf.keras.Sequential() #Define the model object
+
+model.add(tf.keras.layers.Conv2D(filters=32,kernel_size=4,activation='relu',input_shape=adc.shape[1:]))#Shape of a single image.
+model.add(tf.keras.layers.MaxPool2D(2,2))
+model.add(tf.keras.layers.Flatten())
+model.add(tf.keras.layers.Dense(256, activation='relu'))
+model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
+#model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])
+model.compile(tf.keras.optimizers.Adam(lr=0.001),loss='binary_crossentropy',metrics=['accuracy'])
+"""
+#Dense NN (not CNN layers).
+model.add(tf.keras.layers.Dense(128, input_shape=(144,), activation="relu")) #Add the hidden layer
+model.add(tf.keras.layers.Dense(64, activation="relu"))
+#model.add(tf.keras.layers.Dense(32, activation="relu"))
+model.add(tf.keras.layers.Dense(1))
+"""
+
+#model.compile(tf.keras.optimizers.Adam(lr=0.01),loss=tf.keras.losses.CategoricalCrossentropy()) #Adam optimizer and mean squared error loss
+#model.compile(tf.keras.optimizers.Adam(lr=0.0001),loss=tf.keras.losses.MeanSquaredError(),metrics=['accuracy'])
+
+#Print summary of model.
+model.summary()
+
+#results = model.fit(adc_train, hits_train, epochs=10, batch_size=64, validation_split=0.05)
+results = model.fit(tdc_train, hits_train, epochs=10, batch_size=64, validation_split=0.05)
+
+#prediction = model.predict()
+#scores = model.evaluate(adc_test, hits_test)
+scores = model.evaluate(tdc_test, hits_test)
+
+print("test loss, test acc:", scores)
+
+plot_learning_curve(results.history)

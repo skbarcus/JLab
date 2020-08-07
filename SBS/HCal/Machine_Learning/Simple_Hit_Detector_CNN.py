@@ -3,6 +3,8 @@ import tensorflow as tf
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 
+from matplotlib.ticker import MaxNLocator #Able to force plots to use integer ticks only. 
+
 #tf.logging.set_verbosity(tf.logging.ERROR)#Suppress Tensorflow warnings.
 
 def plot_learning_curve(history):
@@ -13,6 +15,7 @@ def plot_learning_curve(history):
     ax[0].set_xlabel("Epoch")
     ax[0].set_ylabel("Loss")
     ax[0].set_yscale('log')
+    ax[0].xaxis.set_major_locator(MaxNLocator(integer=True))
     ax[0].legend()
     
     ax[1].plot(history['accuracy'], label='training')
@@ -20,6 +23,7 @@ def plot_learning_curve(history):
     ax[1].set_title("Model accuracy")
     ax[1].set_xlabel("Epoch")
     ax[1].set_ylabel("Accuracy")
+    ax[1].xaxis.set_major_locator(MaxNLocator(integer=True))
     ax[1].legend()
     plt.show()
     # plt.plot(history["loss"], label="training loss")
