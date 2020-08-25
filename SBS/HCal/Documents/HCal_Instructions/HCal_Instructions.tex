@@ -202,19 +202,34 @@ Sometimes you will not physically be at the HCal to access these computers. In t
 	\item Once on the JLab network these computers can be accessed by typing ``ssh -Y daq@encamsonne", ``ssh -Y  daq@intelsbshcal1", or ``ssh -Y  adaq@intelsbshcal2" depending on the computer one wishes to access. Enter the appropriate password when prompted and access to the computer will be granted.
 \end{enumerate}
 
-
-\chapter{Data Acquisition System}
-\label{ch:daq}
-\section{High Voltage}
-\label{sec:hv}
+\chapter{High Voltage}
+\label{hv}
 
 \subsection{Overview}
 \label{ssec:hv_overview}
 
 The high voltage (HV) system for the HCal uses LeCroy 1461 N high voltage cards run off of a Raspberry Pi running the HV server located inside the HV crates themselves. There are two HV crates for the HCal and each provides voltage for 144 of the 288 PMTs. The HV cards have 12 channels each with the top crate containing 12 HV cards and the lower crate containing 13. The lower crate's extra card contains two HV channels for the paddle scintillators located above both halves of the detector. The upper crate runs server rpi20, and the lower crate rpi21. 
 
-\subsection{HV GUI}
-\label{ssec:gui}
+\section{High Voltage System}
+\label{hv_layout}
+
+A high voltage (HV) distribution system provides the PMTs with the voltages required to operate and is shown diagrammatically in Figure \ref{fig:hv}. This system is comprised of two LeCroy 1458 high voltage crates containing type 1461N high voltage modules, a cable distributions system, and a software control system. The HV crates are located in the shielded electronics hut shown in Figure \ref{fig:hall_layout}. One crate contains 12 12-output 1461N high voltage modules for half of the PMTs (144), and the other crate contains 13 of these modules for the other half plus HV for the cosmic scintillator paddle atop \hcal. \\
+
+ 	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_HV.png}
+	\end{center}
+	\caption{
+	{\bf{\hcal High Voltage Distribution System.}} The PMT high voltages are produced in LeCroy 1458 crates containing 1461N high voltage modules in the shielded electronics hut shown on the right of the image. Individual HV channels are bundled into groups of 24 channels and transported to \hcal across 75 m*** cables. These bundled cables are then split down to individual channels and sent to each of the 288 PMTs.}
+	\label{fig:hv}
+	\end{figure}
+
+The 288 cables carrying the PMT HV emerge from the two LeCroy 1458 crates and enter 12 high voltage boxes each with 24-input channels. These 12 HV boxes each bundle their 24 input cables into a single larger HV cable. These 12 75 m***(check) 24-channel HV cables then run from the electronics hut to 12 HV boxes attached six to each side of \hcal. The HV boxes at \hcal then split the 24-channel HV cable back into 24 single channel HV cables which are then sent to the individual PMTs.  
+
+The HV system is controlled via software which allows the user to set each channel's HV supply along with various trip safeties, monitor a channel's voltage and current, and save/load HV settings. These features are accessed via a Graphical User Interface (GUI) on a Linux workstation. A visual and audio alarm system alerts the user to HV channels whose behavior has deviated from their safety parameters. The HV crates communicate with the Linux workstation via Ethernet network using TCP/IP protocol.
+
+\section{HV GUI}
+\label{hv_gui}
 
 The HV crates and their individual channels are controlled via a graphical user interface (GUI) that can be run from a terminal. This GUI loads its configuration from a server run on the Raspberry Pi inside the crate. Before the GUI can be used the server must be running. To activate the server:
 
@@ -228,6 +243,10 @@ The HV crates and their individual channels are controlled via a graphical user 
 	\item To set an individual channel's HV enter the desired voltage for the channel in its "target voltage" column. Then to activate the channel click the check box in the "***" column. A check mark will appear and the voltage will begin ramping up. You can see the current voltage in the "current voltage" column.
 	\item Note: You can leave the channels checked as on and turn off the voltage with the button on the left hand side to deactivate all channels. The button will change from yellow to grey and all voltages will read zero after a few seconds. Then if the voltage is turned back on with the same button all channels with checked boxes will begin supplying voltages again. 
 \end{enumerate}
+
+
+\chapter{Data Acquisition System}
+\label{ch:daq}
 
 \section{Cebaf Online Data Acquisition (CODA)}
 \label{sec:coda}

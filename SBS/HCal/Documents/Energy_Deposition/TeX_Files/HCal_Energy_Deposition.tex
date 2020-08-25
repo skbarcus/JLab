@@ -40,7 +40,8 @@
 \usepackage{geometry}
 \usepackage{pdflscape} %Make PDF landscape.
 
-
+%% `Elsevier LaTeX' style
+\bibliographystyle{elsarticle-num}
 
 %allows for multiple pictures in one figure.
 %\usepackage{subfigure}
@@ -466,6 +467,16 @@ Inside of HCal are a series of LEDs which can illuminate the PMT faces via fiber
 		\item Use the LEDs to do voltage scans by taking LED runs at different voltages to get the calibration of HV to ADC value.
 		\item Use both the NPE to ADC calibration and the HV to ADC calibration to predict a safe HV range that the PMTs can be set at during experiments. This will be based on having the expected hadron signals with 99.5\% of maximum energy produce either 150 mv or 200 mv at the PMT output. (Depending on the safety margin for ADC saturation selected.)
 \end{enumerate}
+
+\section{Cosmic Ray Simulations and Tests}
+\label{cosmics}
+The geometry and physics of the three SBS nucleon form factor experiments have been simulated using Geant4 \cite{AGOSTINELLI2003250}. The simulation package, G4SBS \cite{g4sbs}, contains the experiments' fully realized detectors including: HCal, the Cherenkov detectors, the electromagnetic calorimeters, the dipole magnetic fields and their field clamps, beamline shielding and magnetic effects, and the target chamber. Optical photon processes are fully simulated for calculating light yields and backgrounds in the detectors \cite{halla_2014}.
+
+G4SBS was used to simulate cosmic rays striking HCal. These cosmic rays originate above HCal and enter from the top of the detector, not from the front face as hadrons will during the experiments. G4SBS cosmic ray simulations predict that the average energy cosmic ray will deposit 13-14 MeV of energy in the scintillators. These simulations expect approximately 5.5 photoelectrons to be produced per 1 MeV deposited in the scintillators so and average cosmic ray should produce 72 to 77 photoelectrons. 
+
+HCal cosmic ray tests were performed from 18 June to 26 July 2018 at JLab. The details and results of these tests can be found in Reference \cite{cosmics2018}. Several of these test runs were analyzed to calculate the number of PEs produced. These two runs observed 56 and 70 PEs which is in reasonable agreement with the simulation prediction of 72-77 PEs. (Note: the PMTs were not greased for these tests. The addition of grease has been found to increase the number of PEs by as much as 30\%.)
+
+\bibliography{mybibfile}
 
 \end{document}
 
