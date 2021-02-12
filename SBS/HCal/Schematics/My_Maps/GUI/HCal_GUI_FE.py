@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, Button, StringVar, W, E, RIGHT, BOTH, RAISED, LEFT, CENTER, TOP, BOTTOM
+from tkinter import Tk, Label, Button, StringVar, W, E, RIGHT, BOTH, RAISED, LEFT, CENTER, TOP, BOTTOM, Canvas, Scrollbar
 #import tkinter.ttk as ttk
 from tkinter.ttk import Style, Entry, Frame
 #import tkinter.font as tkFont
@@ -75,6 +75,7 @@ class MyFirstGUI:
 
         RR1_splitter_btn = Button(RR1_frame, text='Splitter Panels', width=10, height=13, font='Helvetica 14 bold')
         RR1_splitter_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
+        RR1_splitter_btn.bind("<Button-1>", self.RR1_splitter_connections)
 
         RR1_amp_btn = Button(RR1_frame, text='Amplifiers', width=10, height=5, font='Helvetica 14 bold')
         RR1_amp_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
@@ -86,6 +87,7 @@ class MyFirstGUI:
 
         RR2_upper_tdc_pp_btn = Button(RR2_frame, text='Upper TDC Patch Panels', width=10, height=4, font='Helvetica 14 bold')
         RR2_upper_tdc_pp_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
+        RR2_upper_tdc_pp_btn.bind("<Button-1>", self.RR2_upper_tdc_pp_connections)
 
         RR2_upper_tdc_disc_btn = Button(RR2_frame, text='TDC Discriminators from RR3', width=10, height=5, font='Helvetica 14 bold')
         RR2_upper_tdc_disc_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
@@ -93,6 +95,7 @@ class MyFirstGUI:
 
         RR2_lower_tdc_pp_btn = Button(RR2_frame, text='Lower TDC Patch Panels', width=10, height=6, font='Helvetica 14 bold')
         RR2_lower_tdc_pp_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
+        RR2_lower_tdc_pp_btn.bind("<Button-1>", self.RR2_lower_tdc_pp_connections)
 
         RR2_lower_tdc_disc_btn = Button(RR2_frame, text='TDC Discriminators from RR1', width=10, height=5, font='Helvetica 14 bold')
         RR2_lower_tdc_disc_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
@@ -100,6 +103,7 @@ class MyFirstGUI:
 
         RR2_fadc_pp_btn = Button(RR2_frame, text='fADC Patch Panels', width=10, height=11, font='Helvetica 14 bold')
         RR2_fadc_pp_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
+        RR2_fadc_pp_btn.bind("<Button-1>", self.RR2_adc_pp_connections)
 
         #Create buttons and labels for electronics in RR3
         RR3_label = Label(RR3_frame, text='RR3', font='Helvetica 16 bold')
@@ -111,6 +115,7 @@ class MyFirstGUI:
 
         RR3_splitter_btn = Button(RR3_frame, text='Splitter Panels', width=10, height=13, font='Helvetica 14 bold')
         RR3_splitter_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
+        RR3_splitter_btn.bind("<Button-1>", self.RR3_splitter_connections)
 
         RR3_amp_btn = Button(RR3_frame, text='Amplifiers', width=10, height=5, font='Helvetica 14 bold')
         RR3_amp_btn.pack(side="top", padx=5, pady=5, expand=True, fill=BOTH)
@@ -126,13 +131,13 @@ class MyFirstGUI:
         win.wm_title("RR3 Amplifier Connections")
         win.geometry("1400x600")
 
-        RR3_amp_frames = []                               #List to hold the amplifier frames.
+        RR3_amp_frames = []                           #List to hold the amplifier frames.
         buttons = []                                  #List to hold the amplifier buttons.
-        nslots = 9                                         #Number of amplifiers in crate.
+        nslots = 9                                    #Number of amplifiers in crate.
         nrows = 16                                    #Number of rows of channels in an amp.
         ncols = 3                                     #Number of columns of channels in an amp.
-        nchannels = nrows * ncols             #Number of channels in one amp.
-        nall_channels = nslots * nrows * ncols #Number of channels in all the amps.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
 
         #Create 9 different frames to hold the amp channel buttons.
         for i in range (0,nslots):
@@ -195,13 +200,13 @@ class MyFirstGUI:
         win.wm_title("RR1 Amplifier Connections")
         win.geometry("1400x600")
 
-        RR1_amp_frames = []                               #List to hold the amplifier frames.
+        RR1_amp_frames = []                           #List to hold the amplifier frames.
         buttons = []                                  #List to hold the amplifier buttons.
-        nslots = 9                                         #Number of amplifiers in crate.
+        nslots = 9                                    #Number of amplifiers in crate.
         nrows = 16                                    #Number of rows of channels in an amp.
         ncols = 3                                     #Number of columns of channels in an amp.
-        nchannels = nrows * ncols             #Number of channels in one amp.
-        nall_channels = nslots * nrows * ncols #Number of channels in all the amps.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
 
         #Create 9 different frames to hold the amp channel buttons.
         for i in range (0,nslots):
@@ -498,7 +503,7 @@ class MyFirstGUI:
 
     def RR2_Lower_TDC_Disc_connections(self, event):
         win = Tk()
-        win.wm_title("RR2 Upper TDC Discriminator Connections")
+        win.wm_title("RR2 Lower TDC Discriminator Connections")
         win.geometry("1400x600")
         RR2_lower_TDC_disc_frames = []                #List to hold the frames.
         buttons = []                                  #List to hold the  buttons.
@@ -570,8 +575,445 @@ class MyFirstGUI:
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
                 nmods = nmods +1
 
+    def RR3_splitter_connections(self, event):
+        win = Tk()
+        win.wm_title("RR3 Splitter Panel Connections")
+        win.geometry("800x600")
+
+        RR3_splitter_frames = []                      #List to hold the amplifier frames.
+        buttons = []                                  #List to hold the amplifier buttons.
+        nslots = 9                                    #Number of amplifiers in crate.
+        nrows = 3                                     #Number of rows of channels in an amp.
+        ncols = 16                                    #Number of columns of channels in an amp.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
+
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        vsb.pack(side="right", fill="y")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure(canvas))
+
+        #Create 9 different frames to hold the amp channel buttons.
+        for i in range (0,nslots):
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
+            frame.pack(side='top', fill=BOTH, expand=True)
+            RR3_splitter_frames.append(frame)
+
+        #Define the rows and cols for the button grid.
+        for i in range(0,nslots):
+            for j in range(0,ncols):
+                RR3_splitter_frames[i].columnconfigure(j, pad=3, weight=1)
+
+            for j in range(0,nrows+1):
+                RR3_splitter_frames[i].rowconfigure(j, pad=3, weight=1)
+
+        #Create and bind the amp buttons to their functions.
+        for i in range(0,nslots):
+            buttons.append([])#Make this list 2D to hold the buttons of each of the 9 frames separately.
+            for j in range(0,nrows):
+                for k in range(0,ncols):
+
+                    btn = Button(RR3_splitter_frames[i], width=3, height=2, font='Helvetica 8')
+
+                    #Give names and function binds to the three different columns.
+                    if j == 0:
+                        text = 'SP'+str(18-i)+'-'+str(k+1)+'\n Out 1'
+                        btn['text'] = text
+                        #btn['font'] = 'Helvetica 20'
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 1:
+                        text = 'SP'+str(18-i)+'-'+str(k+1)+'\n In'
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 2:
+                        text = 'SP'+str(18-i)+'-'+str(k+1)+'\n Out 2'
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+
+        labels = []
+        #Place labels above the buttons in the grid.
+        for i in range(0,nslots):
+            label = Label(RR3_splitter_frames[i], text='Splitter Panel '+str(18-i))
+            labels.append(label)
+            labels[i].grid(row=0,columnspan=ncols)
+
+        #Place the buttons in the grid.
+        for i in range(0,nslots):
+            for j in range(1,nrows+1):
+                for k in range(0,ncols):
+                    buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
 
 
+        def onFrameConfigure(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR1_splitter_connections(self, event):
+        win = Tk()
+        win.wm_title("RR1 Splitter Panel Connections")
+        win.geometry("800x600")
+
+        RR1_splitter_frames = []                      #List to hold the amplifier frames.
+        buttons = []                                  #List to hold the amplifier buttons.
+        nslots = 9                                    #Number of amplifiers in crate.
+        nrows = 3                                     #Number of rows of channels in an amp.
+        ncols = 16                                    #Number of columns of channels in an amp.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
+
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        vsb.pack(side="right", fill="y")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure(canvas))
+
+        #Create 9 different frames to hold the amp channel buttons.
+        for i in range (0,nslots):
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
+            frame.pack(side='top', fill=BOTH, expand=True)
+            RR1_splitter_frames.append(frame)
+
+        #Define the rows and cols for the button grid.
+        for i in range(0,nslots):
+            for j in range(0,ncols):
+                RR1_splitter_frames[i].columnconfigure(j, pad=3, weight=1)
+
+            for j in range(0,nrows+1):
+                RR1_splitter_frames[i].rowconfigure(j, pad=3, weight=1)
+
+        #Create and bind the amp buttons to their functions.
+        for i in range(0,nslots):
+            buttons.append([])#Make this list 2D to hold the buttons of each of the 9 frames separately.
+            for j in range(0,nrows):
+                for k in range(0,ncols):
+
+                    btn = Button(RR1_splitter_frames[i], width=3, height=2, font='Helvetica 8')
+
+                    #Give names and function binds to the three different columns.
+                    if j == 0:
+                        text = 'SP'+str(nslots-i)+'-'+str(k+1)+'\n Out 1'
+                        btn['text'] = text
+                        #btn['font'] = 'Helvetica 20'
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 1:
+                        text = 'SP'+str(nslots-i)+'-'+str(k+1)+'\n In'
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 2:
+                        text = 'SP'+str(nslots-i)+'-'+str(k+1)+'\n Out 2'
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+
+        labels = []
+        #Place labels above the buttons in the grid.
+        for i in range(0,nslots):
+            label = Label(RR1_splitter_frames[i], text='Splitter Panel '+str(nslots-i))
+            labels.append(label)
+            labels[i].grid(row=0,columnspan=ncols)
+
+        #Place the buttons in the grid.
+        for i in range(0,nslots):
+            for j in range(1,nrows+1):
+                for k in range(0,ncols):
+                    buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+
+
+        def onFrameConfigure(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_adc_pp_connections(self, event):
+        win = Tk()
+        win.wm_title("RR2 fADC Patch Panel Connections")
+        win.geometry("800x600")
+
+        RR2_adc_pp_frames = []                        #List to hold the amplifier frames.
+        buttons = []                                  #List to hold the amplifier buttons.
+        nslots = 5                                    #Number of amplifiers in crate.
+        nrows = 4                                     #Number of rows of channels in an amp.
+        ncols = 16                                    #Number of columns of channels in an amp.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
+
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        vsb.pack(side="right", fill="y")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure2(canvas))
+
+        #Create 9 different frames to hold the amp channel buttons.
+        for i in range (0,nslots):
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
+            frame.pack(side='top', fill=BOTH, expand=True)
+            RR2_adc_pp_frames.append(frame)
+
+        #Define the rows and cols for the button grid.
+        for i in range(0,nslots):
+            for j in range(0,ncols):
+                RR2_adc_pp_frames[i].columnconfigure(j, pad=3, weight=1)
+
+            for j in range(0,nrows+1):
+                RR2_adc_pp_frames[i].rowconfigure(j, pad=3, weight=1)
+
+        #Create and bind the amp buttons to their functions.
+        for i in range(0,nslots):
+            buttons.append([])#Make this list 2D to hold the buttons of each of the 9 frames separately.
+            for j in range(0,nrows):
+                for k in range(0,ncols):
+
+                    btn = Button(RR2_adc_pp_frames[i], width=3, height=2, font='Helvetica 8')
+
+                    #Give names and function binds to the three different columns.
+                    if j == 0:
+                        text = str(nslots-i)+'A-'+str(k+1)
+                        btn['text'] = text
+                        #btn['font'] = 'Helvetica 20'
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 1:
+                        text = str(nslots-i)+'B-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 2:
+                        text = str(nslots-i)+'C-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 3:
+                        text = str(nslots-i)+'D-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+
+        labels = []
+        #Place labels above the buttons in the grid.
+        for i in range(0,nslots):
+            label = Label(RR2_adc_pp_frames[i], text='fADC Patch Panel '+str(nslots-i))
+            labels.append(label)
+            labels[i].grid(row=0,columnspan=ncols)
+
+        #Place the buttons in the grid.
+        for i in range(0,nslots):
+            for j in range(1,nrows+1):
+                for k in range(0,ncols):
+                    buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+
+
+        def onFrameConfigure2(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_lower_tdc_pp_connections(self, event):
+        win = Tk()
+        win.wm_title("RR2 Lower TDC Patch Panel Connections")
+        win.geometry("800x600")
+
+        RR2_lower_tdc_pp_frames = []                  #List to hold the amplifier frames.
+        buttons = []                                  #List to hold the amplifier buttons.
+        nslots = 3                                    #Number of amplifiers in crate.
+        nrows = 4                                     #Number of rows of channels in an amp.
+        ncols = 16                                    #Number of columns of channels in an amp.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
+
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        vsb.pack(side="right", fill="y")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure2(canvas))
+
+        #Create 9 different frames to hold the amp channel buttons.
+        for i in range (0,nslots):
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
+            frame.pack(side='top', fill=BOTH, expand=True)
+            RR2_lower_tdc_pp_frames.append(frame)
+
+        #Define the rows and cols for the button grid.
+        for i in range(0,nslots):
+            for j in range(0,ncols):
+                RR2_lower_tdc_pp_frames[i].columnconfigure(j, pad=3, weight=1)
+
+            for j in range(0,nrows+1):
+                RR2_lower_tdc_pp_frames[i].rowconfigure(j, pad=3, weight=1)
+
+        #Create and bind the amp buttons to their functions.
+        for i in range(0,nslots):
+            buttons.append([])#Make this list 2D to hold the buttons of each of the 9 frames separately.
+            for j in range(0,nrows):
+                for k in range(0,ncols):
+
+                    btn = Button(RR2_lower_tdc_pp_frames[i], width=3, height=2, font='Helvetica 8')
+
+                    #Give names and function binds to the three different columns.
+                    if j == 0:
+                        text = str(nslots-i)+'A-'+str(k+1)
+                        btn['text'] = text
+                        #btn['font'] = 'Helvetica 20'
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 1:
+                        text = str(nslots-i)+'B-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 2:
+                        text = str(nslots-i)+'C-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 3:
+                        text = str(nslots-i)+'D-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+
+        labels = []
+        #Place labels above the buttons in the grid.
+        for i in range(0,nslots):
+            label = Label(RR2_lower_tdc_pp_frames[i], text='fADC Patch Panel '+str(nslots-i))
+            labels.append(label)
+            labels[i].grid(row=0,columnspan=ncols)
+
+        #Place the buttons in the grid.
+        for i in range(0,nslots):
+            for j in range(1,nrows+1):
+                for k in range(0,ncols):
+                    buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+
+
+        def onFrameConfigure2(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_upper_tdc_pp_connections(self, event):
+        win = Tk()
+        win.wm_title("RR2 Upper TDC Patch Panel Connections")
+        win.geometry("800x600")
+
+        RR2_upper_tdc_pp_frames = []                  #List to hold the amplifier frames.
+        buttons = []                                  #List to hold the amplifier buttons.
+        nslots = 2                                    #Number of amplifiers in crate.
+        nrows = 4                                     #Number of rows of channels in an amp.
+        ncols = 16                                    #Number of columns of channels in an amp.
+        nchannels = nrows * ncols                     #Number of channels in one amp.
+        nall_channels = nslots * nrows * ncols        #Number of channels in all the amps.
+
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        vsb.pack(side="right", fill="y")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure2(canvas))
+
+        #Create 9 different frames to hold the amp channel buttons.
+        for i in range (0,nslots):
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
+            frame.pack(side='top', fill=BOTH, expand=True)
+            RR2_upper_tdc_pp_frames.append(frame)
+
+        #Define the rows and cols for the button grid.
+        for i in range(0,nslots):
+            for j in range(0,ncols):
+                RR2_upper_tdc_pp_frames[i].columnconfigure(j, pad=3, weight=1)
+
+            for j in range(0,nrows+1):
+                RR2_upper_tdc_pp_frames[i].rowconfigure(j, pad=3, weight=1)
+
+        #Create and bind the amp buttons to their functions.
+        for i in range(0,nslots):
+            buttons.append([])#Make this list 2D to hold the buttons of each of the 9 frames separately.
+            for j in range(0,nrows):
+                for k in range(0,ncols):
+
+                    btn = Button(RR2_upper_tdc_pp_frames[i], width=3, height=2, font='Helvetica 8')
+
+                    #Give names and function binds to the three different columns.
+                    if j == 0:
+                        text = str(5-i)+'A-'+str(k+1)
+                        btn['text'] = text
+                        #btn['font'] = 'Helvetica 20'
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 1:
+                        text = str(5-i)+'B-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 2:
+                        text = str(5-i)+'C-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+                    elif j == 3:
+                        text = str(5-i)+'D-'+str(k+1)
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[i].append(btn)
+
+        labels = []
+        #Place labels above the buttons in the grid.
+        for i in range(0,nslots):
+            label = Label(RR2_upper_tdc_pp_frames[i], text='fADC Patch Panel '+str(5-i))
+            labels.append(label)
+            labels[i].grid(row=0,columnspan=ncols)
+
+        #Place the buttons in the grid.
+        for i in range(0,nslots):
+            for j in range(1,nrows+1):
+                for k in range(0,ncols):
+                    buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+
+
+        def onFrameConfigure2(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
 
 root = Tk()
 root.geometry("1200x800")
