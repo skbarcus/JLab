@@ -380,14 +380,21 @@ class MyFirstGUI:
 
     def RR5_vxs2_connections(self, event):
         win = Tk()
-        win.wm_title("RR2 Upper TDC Discriminator Connections")
-        win.geometry("1400x525")
+        win.wm_title("RR5 Upper VXS Crate Connections")
+        win.geometry("1400x705")
         RR5_vxs2_frames = []                #List to hold the frames.
         buttons = []                                  #List to hold the  buttons.
-        nslots = 25                                   #Number of slots in crate.
-        ndisc = 18                                     #Number of summing modules.
-        nrows = 8                                    #Number of rows of channels in a module.
-        ncols = 2                                     #Number of columns of channels in a module.
+        ti_buttons = []
+        f1_buttons = []
+        nslots = 21                                   #Number of slots in crate.
+        ndisc = 2                                     #Number of summing modules.
+        nrows = 16                                    #Number of rows of channels in a module.
+        ncols = 1                                     #Number of columns of channels in a module.
+        ti_rows = 18
+        ti_cols = 1
+        nf1 = 5
+        f1_rows = 3
+        f1_cols = 2
         nchannels = nrows * ncols                     #Number of channels in one module.
         nall_channels = nslots * nrows * ncols        #Number of channels in all the modules.
 
@@ -413,77 +420,224 @@ class MyFirstGUI:
 
         #Define the rows and cols for the button grid.
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
+            if i == 18 or i == 19:
                 for j in range(0,ncols):
                     RR5_vxs2_frames[i].columnconfigure(j, pad=3, weight=1)
 
-                for j in range(0,nrows+3):
+                for j in range(0,nrows+1):
                     RR5_vxs2_frames[i].rowconfigure(j, pad=3, weight=1)
 
-        #Create and bind the sum buttons to their functions.
+        #Define standalone module rows and cols.
+        RR5_vxs2_frames[0].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[0].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[0].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs2_frames[1].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[1].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[1].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs2_frames[10].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[10].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[10].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs2_frames[11].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[11].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[11].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs2_frames[14].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[14].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs2_frames[14].rowconfigure(1, pad=3, weight=1)
+
+        for i in range(0,nslots):
+            if i == 2 or i == 8  or i == 9  or i == 12  or i == 13  or i == 15 or i == 16 or i == 17:
+                RR5_vxs2_frames[i].columnconfigure(0, pad=3, weight=1)
+                RR5_vxs2_frames[i].rowconfigure(0, pad=3, weight=1)
+                RR5_vxs2_frames[i].rowconfigure(1, pad=3, weight=1)
+
+        #Define TI button grid.
+        for i in range(0,ti_rows+5):
+            RR5_vxs2_frames[20].rowconfigure(i, pad=3, weight=1)
+
+        for i in range(0,ti_cols):
+            RR5_vxs2_frames[20].columnconfigure(i, pad=3, weight=1)
+
+        #Define F1 button grid.
+        for i in range(0,nslots):
+            if i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
+                for j in range(0,f1_rows+1):
+                    RR5_vxs2_frames[i].rowconfigure(j, pad=3, weight=1)
+
+                for j in range(0,f1_cols):
+                    RR5_vxs2_frames[i].columnconfigure(j, pad=3, weight=1)
+
+        #Create and bind the fADC buttons to their functions.
         nmods = 0
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
+            if  i == 18 or i == 19:
                 buttons.append([])#Make this list 2D to hold the buttons of each of the frames separately.
                 for j in range(0,nrows):
                     for k in range(0,ncols):
                         btn = Button(RR5_vxs2_frames[i], width=1, height=1, font='Helvetica 8')
 
                         #Give names and function binds to the three different columns.
-                        if k == 0:
-                            text = str(18-nmods)+'-'+str(j*2+1)+'\n In'
-                            btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
-                            buttons[nmods].append(btn)
-                        elif k == 1:
-                            text = str(18-nmods)+'-'+str(j*2+2)+'\n In'
-                            btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
-                            buttons[nmods].append(btn)
-                #Make a button for each discriminator output.
-                btn1 = Button(RR5_vxs2_frames[i], width=1, height=8, font='Helvetica 8')
-                btn1['text'] = 'Ribbon \n Out 1'
-                btn1.bind("<Button-1>", self.ftest)
-                buttons[nmods].append(btn1)
-                btn2 = Button(RR5_vxs2_frames[i], width=1, height=8, font='Helvetica 8')
-                btn2['text'] = 'Ribbon \n Out 2'
-                btn2.bind("<Button-1>", self.ftest)
-                buttons[nmods].append(btn2)
-
+                        text = str(nmods+1)+'-'+str(15-j)+'\n In'
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[nmods].append(btn)
                 nmods = nmods + 1
 
-        #Place labels above the sum buttons in the grid.
+        #Create and bind the F1 buttons to their functions.
+        nmods = 0
+        for i in range(0,nslots):
+            if i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
+                f1_buttons.append([])#Make this list 2D to hold the buttons of each of the frames separately.
+                for j in range(0,f1_rows):
+                    for k in range(0,f1_cols):
+                        f1_btn = Button(RR5_vxs2_frames[i], width=1, height=10, font='Helvetica 8')
+
+                        #Give names and function binds to the three different columns.
+                        if j == 0 and k == 0:
+                            text = 'Chs In\n'+str(17)+'-'+str(32)
+                        if j == 0 and k == 1:
+                            text = 'Chs In\n'+str(1)+'-'+str(16)
+                        if j == 1 and k == 0:
+                            text = 'F1 SD\n Cable'
+                            f1_btn['height'] = 1
+                        if j == 1 and k == 1:
+                            text = ''
+                            f1_btn['height'] = 1
+                            f1_btn['state'] = 'disabled'
+                        if j == 2 and k == 0:
+                            text = 'Chs In\n'+str(49)+'-'+str(64)
+                        if j == 2 and k == 1:
+                            text = 'Chs In\n'+str(33)+'-'+str(48)
+                        f1_btn['text'] = text
+                        f1_btn.bind("<Button-1>", self.ftest)
+                        f1_buttons[nmods].append(f1_btn)
+                nmods = nmods + 1
+
+        #Create a standalone buttons.
+        roc_btn = Button(RR5_vxs2_frames[0], text='ROC 17', width=4, height=49, font='Helvetica 8')
+        roc_btn.grid(row=1,columnspan=ncols)
+        roc_btn.bind("<Button-1>", self.ftest)
+
+        scaler_btn = Button(RR5_vxs2_frames[1], text='F1TDC SD', width=4, height=49, font='Helvetica 8')
+        scaler_btn.grid(row=1,columnspan=ncols)
+        scaler_btn.bind("<Button-1>", self.ftest)
+
+        vtp_btn = Button(RR5_vxs2_frames[10], text='VTP', width=4, height=49, font='Helvetica 8')
+        vtp_btn.grid(row=1,columnspan=ncols)
+        vtp_btn.bind("<Button-1>", self.ftest)
+
+        fadc_sd_btn = Button(RR5_vxs2_frames[11], text='fADC SD', width=4, height=49, font='Helvetica 8')
+        fadc_sd_btn.grid(row=1,columnspan=ncols)
+        fadc_sd_btn.bind("<Button-1>", self.ftest)
+
+        dvcs_pulser_btn = Button(RR5_vxs2_frames[14], text='DVCS\n Pulser', width=4, height=49, font='Helvetica 8')
+        dvcs_pulser_btn.grid(row=1,columnspan=ncols)
+        dvcs_pulser_btn.bind("<Button-1>", self.ftest)
+
+        #Create buttons for empty slots.
+        empty_btns = []
+        for i in range(0,nslots):
+            if i == 2 or i == 8  or i == 9  or i == 12  or i == 13  or i == 15 or i == 16 or i == 17:
+                empty_btn = Button(RR5_vxs2_frames[i], text='Empty', width=4, height=49, font='Helvetica 8')
+                empty_btn.grid(row=1,columnspan=ncols)
+                empty_btn.bind("<Button-1>", self.ftest)
+                empty_btn['state'] = 'disabled'
+                empty_btns.append(empty_btn)
+
+        #Make TI buttons.
+        ti_btn_names = ['Optical\n Fiber','','','','','TS#6\n In','TS#5\n In','TS#4\n In','CLK\n In','TS#3\n In','TS#2\n In','TS#1\n In','TRG\n In','INH\n In','OT#2\n Out','OT#1\n Out','O#4\n Out','O#3\n Out','O#2\n Out','O#1\n Out','TRG\n Out','Busy\n Out']
+
+        for i in range(0,ti_rows+4):
+            for j in range(0,ti_cols):
+                ti_btn = Button(RR5_vxs2_frames[20], width=1, height=1, font='Helvetica 8')
+                ti_btn['text'] = ti_btn_names[i]
+                ti_btn.bind("<Button-1>", self.ftest)
+
+                if i == 1 or i == 2 or i == 3 or i == 4:
+                    ti_btn['state'] = 'disabled'
+
+                ti_buttons.append(ti_btn)
+
+        #Place labels above the fADC buttons in the grid.
         labels = []
         nlabels = 0
         nmod = 0
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
-                label = Label(RR5_vxs2_frames[i], text='TDC Discriminator '+str(ndisc-nmod))
+            if i == 18 or i == 19:
+                label = Label(RR5_vxs2_frames[i], text='fADC250 '+str(i-1))
                 labels.append(label)
                 labels[nlabels].grid(row=0,columnspan=ncols)
                 nlabels = nlabels +1
                 nmod = nmod + 1
-            else:
-                label = Label(RR5_vxs2_frames[i], text='Empty')
-                labels.append(label)
-                labels[nlabels].grid(row=0,columnspan=ncols)
+
+        #Place labels above the F1 buttons in the grid.
+        f1_labels = []
+        nlabels = 0
+        nmod = 0
+        for i in range(0,nslots):
+           if i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
+                f1_label = Label(RR5_vxs2_frames[i], text='F1 TDC '+str(i-2))
+                f1_labels.append(f1_label)
+                f1_labels[nlabels].grid(row=0,columnspan=ncols)
                 nlabels = nlabels +1
-                    
-        #Place the buttons in the grid.
+                nmod = nmod + 1
+              
+        #Place labels above the empty buttons in the grid.
+        empty_labels = []
+        nlabels = 0
+        nmod = 0
+        for i in range(0,nslots):
+            if i == 2 or i == 8  or i == 9  or i == 12  or i == 13  or i == 15 or i == 16 or i == 17:
+                empty_label = Label(RR5_vxs2_frames[i], text='Empty')
+                empty_labels.append(empty_label)
+                empty_labels[nlabels].grid(row=0,columnspan=ncols)
+                nlabels = nlabels +1
+                nmod = nmod + 1
+                
+
+        #Create standalone labels.
+        roc_label = Label(RR5_vxs2_frames[0], text='ROC17')
+        roc_label.grid(row=0,columnspan=ncols)
+
+        scaler_label = Label(RR5_vxs2_frames[1], text='F1TDC SD')
+        scaler_label.grid(row=0,columnspan=ncols)
+
+        vtp_label = Label(RR5_vxs2_frames[10], text='VTP')
+        vtp_label.grid(row=0,columnspan=ncols)
+
+        fadc_sd_label = Label(RR5_vxs2_frames[11], text='fADC SD')
+        fadc_sd_label.grid(row=0,columnspan=ncols)
+
+        ti_label = Label(RR5_vxs2_frames[20], text='TI')
+        ti_label.grid(row=0,columnspan=ncols)
+
+        dvcs_pulser_label = Label(RR5_vxs2_frames[14], text='DVCS Pulser')
+        dvcs_pulser_label.grid(row=0,columnspan=ncols)
+
+        #Place the fADC buttons in the grid.
         nmods = 0
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
-                for j in range(1,5):
+            if i == 18 or i == 19:
+                for j in range(1,nrows+1):
                     for k in range(0,ncols):
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+                nmods = nmods +1
 
-                for j in range(7,11):
-                    for k in range(0,ncols):
-                        buttons[nmods][(j-1-2)*ncols+k].grid(row=j, column=k, sticky='NSEW')
-                        
-                #Add the two output buttons.
-                buttons[nmods][16].grid(row=5, column=0, rowspan=1, sticky='NSEW')
-                buttons[nmods][17].grid(row=6, column=0, rowspan=1, sticky='NSEW')
+        #Place the TI buttons in the grid.
+        for i in range(1,ti_rows+5):
+            for j in range(0,ti_cols):
+                ti_buttons[i-1].grid(row=i, column=j, sticky='NSEW')
+
+        #Place the f1 buttons in the grid.
+        nmods = 0
+        for i in range(0,nslots):
+           if i == 3 or i == 4 or i == 5 or i == 6 or i == 7:
+                for j in range(1,f1_rows+1):
+                    for k in range(0,f1_cols):
+                        f1_buttons[nmods][(j-1)*f1_cols+k].grid(row=j, column=k, sticky='NSEW')
                 nmods = nmods +1
 
 
@@ -493,14 +647,17 @@ class MyFirstGUI:
 
     def RR5_vxs1_connections(self, event):
         win = Tk()
-        win.wm_title("RR2 Upper TDC Discriminator Connections")
-        win.geometry("1400x525")
+        win.wm_title("RR5 Lower VXS Crate Connections")
+        win.geometry("1400x705")
         RR5_vxs1_frames = []                #List to hold the frames.
         buttons = []                                  #List to hold the  buttons.
-        nslots = 25                                   #Number of slots in crate.
-        ndisc = 18                                     #Number of summing modules.
-        nrows = 8                                    #Number of rows of channels in a module.
-        ncols = 2                                     #Number of columns of channels in a module.
+        ti_buttons = []
+        nslots = 21                                   #Number of slots in crate.
+        ndisc = 16                                     #Number of summing modules.
+        nrows = 16                                    #Number of rows of channels in a module.
+        ncols = 1                                     #Number of columns of channels in a module.
+        ti_rows = 18
+        ti_cols = 1
         nchannels = nrows * ncols                     #Number of channels in one module.
         nall_channels = nslots * nrows * ncols        #Number of channels in all the modules.
 
@@ -526,79 +683,123 @@ class MyFirstGUI:
 
         #Define the rows and cols for the button grid.
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
+            if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 12 or i == 13 or i == 14 or i == 15 or i == 16 or i == 17 or i == 18 or i == 19:
                 for j in range(0,ncols):
                     RR5_vxs1_frames[i].columnconfigure(j, pad=3, weight=1)
 
-                for j in range(0,nrows+3):
+                for j in range(0,nrows+1):
                     RR5_vxs1_frames[i].rowconfigure(j, pad=3, weight=1)
+        #Define standalone module rows and cols.
+        RR5_vxs1_frames[0].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[0].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[0].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs1_frames[1].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[1].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[1].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs1_frames[10].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[10].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[10].rowconfigure(1, pad=3, weight=1)
+
+        RR5_vxs1_frames[11].columnconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[11].rowconfigure(0, pad=3, weight=1)
+        RR5_vxs1_frames[11].rowconfigure(1, pad=3, weight=1)
+
+        #Define TI button grid.
+        for i in range(0,ti_rows+5):
+            RR5_vxs1_frames[20].rowconfigure(i, pad=3, weight=1)
+
+        for i in range(0,ti_cols):
+            RR5_vxs1_frames[20].columnconfigure(i, pad=3, weight=1)
 
         #Create and bind the sum buttons to their functions.
         nmods = 0
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
+            if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 12 or i == 13 or i == 14 or i == 15 or i == 16 or i == 17 or i == 18 or i == 19:
                 buttons.append([])#Make this list 2D to hold the buttons of each of the frames separately.
                 for j in range(0,nrows):
                     for k in range(0,ncols):
                         btn = Button(RR5_vxs1_frames[i], width=1, height=1, font='Helvetica 8')
 
                         #Give names and function binds to the three different columns.
-                        if k == 0:
-                            text = str(18-nmods)+'-'+str(j*2+1)+'\n In'
-                            btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
-                            buttons[nmods].append(btn)
-                        elif k == 1:
-                            text = str(18-nmods)+'-'+str(j*2+2)+'\n In'
-                            btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
-                            buttons[nmods].append(btn)
-                #Make a button for each discriminator output.
-                btn1 = Button(RR5_vxs1_frames[i], width=1, height=8, font='Helvetica 8')
-                btn1['text'] = 'Ribbon \n Out 1'
-                btn1.bind("<Button-1>", self.ftest)
-                buttons[nmods].append(btn1)
-                btn2 = Button(RR5_vxs1_frames[i], width=1, height=8, font='Helvetica 8')
-                btn2['text'] = 'Ribbon \n Out 2'
-                btn2.bind("<Button-1>", self.ftest)
-                buttons[nmods].append(btn2)
-
+                        text = str(nmods+1)+'-'+str(15-j)+'\n In'
+                        btn['text'] = text
+                        btn.bind("<Button-1>", self.ftest)
+                        buttons[nmods].append(btn)
                 nmods = nmods + 1
+        #Create a standalone buttons.
+        roc_btn = Button(RR5_vxs1_frames[0], text='ROC 16', width=4, height=49, font='Helvetica 8')
+        roc_btn.grid(row=1,columnspan=ncols)
+        roc_btn.bind("<Button-1>", self.ftest)
+
+        scaler_btn = Button(RR5_vxs1_frames[1], text='Scaler', width=4, height=49, font='Helvetica 8')
+        scaler_btn.grid(row=1,columnspan=ncols)
+        scaler_btn.bind("<Button-1>", self.ftest)
+
+        vtp_btn = Button(RR5_vxs1_frames[10], text='VTP', width=4, height=49, font='Helvetica 8')
+        vtp_btn.grid(row=1,columnspan=ncols)
+        vtp_btn.bind("<Button-1>", self.ftest)
+
+        fadc_sd_btn = Button(RR5_vxs1_frames[11], text='fADC SD', width=4, height=49, font='Helvetica 8')
+        fadc_sd_btn.grid(row=1,columnspan=ncols)
+        fadc_sd_btn.bind("<Button-1>", self.ftest)
+
+        #Make TI buttons.
+        ti_btn_names = ['Optical\n Fiber','','','','','TS#6\n In','TS#5\n In','TS#4\n In','CLK\n In','TS#3\n In','TS#2\n In','TS#1\n In','TRG\n In','INH\n In','OT#2\n Out','OT#1\n Out','O#4\n Out','O#3\n Out','O#2\n Out','O#1\n Out','TRG\n Out','Busy\n Out']
+
+        for i in range(0,ti_rows+4):
+            for j in range(0,ti_cols):
+                ti_btn = Button(RR5_vxs1_frames[20], width=1, height=1, font='Helvetica 8')
+                ti_btn['text'] = ti_btn_names[i]
+                ti_btn.bind("<Button-1>", self.ftest)
+
+                if i == 1 or i == 2 or i == 3 or i == 4:
+                    ti_btn['state'] = 'disabled'
+
+                ti_buttons.append(ti_btn)
 
         #Place labels above the sum buttons in the grid.
         labels = []
         nlabels = 0
         nmod = 0
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
-                label = Label(RR5_vxs1_frames[i], text='TDC Discriminator '+str(ndisc-nmod))
+            if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 12 or i == 13 or i == 14 or i == 15 or i == 16 or i == 17 or i == 18 or i == 19:
+                label = Label(RR5_vxs1_frames[i], text='fADC250 '+str(nmod+1))
                 labels.append(label)
                 labels[nlabels].grid(row=0,columnspan=ncols)
                 nlabels = nlabels +1
                 nmod = nmod + 1
-            else:
-                label = Label(RR5_vxs1_frames[i], text='Empty')
-                labels.append(label)
-                labels[nlabels].grid(row=0,columnspan=ncols)
-                nlabels = nlabels +1
-                    
-        #Place the buttons in the grid.
+                 
+        #Create standalone labels.
+        roc_label = Label(RR5_vxs1_frames[0], text='ROC16')
+        roc_label.grid(row=0,columnspan=ncols)
+
+        scaler_label = Label(RR5_vxs1_frames[1], text='Scaler')
+        scaler_label.grid(row=0,columnspan=ncols)
+
+        vtp_label = Label(RR5_vxs1_frames[10], text='VTP')
+        vtp_label.grid(row=0,columnspan=ncols)
+
+        fadc_sd_label = Label(RR5_vxs1_frames[11], text='fADC SD')
+        fadc_sd_label.grid(row=0,columnspan=ncols)
+
+        ti_label = Label(RR5_vxs1_frames[20], text='TI')
+        ti_label.grid(row=0,columnspan=ncols)
+
+        #Place the fADC buttons in the grid.
         nmods = 0
         for i in range(0,nslots):
-            if i == 1 or i == 2 or i == 3 or i == 5 or i == 6 or i == 7 or i == 9 or i == 10 or i == 11 or i == 13 or i == 14 or i == 15 or i == 17 or i == 18 or i == 19 or i == 21 or i == 22 or i == 23 :
-                for j in range(1,5):
+            if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 12 or i == 13 or i == 14 or i == 15 or i == 16 or i == 17 or i == 18 or i == 19:
+                for j in range(1,nrows+1):
                     for k in range(0,ncols):
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
-
-                for j in range(7,11):
-                    for k in range(0,ncols):
-                        buttons[nmods][(j-1-2)*ncols+k].grid(row=j, column=k, sticky='NSEW')
-                        
-                #Add the two output buttons.
-                buttons[nmods][16].grid(row=5, column=0, rowspan=1, sticky='NSEW')
-                buttons[nmods][17].grid(row=6, column=0, rowspan=1, sticky='NSEW')
                 nmods = nmods +1
 
+        #Place the TI buttons in the grid.
+        for i in range(1,ti_rows+5):
+            for j in range(0,ti_cols):
+                ti_buttons[i-1].grid(row=i, column=j, sticky='NSEW')
 
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
