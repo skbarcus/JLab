@@ -247,8 +247,8 @@ for row in range(0,nrows):
         elif int(pp_row)%4 == 3:
             pp_row_letter = 'B'
           
-        print('PMT: ',pmt,' pp_row ',pp_row,type(pp_row),' pp_num = ',pp_num,type(pp_num),type(pp_row_letter),type(channel))
-        con_test[pmt].append(pp_num+pp_row_letter+'-'+channel)
+        #print('PMT: ',pmt,' pp_row ',pp_row,type(pp_row),' pp_num = ',pp_num,type(pp_num),type(pp_row_letter),type(channel))
+        con_test[pmt].append('PP'+pp_num+pp_row_letter+'-'+channel)
         #con_test[pmt].append('A-'+pp_row+' '+pp_row_letter+' '+channel)
 
 #Add DAQ fADC PP connections which have the same labels as the FE PPs.
@@ -278,6 +278,120 @@ for row in range(0,nrows):
             fadc_num = int(amplifier[1])+9
             fadc_num = str(fadc_num)
         con_test[pmt].append('f'+fadc_num+'-'+channel)
+
+#Add splitter panel connections. 
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+
+        #Assign the variable amplifier the name of the amplifier and channel associated with the PMT.
+        amplifier = con_test[pmt][0]
+        channel = con_test[pmt][0][3:]
+        channel = int(channel)
+        channel = str(channel)
+        if len(channel)==1:
+            channel = channel[:0]+'0'+channel[0:]
+
+        #Check if top (bx-xx) or bottom (ax-xx) of HCal.
+        if amplifier[0]=='b':
+            sp_num = int(amplifier[1])
+            sp_num = str(sp_num)
+        elif amplifier[0]=='a':
+            sp_num = int(amplifier[1])+9
+            sp_num = str(sp_num)
+        con_test[pmt].append('SP'+sp_num+'-'+channel)
+
+#Add FE TDC discriminator connections. 
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+
+        #Assign the variable amplifier the name of the amplifier and channel associated with the PMT.
+        amplifier = con_test[pmt][0]
+        channel = con_test[pmt][0][3:]
+        channel = int(channel)
+        channel = str(channel)
+        if len(channel)==1:
+            channel = channel[:0]+'0'+channel[0:]
+
+        #Check if top (bx-xx) or bottom (ax-xx) of HCal.
+        if amplifier[0]=='b':
+            fe_tdc_disc_num = int(amplifier[1])
+            fe_tdc_disc_num = str(fe_tdc_disc_num)
+        elif amplifier[0]=='a':
+            fe_tdc_disc_num = int(amplifier[1])+9
+            fe_tdc_disc_num = str(fe_tdc_disc_num)
+        con_test[pmt].append('Disc.'+fe_tdc_disc_num+'-'+channel)
+
+#Add FE TDC patch panel connections. 
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+
+        #Assign the variable amplifier the name of the amplifier and channel associated with the PMT.
+        amplifier = con_test[pmt][0]
+        channel = con_test[pmt][0][3:]
+        channel = int(channel)
+        channel = str(channel)
+        if len(channel)==1:
+            channel = channel[:0]+'0'+channel[0:]
+
+        #Check if top (bx-xx) or bottom (ax-xx) of HCal.
+        if amplifier[0]=='b':
+            pp_row = int(amplifier[1])
+        elif amplifier[0]=='a':
+            pp_row = int(amplifier[1])+9
+
+        #Determine the TDC PP number. Each PP has 4 rows of 16.
+        if pp_row==1 or pp_row==2 or pp_row==3 or pp_row==4:
+            pp_num = '6'
+        elif pp_row==5 or pp_row==6 or pp_row==7 or pp_row==8:
+            pp_num = '7'
+        elif pp_row==9 or pp_row==10:
+            pp_num = '8'
+        elif pp_row==11 or pp_row==12 or pp_row==13 or pp_row==14:
+            pp_num = '9'
+        elif pp_row==15 or pp_row==16 or pp_row==17 or pp_row==18:
+            pp_num = '10'
+
+        #Determine row of patch panel. Labeled D,C,B,A from the bottom up.
+        if int(pp_num)<8:
+            if int(pp_row)%4 == 0:
+                pp_row_letter = 'A'
+            elif int(pp_row)%4 == 1:
+                pp_row_letter = 'D'
+            elif int(pp_row)%4 == 2:
+                pp_row_letter = 'C'
+            elif int(pp_row)%4 == 3:
+                pp_row_letter = 'B'
+        elif int(pp_num) == 8:
+            if int(pp_row)%2 == 0:
+                pp_row_letter = 'A'
+            elif int(pp_row)%2 == 1:
+                pp_row_letter = 'B'
+        else:
+            if int(pp_row)%4 == 0:
+                pp_row_letter = 'C'
+            elif int(pp_row)%4 == 1:
+                pp_row_letter = 'B'
+            elif int(pp_row)%4 == 2:
+                pp_row_letter = 'A'
+            elif int(pp_row)%4 == 3:
+                pp_row_letter = 'D'
+
+        con_test[pmt].append('PP'+pp_num+pp_row_letter+'-'+channel)
+
+#Add the DAQ TDC PP connections which have the same labels as the FE PPs.
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+        con_test[pmt].append(con_test[pmt][6])
+
+#Add the DAQ TDC discriminator connections which have the same labels as the FE TDC discriminators.
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+        con_test[pmt].append(con_test[pmt][5])
 
 #print(connections)
 #print('Connections Test: ',con_test)
