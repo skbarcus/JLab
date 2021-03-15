@@ -1,4 +1,4 @@
-
+import json
 nrows = 24
 ncols = 12
 channels = nrows * ncols
@@ -393,10 +393,239 @@ for row in range(0,nrows):
         pmt = row*ncols+col+1
         con_test[pmt].append(con_test[pmt][5])
 
-#print(connections)
-#print('Connections Test: ',con_test)
+#Add the F1TDC connections.
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+
+        #Assign the variable amplifier the name of the amplifier and channel associated with the PMT.
+        amplifier = con_test[pmt][0]
+        channel = con_test[pmt][0][3:]
+        channel = int(channel)
+        channel = str(channel)
+        if len(channel)==1:
+            channel = channel[:0]+'0'+channel[0:]
+
+        #Check if top (bx-xx) or bottom (ax-xx) of HCal.
+        if amplifier[0]=='b':
+            ribbon_cable = int(amplifier[1])
+        elif amplifier[0]=='a':
+            ribbon_cable = int(amplifier[1])+9
+
+        if ribbon_cable == 1:
+            TDC = '1'
+            port = 'A'
+        elif ribbon_cable == 2:
+            TDC = '1'
+            port = 'B'
+        elif ribbon_cable == 3:
+            TDC = '2'
+            port = 'A'
+        elif ribbon_cable == 4:
+            TDC = '2'
+            port = 'B'
+        elif ribbon_cable == 5:
+            TDC = '3'
+            port = 'A'
+        elif ribbon_cable == 6:
+            TDC = '3'
+            port = 'B'
+        elif ribbon_cable == 7:
+            TDC = '4'
+            port = 'A'
+        elif ribbon_cable == 8:
+            TDC = '4'
+            port = 'B'
+        elif ribbon_cable == 9:
+            TDC = '5'
+            port = 'A'
+        elif ribbon_cable == 10:
+            TDC = '5'
+            port = 'B'
+        elif ribbon_cable == 11:
+            TDC = '1'
+            port = 'C'
+        elif ribbon_cable == 12:
+            TDC = '1'
+            port = 'D'
+        elif ribbon_cable == 13:
+            TDC = '2'
+            port = 'C'
+        elif ribbon_cable == 14:
+            TDC = '2'
+            port = 'D'
+        elif ribbon_cable == 15:
+            TDC = '3'
+            port = 'C'
+        elif ribbon_cable == 16:
+            TDC = '3'
+            port = 'D'
+        elif ribbon_cable == 17:
+            TDC = '4'
+            port = 'C'
+        elif ribbon_cable == 18:
+            TDC = '4'
+            port = 'D'
+
+        con_test[pmt].append('TDC'+TDC+port+'-'+channel)
+
+#Add the summing module connections.
+#for pmt in range(1,289):
+clusters = [] #List to hold PMT #s in each cluster.
+for i in range(0,18):
+    clusters.append([])
+
+cl_ch1 = 0
+cl_ch2 = 0
+cl_ch3 = 0
+cl_ch4 = 0
+cl_ch5 = 0
+cl_ch6 = 0
+cl_ch7 = 0
+cl_ch8 = 0
+cl_ch9 = 0
+cl_ch10 = 0
+cl_ch11 = 0
+cl_ch12 = 0
+cl_ch13 = 0
+cl_ch14 = 0
+cl_ch15 = 0
+cl_ch16 = 0
+cl_ch17 = 0
+cl_ch18 = 0
 
 for row in range(0,nrows):
     for col in range(0,ncols):
         pmt = row*ncols+col+1
-        print('PMT ',pmt,': ',con_test[pmt])
+        #Check right half.
+        if pmt<145:
+            if row<4 and col<4:
+                cluster = 1
+                clusters[0].append(pmt)
+                cl_ch1 = cl_ch1 + 1
+                channel = cl_ch1
+            elif row<4 and col>3 and col<8:
+                cluster = 2
+                clusters[1].append(pmt)
+                cl_ch2 = cl_ch2 + 1
+                channel = cl_ch2
+            elif row<4 and col>7 and col<12:
+                cluster = 3
+                clusters[2].append(pmt)
+                cl_ch3 = cl_ch3 + 1
+                channel = cl_ch3
+            elif row>3 and row<8 and col<4:
+                cluster = 4
+                clusters[3].append(pmt)
+                cl_ch4 = cl_ch4 + 1
+                channel = cl_ch4
+            elif row>3 and row<8 and col>3 and col<8:
+                cluster = 5
+                clusters[4].append(pmt)
+                cl_ch5 = cl_ch5 + 1
+                channel = cl_ch5
+            elif row>3 and row<8 and col>7 and col<12:
+                cluster = 6
+                clusters[5].append(pmt)
+                cl_ch6 = cl_ch6 + 1
+                channel = cl_ch6
+            elif row>7 and row<12 and col<4:
+                cluster = 7
+                clusters[6].append(pmt)
+                cl_ch7 = cl_ch7 + 1
+                channel = cl_ch7
+            elif row>7 and row<12 and col>3 and col<8:
+                cluster = 8
+                clusters[7].append(pmt)
+                cl_ch8 = cl_ch8 + 1
+                channel = cl_ch8
+            elif row>7 and row<12 and col>7 and col<12:
+                cluster = 9
+                clusters[8].append(pmt)
+                cl_ch9 = cl_ch9 + 1
+                channel = cl_ch9
+
+            sum_mod = (cluster+1)//2
+
+            if cluster%2==0:
+                input = 'B'
+            else:
+                input = 'A'
+        #If not right half, then left half.        
+        else:
+            if row>11 and row<16 and col<4:
+                cluster = 10
+                clusters[9].append(pmt)
+                cl_ch10 = cl_ch10 + 1
+                channel = cl_ch10
+            elif row>11 and row<16 and col>3 and col<8:
+                cluster = 11
+                clusters[10].append(pmt)
+                cl_ch11 = cl_ch11 + 1
+                channel = cl_ch11
+            elif row>11 and row<16 and col>7 and col<12:
+                cluster = 12
+                clusters[11].append(pmt)
+                cl_ch12 = cl_ch12 + 1
+                channel = cl_ch12
+            elif row>15 and row<20 and col<4:
+                cluster = 13
+                clusters[12].append(pmt)
+                cl_ch13 = cl_ch13 + 1
+                channel = cl_ch13
+            elif row>15 and row<20 and col>3 and col<8:
+                cluster = 14
+                clusters[13].append(pmt)
+                cl_ch14 = cl_ch14 + 1
+                channel = cl_ch14
+            elif row>15 and row<20 and col>7 and col<12:
+                cluster = 15
+                clusters[14].append(pmt)
+                cl_ch15 = cl_ch15 + 1
+                channel = cl_ch15
+            elif row>19 and row<24 and col<4:
+                cluster = 16
+                clusters[15].append(pmt)
+                cl_ch16 = cl_ch16 + 1
+                channel = cl_ch16
+            elif row>19 and row<24 and col>3 and col<8:
+                cluster = 17
+                clusters[16].append(pmt)
+                cl_ch17 = cl_ch17 + 1
+                channel = cl_ch17
+            elif row>19 and row<24 and col>7 and col<12:
+                cluster = 18
+                clusters[17].append(pmt)
+                cl_ch18 = cl_ch18 + 1
+                channel = cl_ch18
+
+            sum_mod = cluster//2+1
+
+            if cluster%2==0:
+                input = 'A'
+            else:
+                input = 'B'
+        #print(pmt,cluster,channel)
+        #print(len(clusters), len(clusters[0]))
+        channel = str(channel)
+        if len(channel)==1:
+            channel = channel[:0]+'0'+channel[0:]
+        con_test[pmt].append('Sum'+str(sum_mod)+input+'-'+channel)
+    
+#Add the HV connections.
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+        con_test[pmt].append(connections[pmt][2])
+
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+        print('PMT',pmt,':',con_test[pmt])
+#print(con_test)
+
+#Write dictionary to json file.
+json = json.dumps(con_test)
+f = open("hcal_connections.json","w")
+f.write(json)
+f.close()
