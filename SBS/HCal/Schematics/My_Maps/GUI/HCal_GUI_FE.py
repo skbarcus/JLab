@@ -156,20 +156,29 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if k == 0:
-                        text = 'a'+str(i+1)+'-'+str(j+1)+'\n In'
+                        channel = str(j+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'a'+str(i+1)+'-'+channel+'\n In'
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR3_amp_info_in)
                         buttons[i].append(btn)
                     elif k == 1:
-                        text = 'a'+str(i+1)+'-'+str(j+1)+'\n Out 1'
+                        channel = str(j+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'a'+str(i+1)+'-'+channel+'\n Out 1'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR3_amp_info_out1)
                         buttons[i].append(btn)
                     elif k == 2:
-                        text = 'a'+str(i+1)+'-'+str(j+1)+'\n Out 2'
+                        channel = str(j+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'a'+str(i+1)+'-'+channel+'\n Out 2'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR3_amp_info_out2)
                         buttons[i].append(btn)
 
         labels = []
@@ -184,6 +193,51 @@ class MyFirstGUI:
             for j in range(1,nrows+1):
                 for k in range(0,ncols):
                     buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+
+    def RR3_amp_info_in(self, event):
+        text = event.widget.cget('text')
+        text = text[:5]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' In'
+                print('******************** Information for Amplifier '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+' and splitter panel '+str(connections[pmt][4])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+', F1TDC '+str(connections[pmt][9])+', and summing module '+str(connections[pmt][10])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR3_amp_info_out1(self, event):
+        text = event.widget.cget('text')
+        text = text[:5]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 1'
+                print('******************** Information for Amplifier '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' and its output goes to splitter panel '+str(connections[pmt][4])+'.')
+                print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR3_amp_info_out2(self, event):
+        text = event.widget.cget('text')
+        text = text[:5]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 2'
+                print('******************** Information for Amplifier '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
 
     def ftest(self, event):
         print('Test successful!', event.widget.cget('text'))
@@ -230,20 +284,29 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if k == 0:
-                        text = 'b'+str(i+1)+'-'+str(j+1)+'\n In'
+                        channel = str(j+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'b'+str(i+1)+'-'+channel+'\n In'
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR1_amp_info_in)
                         buttons[i].append(btn)
                     elif k == 1:
-                        text = 'b'+str(i+1)+'-'+str(j+1)+'\n Out 1'
+                        channel = str(j+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'b'+str(i+1)+'-'+channel+'\n Out 1'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR1_amp_info_out1)
                         buttons[i].append(btn)
                     elif k == 2:
-                        text = 'b'+str(i+1)+'-'+str(j+1)+'\n Out 2'
+                        channel = str(j+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'b'+str(i+1)+'-'+channel+'\n Out 2'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR1_amp_info_out2)
                         buttons[i].append(btn)
 
         labels = []
@@ -258,6 +321,51 @@ class MyFirstGUI:
             for j in range(1,nrows+1):
                 for k in range(0,ncols):
                     buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
+
+    def RR1_amp_info_in(self, event):
+        text = event.widget.cget('text')
+        text = text[:5]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' In'
+                print('******************** Information for Amplifier '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+' and splitter panel '+str(connections[pmt][4])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+', F1TDC '+str(connections[pmt][9])+', and summing module '+str(connections[pmt][10])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR1_amp_info_out1(self, event):
+        text = event.widget.cget('text')
+        text = text[:5]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 1'
+                print('******************** Information for Amplifier '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' and its output goes to splitter panel '+str(connections[pmt][4])+'.')
+                print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR1_amp_info_out2(self, event):
+        text = event.widget.cget('text')
+        text = text[:5]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 2'
+                print('******************** Information for Amplifier '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
 
     def RR3_sum_connections(self, event):
         win = Tk()
@@ -305,26 +413,32 @@ class MyFirstGUI:
                         #Give names and function binds to the three different columns.
                         if j<nrows:
                             if k == 0:
-                                text = str(nmods+6)+'A-'+str(j+1)+'\n In'
+                                channel = str(j+1)
+                                if len(channel)==1:
+                                    channel = channel[:0]+'0'+channel[0:]
+                                text = 'Sum'+str(10-nmods)+'B-'+channel+'\n In'
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR3_sum_info_in)
                                 buttons[nmods].append(btn)
                             elif k == 1:
-                                text = str(nmods+6)+'B-'+str(j+1)+'\n In'
+                                channel = str(j+1)
+                                if len(channel)==1:
+                                    channel = channel[:0]+'0'+channel[0:]
+                                text = 'Sum'+str(10-nmods)+'A-'+channel+'\n In'
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR3_sum_info_in)
                                 buttons[nmods].append(btn)
                         #Create different buttons for the outputs.
                         else:
                             if k == 0:
-                                text = str(nmods+6)+'A \n Out'+str(j-nrows)
+                                text = 'Sum'+str(10-nmods)+'B \n Out '+str(j-nrows+1)
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR3_sum_info_out)
                                 buttons[nmods].append(btn)
                             elif k == 1:
-                                text = str(nmods+6)+'B \n Out'+str(j-nrows)
+                                text = 'Sum'+str(10-nmods)+'A \n Out '+str(j-nrows+1)
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR3_sum_info_out)
                                 buttons[nmods].append(btn)
                 nmods = nmods + 1
 
@@ -333,7 +447,7 @@ class MyFirstGUI:
         nlabels = 0
         for i in range(0,nslots):
             if i == 0 or i == 2 or i == 4 or i == 6 or i == 8:
-                label = Label(RR3_sum_frames[i], text='Summing Module '+str(nlabels+6))
+                label = Label(RR3_sum_frames[i], text='Summing Module '+str(10-nlabels))
                 labels.append(label)
                 labels[nlabels].grid(row=0,columnspan=ncols)
                 nlabels = nlabels +1
@@ -346,6 +460,50 @@ class MyFirstGUI:
                     for k in range(0,ncols):
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
                 nmods = nmods +1
+
+    def RR3_sum_info_in(self, event):
+        text = event.widget.cget('text')
+        #print(len(text))
+        if len(text)==12:
+            text = text[:8]
+        elif len(text)==13:
+            text = text[:9]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' In'
+                print('******************** Information for Summing Module '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from splitter panel '+connections[pmt][4]+' and its output goes the overlapping region trigger.')
+                print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
+
+    def RR3_sum_info_out(self, event):
+        text = event.widget.cget('text')
+        #print(len(text))
+        if len(text)==13:
+            sum_mod = text[3]
+            side = text[4]
+            if side=='A':
+                cluster = int(sum_mod)*2-2
+            elif side == 'B':
+                cluster = int(sum_mod)*2-1
+        elif len(text)==14:
+            sum_mod = text[3:5]
+            side = text[5]
+            if side=='A':
+                cluster = int(sum_mod)*2-2
+            elif side == 'B':
+                cluster = int(sum_mod)*2-1
+        if sum_mod=='10' and side=='B':
+            print('Empty')
+        else:
+            print('Sum'+sum_mod+side+' connects to cluster '+str(cluster)+' on HCal')
 
     def RR1_sum_connections(self, event):
         win = Tk()
@@ -393,26 +551,32 @@ class MyFirstGUI:
                         #Give names and function binds to the three different columns.
                         if j<nrows:
                             if k == 0:
-                                text = str(nmods+1)+'A-'+str(j+1)+'\n In'
+                                channel = str(j+1)
+                                if len(channel)==1:
+                                    channel = channel[:0]+'0'+channel[0:]
+                                text = 'Sum'+str(nmods+1)+'A-'+channel+'\n In'
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR1_sum_info_in)
                                 buttons[nmods].append(btn)
                             elif k == 1:
-                                text = str(nmods+1)+'B-'+str(j+1)+'\n In'
+                                channel = str(j+1)
+                                if len(channel)==1:
+                                    channel = channel[:0]+'0'+channel[0:]
+                                text = 'Sum'+str(nmods+1)+'B-'+channel+'\n In'
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR1_sum_info_in)
                                 buttons[nmods].append(btn)
                         #Create different buttons for the outputs.
                         else:
                             if k == 0:
-                                text = str(nmods+1)+'A \n Out'+str(j-nrows)
+                                text = 'Sum'+str(nmods+1)+'A \n Out'+str(j-nrows)
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR1_sum_info_out)
                                 buttons[nmods].append(btn)
                             elif k == 1:
-                                text = str(nmods+1)+'B \n Out'+str(j-nrows)
+                                text = 'Sum'+str(nmods+1)+'B \n Out'+str(j-nrows)
                                 btn['text'] = text
-                                btn.bind("<Button-1>", self.ftest)
+                                btn.bind("<Button-1>", self.RR1_sum_info_out)
                                 buttons[nmods].append(btn)
                 nmods = nmods + 1
 
@@ -434,6 +598,43 @@ class MyFirstGUI:
                     for k in range(0,ncols):
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
                 nmods = nmods +1
+
+    def RR1_sum_info_in(self, event):
+        text = event.widget.cget('text')
+        #print(len(text))
+        if len(text)==12:
+            text = text[:8]
+        elif len(text)==13:
+            text = text[:9]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' In'
+                print('******************** Information for Summing Module '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from splitter panel '+connections[pmt][4]+' and its output goes the overlapping region trigger.')
+                print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
+
+    def RR1_sum_info_out(self, event):
+        text = event.widget.cget('text')
+        #print(len(text))
+        if len(text)==12:
+            sum_mod = text[3]
+            side = text[4]
+            if side=='A':
+                cluster = int(sum_mod)*2-1
+            elif side == 'B':
+                cluster = int(sum_mod)*2
+        if sum_mod=='5' and side=='B':
+            print('Empty')
+        else:
+            print('Sum'+sum_mod+side+' connects to cluster '+str(cluster)+' on HCal')
 
     def RR2_Upper_TDC_Disc_connections(self, event):
         win = Tk()
@@ -649,20 +850,29 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = 'SP'+str(18-i)+'-'+str(k+1)+'\n Out 1'
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'SP'+str(18-i)+'-'+channel+'\n Out 1'
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR3_splitter_info_in)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = 'SP'+str(18-i)+'-'+str(k+1)+'\n In'
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'SP'+str(18-i)+'-'+channel+'\n In'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR3_splitter_info_out1)
                         buttons[i].append(btn)
                     elif j == 2:
-                        text = 'SP'+str(18-i)+'-'+str(k+1)+'\n Out 2'
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'SP'+str(18-i)+'-'+channel+'\n Out 2'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR3_splitter_info_out2)
                         buttons[i].append(btn)
 
         labels = []
@@ -682,6 +892,49 @@ class MyFirstGUI:
         def onFrameConfigure(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR3_splitter_info_in(self, event):
+        text = event.widget.cget('text')
+        text = text[:7]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' In'
+                print('******************** Information for Splitter '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+' and summing module '+str(connections[pmt][10])+'.')
+                print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR3_splitter_info_out1(self, event):
+        text = event.widget.cget('text')
+        text = text[:7]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 1'
+                print('******************** Information for Splitter '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to summing module '+str(connections[pmt][10])+'.')
+                print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR3_splitter_info_out2(self, event):
+        text = event.widget.cget('text')
+        text = text[:7]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 2'
+                print('******************** Information for Splitter '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+'.')
+                print('This signal terminates at F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
 
     def RR1_splitter_connections(self, event):
         win = Tk()
@@ -739,20 +992,29 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = 'SP'+str(nslots-i)+'-'+str(k+1)+'\n Out 1'
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'SP'+str(nslots-i)+'-'+channel+'\n Out 1'
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR1_splitter_info_in)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = 'SP'+str(nslots-i)+'-'+str(k+1)+'\n In'
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'SP'+str(nslots-i)+'-'+channel+'\n In'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR1_splitter_info_out1)
                         buttons[i].append(btn)
                     elif j == 2:
-                        text = 'SP'+str(nslots-i)+'-'+str(k+1)+'\n Out 2'
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'SP'+str(nslots-i)+'-'+channel+'\n Out 2'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR1_splitter_info_out2)
                         buttons[i].append(btn)
 
         labels = []
@@ -772,6 +1034,49 @@ class MyFirstGUI:
         def onFrameConfigure(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR1_splitter_info_in(self, event):
+        text = event.widget.cget('text')
+        text = text[:6]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' In'
+                print('******************** Information for Splitter '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+' and summing module '+str(connections[pmt][10])+'.')
+                print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR1_splitter_info_out1(self, event):
+        text = event.widget.cget('text')
+        text = text[:6]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 1'
+                print('******************** Information for Splitter '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to summing module '+str(connections[pmt][10])+'.')
+                print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+
+    def RR1_splitter_info_out2(self, event):
+        text = event.widget.cget('text')
+        text = text[:6]
+        #print(text)
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                text = text + ' Out 2'
+                print('******************** Information for Splitter '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+'.')
+                print('This signal terminates at F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
 
     def RR2_adc_pp_connections(self, event):
         win = Tk()
