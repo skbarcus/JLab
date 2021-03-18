@@ -204,11 +204,11 @@ class MyFirstGUI:
                 text = text + ' In'
                 print('******************** Information for Amplifier '+text+' ********************')
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
-                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+' and splitter panel '+str(connections[pmt][4])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' ('+connections[pmt][12]+') and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+' and splitter panel '+str(connections[pmt][4])+'.')
                 print('This signal terminates at fADC '+str(connections[pmt][3])+', F1TDC '+str(connections[pmt][9])+', and summing module '+str(connections[pmt][10])+'.')
-                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR3_amp_info_out1(self, event):
         text = event.widget.cget('text')
@@ -220,10 +220,10 @@ class MyFirstGUI:
                 text = text + ' Out 1'
                 print('******************** Information for Amplifier '+text+' ********************')
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
-                print(text+'\'s input comes from PMT '+pmt+' and its output goes to splitter panel '+str(connections[pmt][4])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' ('+connections[pmt][12]+') and its output goes to splitter panel '+str(connections[pmt][4])+'.')
                 print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR3_amp_info_out2(self, event):
         text = event.widget.cget('text')
@@ -235,9 +235,9 @@ class MyFirstGUI:
                 text = text + ' Out 2'
                 print('******************** Information for Amplifier '+text+' ********************')
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
-                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' ('+connections[pmt][12]+') and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+'.')
                 print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
-                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
 
     def ftest(self, event):
         print('Test successful!', event.widget.cget('text'))
@@ -332,11 +332,11 @@ class MyFirstGUI:
                 text = text + ' In'
                 print('******************** Information for Amplifier '+text+' ********************')
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
-                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+' and splitter panel '+str(connections[pmt][4])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' ('+connections[pmt][12]+') and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+' and splitter panel '+str(connections[pmt][4])+'.')
                 print('This signal terminates at fADC '+str(connections[pmt][3])+', F1TDC '+str(connections[pmt][9])+', and summing module '+str(connections[pmt][10])+'.')
-                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR1_amp_info_out1(self, event):
         text = event.widget.cget('text')
@@ -348,10 +348,10 @@ class MyFirstGUI:
                 text = text + ' Out 1'
                 print('******************** Information for Amplifier '+text+' ********************')
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
-                print(text+'\'s input comes from PMT '+pmt+' and its output goes to splitter panel '+str(connections[pmt][4])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' ('+connections[pmt][12]+') and its output goes to splitter panel '+str(connections[pmt][4])+'.')
                 print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR1_amp_info_out2(self, event):
         text = event.widget.cget('text')
@@ -363,9 +363,9 @@ class MyFirstGUI:
                 text = text + ' Out 2'
                 print('******************** Information for Amplifier '+text+' ********************')
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
-                print(text+'\'s input comes from PMT '+pmt+' and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+'.')
+                print(text+'\'s input comes from PMT '+pmt+' ('+connections[pmt][12]+') and its output goes to front-end fADC patch panel '+str(connections[pmt][1])+'.')
                 print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
-                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
 
     def RR3_sum_connections(self, event):
         win = Tk()
@@ -478,7 +478,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from splitter panel '+connections[pmt][4]+' and its output goes the overlapping region trigger.')
                 print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -616,7 +616,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from splitter panel '+connections[pmt][4]+' and its output goes the overlapping region trigger.')
                 print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -754,7 +754,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from splitter panel '+str(connections[pmt][4])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
                 print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -877,7 +877,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from splitter panel '+str(connections[pmt][4])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
                 print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -993,8 +993,8 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+' and summing module '+str(connections[pmt][10])+'.')
                 print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR3_splitter_info_out1(self, event):
         text = event.widget.cget('text')
@@ -1008,7 +1008,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to summing module '+str(connections[pmt][10])+'.')
                 print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR3_splitter_info_out2(self, event):
         text = event.widget.cget('text')
@@ -1022,7 +1022,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+'.')
                 print('This signal terminates at F1TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
 
     def RR1_splitter_connections(self, event):
         win = Tk()
@@ -1135,8 +1135,8 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+' and summing module '+str(connections[pmt][10])+'.')
                 print('This signal terminates at F1TDC '+str(connections[pmt][9])+' and summing module '+str(connections[pmt][10])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR1_splitter_info_out1(self, event):
         text = event.widget.cget('text')
@@ -1150,7 +1150,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to summing module '+str(connections[pmt][10])+'.')
                 print('This signal terminates at summing module '+str(connections[pmt][10])+'.')
-                print('The summing module data flow follows: PMT '+pmt+' -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
+                print('The summing module data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplifier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> summing module '+str(connections[pmt][10])+'.')
 
     def RR1_splitter_info_out2(self, event):
         text = event.widget.cget('text')
@@ -1164,7 +1164,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+connections[pmt][0]+' Out 1 and its output goes to front-end TDC discriminator '+str(connections[pmt][5])+'.')
                 print('This signal terminates at F1TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
 
     def RR2_adc_pp_connections(self, event):
         win = Tk()
@@ -1285,7 +1285,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from amplifier '+str(connections[pmt][0])+' and its output goes to DAQ fADC patch panel '+str(connections[pmt][2])+'.')
                 print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
-                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -1413,7 +1413,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from front-end TDC discriminator '+str(connections[pmt][5])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
                 print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -1537,7 +1537,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from front-end TDC discriminator '+str(connections[pmt][5])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
                 print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
                 filled = 1
         if filled==0:
             print('Empty')

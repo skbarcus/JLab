@@ -607,6 +607,7 @@ for row in range(0,nrows):
                 input = 'B'
         #print(pmt,cluster,channel)
         #print(len(clusters), len(clusters[0]))
+        #print(clusters)
         channel = str(channel)
         if len(channel)==1:
             channel = channel[:0]+'0'+channel[0:]
@@ -617,6 +618,12 @@ for row in range(0,nrows):
     for col in range(0,ncols):
         pmt = row*ncols+col+1
         con_test[pmt].append(connections[pmt][2])
+
+#Add PMT row and column designations.
+for row in range(0,nrows):
+    for col in range(0,ncols):
+        pmt = row*ncols+col+1
+        con_test[pmt].append('R'+str(row+1)+'-'+'C'+str(col+1))
 
 for row in range(0,nrows):
     for col in range(0,ncols):

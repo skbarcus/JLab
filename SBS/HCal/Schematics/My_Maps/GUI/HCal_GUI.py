@@ -18,16 +18,13 @@ connections = json.loads(connections)
 #print(type(connections))
 #print(connections['1'][0])
 
+clusters = [[1, 2, 3, 4, 13, 14, 15, 16, 25, 26, 27, 28, 37, 38, 39, 40], [5, 6, 7, 8, 17, 18, 19, 20, 29, 30, 31, 32, 41, 42, 43, 44], [9, 10, 11, 12, 21, 22, 23, 24, 33, 34, 35, 36, 45, 46, 47, 48], [49, 50, 51, 52, 61, 62, 63, 64, 73, 74, 75, 76, 85, 86, 87, 88], [53, 54, 55, 56, 65, 66, 67, 68, 77, 78, 79, 80, 89, 90, 91, 92], [57, 58, 59, 60, 69, 70, 71, 72, 81, 82, 83, 84, 93, 94, 95, 96], [97, 98, 99, 100, 109, 110, 111, 112, 121, 122, 123, 124, 133, 134, 135, 136], [101, 102, 103, 104, 113, 114, 115, 116, 125, 126, 127, 128, 137, 138, 139, 140], [105, 106, 107, 108, 117, 118, 119, 120, 129, 130, 131, 132, 141, 142, 143, 144], [145, 146, 147, 148, 157, 158, 159, 160, 169, 170, 171, 172, 181, 182, 183, 184], [149, 150, 151, 152, 161, 162, 163, 164, 173, 174, 175, 176, 185, 186, 187, 188], [153, 154, 155, 156, 165, 166, 167, 168, 177, 178, 179, 180, 189, 190, 191, 192], [193, 194, 195, 196, 205, 206, 207, 208, 217, 218, 219, 220, 229, 230, 231, 232], [197, 198, 199, 200, 209, 210, 211, 212, 221, 222, 223, 224, 233, 234, 235, 236], [201, 202, 203, 204, 213, 214, 215, 216, 225, 226, 227, 228, 237, 238, 239, 240], [241, 242, 243, 244, 253, 254, 255, 256, 265, 266, 267, 268, 277, 278, 279, 280], [245, 246, 247, 248, 257, 258, 259, 260, 269, 270, 271, 272, 281, 282, 283, 284], [249, 250, 251, 252, 261, 262, 263, 264, 273, 274, 275, 276, 285, 286, 287, 288]]
+
+
 #Fill PMT module numbers.
 for i in range(0,channels):
     pmt_mods.append(i+1)
     #print(pmt_mods[i])
-
-#Fill a list with the names for the buttons.
-button_names = []
-for i in range(0,channels):
-    button_names.append("Button"+str(i+1))
-#print(button_names)
 
 class MyFirstGUI:
     LABEL_TEXT = [
@@ -41,7 +38,7 @@ class MyFirstGUI:
         self.primary = primary
         primary.title("Hadron Calorimeter")
 
-        Style().configure("TButton", padding=(0, 5, 0, 5),font='serif 10')
+        #Style().configure("TButton", padding=(0, 5, 0, 5),font='serif 10')
 
         #frame1 = Frame(primary)
 
@@ -50,16 +47,34 @@ class MyFirstGUI:
         #exit_btn = Button(exit_frame, text='Close', width=2, height=1, font='Helvetica 8 bold', command=root.destroy, bg = "red")
         #exit_btn.pack(side="bottom")
 
+        #canvas = Canvas(primary, borderwidth=0)
+        #canvas.create_line(0, 0, 600, 600)
+
+        #container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)
+
+        #frame = Frame(container_frame, relief=RAISED, borderwidth=2)
+        #frame.pack(side='left', fill=BOTH, expand=True)
+
         for i in range(0,ncols):
             primary.columnconfigure(i, pad=3)
+            #container_frame.columnconfigure(i, pad=3)
 
         for i in range(0,nrows+1):
             primary.rowconfigure(i, pad=3)
+            #container_frame.rowconfigure(i, pad=3)
 
         #Fill a list with the actual buttons.
         #buttons = []
         for i in range(0,channels):
-            self.button = Button(primary, text=pmt_mods[i], width=1, height=1)#, command=self.fconnections)
+            for cluster in range(0,len(clusters)):
+                for pmt in range(0,len(clusters[cluster])):
+                    if clusters[cluster][pmt] == i+1:
+                        if cluster%2==0:
+                            bg_color = 'Gray66'
+                        else:
+                            bg_color = 'Gray88'
+            self.button = Button(primary, text=str(pmt_mods[i])+'\n'+connections[str(i+1)][12], width=4, height=1,bg=bg_color)
             #button["command"] = self.fconnections
             self.button.bind("<Button-1>", self.fconnections)
             buttons.append(self.button)
@@ -106,10 +121,16 @@ class MyFirstGUI:
 
     def fconnections(self, event):
         pmt = event.widget.cget('text')
-        pmt = str(pmt)
-        print('******************** Information for PMT Module '+pmt+' ********************')
-        print('PMT module '+pmt+' is powered by HV channel '+str(connections[pmt][11])+'.')
-        print('PMT module '+pmt+'\'s output goes to amplifier '+str(connections[pmt][0])+'.')
+        #print(len(pmt))
+        if pmt[2:3]== 'R':
+            pmt = str(pmt[:1])
+        elif pmt[2:3]== '\n':
+            pmt = str(pmt[:2])
+        else:
+            pmt = str(pmt[:3])
+        print('******************** Information for PMT Module '+pmt+' ('+connections[pmt][12]+') ********************')
+        print('PMT module '+pmt+' ('+connections[pmt][12]+') is powered by HV channel '+str(connections[pmt][11])+'.')
+        print('PMT module '+pmt+'\'s ('+connections[pmt][12]+') output goes to amplifier '+str(connections[pmt][0])+'.')
         print('This signal terminates at fADC '+str(connections[pmt][3])+', F1TDC '+str(connections[pmt][9])+', and summing module '+str(connections[pmt][10])+'.')
         print('The fADC data flow follows: amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
         print('The TDC data flow follows: amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')

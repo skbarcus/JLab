@@ -196,7 +196,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from front-end TDC patch panel '+str(connections[pmt][6])+' and its output goes to DAQ TDC discriminator '+str(connections[pmt][8])+'.')
                 print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -340,13 +340,13 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from DAQ TDC patch panel '+str(connections[pmt][7])+' and its output goes to F1TDC '+str(connections[pmt][9])+'.')
                 print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
-                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
 
     def RR4_DAQ_tdc_disc_info_out(self, event):
-        ribbon2tdc = {'1':'TDC1-A','2':'TDC1-B','3':'TDC2-A','4':'TDC2-B','5':'TDC3-A','6':'TDC3-B','7':'TDC4-A','8':'TDC4-B','9':'TDC5-A','10':'TDC5-B','11':'TDC1-C','12':'TDC1-D','13':'TDC2-C','14':'TDC2-D','15':'TDC3-C','16':'TDC3-D','17':'TDC4-C','18':'TDC4-D'}
+        ribbon2tdc = {'1':'TDC1A','2':'TDC1B','3':'TDC2A','4':'TDC2B','5':'TDC3A','6':'TDC3B','7':'TDC4A','8':'TDC4B','9':'TDC5A','10':'TDC5B','11':'TDC1C','12':'TDC1D','13':'TDC2C','14':'TDC2D','15':'TDC3C','16':'TDC3D','17':'TDC4C','18':'TDC4D'}
         text = event.widget.cget('text')
         if len(text)==17:
             ribbon = text[7:9]
@@ -478,7 +478,7 @@ class MyFirstGUI:
                 print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
                 print(text+'\'s input comes from front-end ADC patch panel '+str(connections[pmt][1])+' and its output goes to fADC '+str(connections[pmt][3])+'.')
                 print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
-                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
                 filled = 1
         if filled==0:
             print('Empty')
@@ -588,11 +588,13 @@ class MyFirstGUI:
                 for j in range(0,nrows):
                     for k in range(0,ncols):
                         btn = Button(RR5_vxs2_frames[i], width=1, height=1, font='Helvetica 8')
-
-                        #Give names and function binds to the three different columns.
-                        text = str(nmods+1)+'-'+str(15-j)+'\n In'
+                        #Give names and function binds to the different columns.
+                        channel = str(15-j)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'f'+str(nmods+17)+'-'+channel+'\n In'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR5_vxs2_adc_info)
                         buttons[nmods].append(btn)
                 nmods = nmods + 1
 
@@ -603,13 +605,13 @@ class MyFirstGUI:
                 f1_buttons.append([])#Make this list 2D to hold the buttons of each of the frames separately.
                 for j in range(0,f1_rows):
                     for k in range(0,f1_cols):
-                        f1_btn = Button(RR5_vxs2_frames[i], width=1, height=10, font='Helvetica 8')
+                        f1_btn = Button(RR5_vxs2_frames[i], width=4, height=10, font='Helvetica 8')
 
                         #Give names and function binds to the three different columns.
                         if j == 0 and k == 0:
-                            text = 'Chs In\n'+str(17)+'-'+str(32)
+                            text = 'TDC'+str(nmods+1)+'A\n Chs'+str(17)+'-'+str(32)
                         if j == 0 and k == 1:
-                            text = 'Chs In\n'+str(1)+'-'+str(16)
+                            text = 'TDC'+str(nmods+1)+'B\n Chs'+str(1)+'-'+str(16)
                         if j == 1 and k == 0:
                             text = 'F1 SD\n Cable'
                             f1_btn['height'] = 1
@@ -618,11 +620,11 @@ class MyFirstGUI:
                             f1_btn['height'] = 1
                             f1_btn['state'] = 'disabled'
                         if j == 2 and k == 0:
-                            text = 'Chs In\n'+str(49)+'-'+str(64)
+                            text = 'TDC'+str(nmods+1)+'C\n Chs'+str(49)+'-'+str(64)
                         if j == 2 and k == 1:
-                            text = 'Chs In\n'+str(33)+'-'+str(48)
+                            text = 'TDC'+str(nmods+1)+'D\n Chs'+str(33)+'-'+str(48)
                         f1_btn['text'] = text
-                        f1_btn.bind("<Button-1>", self.ftest)
+                        f1_btn.bind("<Button-1>", self.RR5_vxs2_tdc_info)
                         f1_buttons[nmods].append(f1_btn)
                 nmods = nmods + 1
 
@@ -755,6 +757,43 @@ class MyFirstGUI:
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
 
+    def RR5_vxs2_tdc_info(self, event):
+        ribbon2tdc = {'1':'TDC1A','2':'TDC1B','3':'TDC2A','4':'TDC2B','5':'TDC3A','6':'TDC3B','7':'TDC4A','8':'TDC4B','9':'TDC5A','10':'TDC5B','11':'TDC1C','12':'TDC1D','13':'TDC2C','14':'TDC2D','15':'TDC3C','16':'TDC3D','17':'TDC4C','18':'TDC4D'}
+        # function to return key for any value
+        def get_key(val):
+            for key, value in ribbon2tdc.items():
+                if val == value:
+                    return key
+            return 'Empty'
+        text = event.widget.cget('text')
+        text = text[:5]
+        ribbon = get_key(text)
+        if ribbon == 'Empty':
+            print('Empty')
+        else:
+            print('The input to '+text+' is ribbon cable '+ribbon+' which comes from DAQ TDC discriminator '+ribbon+'.')
+
+    def RR5_vxs2_adc_info(self, event):
+        text = event.widget.cget('text')
+        #text = text[:len(text)]
+        print(len(text))
+        if len(text)==9:
+            text = text[:5]
+        elif len(text)==10:
+            text = text[:6]
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for fADC '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from DAQ ADC patch panel '+str(connections[pmt][2])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
+
     def RR5_vxs1_connections(self, event):
         win = Tk()
         win.wm_title("RR5 Lower VXS Crate Connections")
@@ -828,7 +867,7 @@ class MyFirstGUI:
         for i in range(0,ti_cols):
             RR5_vxs1_frames[20].columnconfigure(i, pad=3, weight=1)
 
-        #Create and bind the sum buttons to their functions.
+        #Create and bind the buttons to their functions.
         nmods = 0
         for i in range(0,nslots):
             if i == 2 or i == 3 or i == 4 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 12 or i == 13 or i == 14 or i == 15 or i == 16 or i == 17 or i == 18 or i == 19:
@@ -836,11 +875,13 @@ class MyFirstGUI:
                 for j in range(0,nrows):
                     for k in range(0,ncols):
                         btn = Button(RR5_vxs1_frames[i], width=1, height=1, font='Helvetica 8')
-
-                        #Give names and function binds to the three different columns.
-                        text = str(nmods+1)+'-'+str(15-j)+'\n In'
+                        #Give names and function binds to the different columns.
+                        channel = str(15-j)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'f'+str(nmods+1)+'-'+channel+'\n In'
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR5_vxs1_adc_info)
                         buttons[nmods].append(btn)
                 nmods = nmods + 1
         #Create a standalone buttons.
@@ -919,6 +960,27 @@ class MyFirstGUI:
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR5_vxs1_adc_info(self, event):
+        text = event.widget.cget('text')
+        #text = text[:len(text)]
+        print(len(text))
+        if len(text)==9:
+            text = text[:5]
+        elif len(text)==10:
+            text = text[:6]
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for fADC '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from DAQ ADC patch panel '+str(connections[pmt][2])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' ('+connections[pmt][12]+') --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
 
 root = Tk()
 root.geometry("1200x800")
