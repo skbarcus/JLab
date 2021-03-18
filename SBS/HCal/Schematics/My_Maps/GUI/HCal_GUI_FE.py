@@ -639,7 +639,7 @@ class MyFirstGUI:
     def RR2_Upper_TDC_Disc_connections(self, event):
         win = Tk()
         win.wm_title("RR2 Upper TDC Discriminator Connections")
-        win.geometry("1400x600")
+        win.geometry("1400x550")
         RR2_upper_TDC_disc_frames = []                #List to hold the frames.
         buttons = []                                  #List to hold the  buttons.
         nslots = 12                                   #Number of slots in crate.
@@ -649,14 +649,28 @@ class MyFirstGUI:
         nchannels = nrows * ncols                     #Number of channels in one module.
         nall_channels = nslots * nrows * ncols        #Number of channels in all the modules.
 
-        exit_frame = Frame(win, relief=RAISED, borderwidth=2)
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="horizontal", command=canvas.xview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        exit_frame = Frame(container_frame, relief=RAISED, borderwidth=2)
         exit_frame.pack(side='bottom')
         exit_btn = Button(exit_frame, text='Close', width=2, height=1, font='Helvetica 8 bold', command=win.quit, bg = "red")
         exit_btn.pack(side="bottom")
 
+        vsb.pack(side="bottom", fill="x")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure2(canvas))
+
         #Create different frames to hold the channel buttons.
         for i in range (0,nslots):
-            frame = Frame(win, relief=RAISED, borderwidth=2)
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
             frame.pack(side='left', fill=BOTH, expand=True)
             RR2_upper_TDC_disc_frames.append(frame)
 
@@ -676,23 +690,32 @@ class MyFirstGUI:
                 buttons.append([])#Make this list 2D to hold the buttons of each of the frames separately.
                 for j in range(0,nrows):
                     for k in range(0,ncols):
-                        btn = Button(RR2_upper_TDC_disc_frames[i], width=1, height=1, font='Helvetica 8')
+                        btn = Button(RR2_upper_TDC_disc_frames[i], width=4, height=1, font='Helvetica 8')
 
                         #Give names and function binds to the three different columns.
                         if k == 0:
-                            text = str(18-nmods)+'-'+str(j+1)+'\n In'
+                            channel = str(j+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(18-nmods)+'-'+channel+'\n In'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR2_FE_upper_tdc_disc_info)
                             buttons[nmods].append(btn)
                         elif k == 1:
-                            text = str(18-nmods)+'-'+str(j+1)+'\n Out 1'
+                            channel = str(j+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(18-nmods)+'-'+channel+'\n Out 1'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR2_FE_upper_tdc_disc_info)
                             buttons[nmods].append(btn)
                         elif k == 2:
-                            text = str(18-nmods)+'-'+str(j+1)+'\n Out 2'
+                            channel = str(j+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(18-nmods)+'-'+channel+'\n Out 2'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR2_FE_upper_tdc_disc_info)
                             buttons[nmods].append(btn)
                 nmods = nmods + 1
 
@@ -715,10 +738,31 @@ class MyFirstGUI:
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
                 nmods = nmods +1
 
+        def onFrameConfigure2(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_FE_upper_tdc_disc_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:9]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for Front-End Lower TDC Discriminator '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from splitter panel '+str(connections[pmt][4])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
+                print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
+
     def RR2_Lower_TDC_Disc_connections(self, event):
         win = Tk()
         win.wm_title("RR2 Lower TDC Discriminator Connections")
-        win.geometry("1400x600")
+        win.geometry("1400x550")
         RR2_lower_TDC_disc_frames = []                #List to hold the frames.
         buttons = []                                  #List to hold the  buttons.
         nslots = 12                                   #Number of slots in crate.
@@ -728,14 +772,28 @@ class MyFirstGUI:
         nchannels = nrows * ncols                     #Number of channels in one module.
         nall_channels = nslots * nrows * ncols        #Number of channels in all the modules.
 
-        exit_frame = Frame(win, relief=RAISED, borderwidth=2)
+        canvas = Canvas(win, borderwidth=0)
+        #Make a frame to go on the canvas that contains the other frames so the scroll bar works for all other frames.
+        container_frame = Frame(canvas, relief=RAISED, borderwidth=1)
+        container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        vsb = Scrollbar(win, orient="horizontal", command=canvas.xview)
+        canvas.configure(yscrollcommand=vsb.set)
+
+        exit_frame = Frame(container_frame, relief=RAISED, borderwidth=2)
         exit_frame.pack(side='bottom')
         exit_btn = Button(exit_frame, text='Close', width=2, height=1, font='Helvetica 8 bold', command=win.quit, bg = "red")
         exit_btn.pack(side="bottom")
 
+        vsb.pack(side="bottom", fill="x")
+        canvas.pack(side="top", fill="both", expand=True)
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Cannot for life of me get this to expand to entire width of popup. Currently just changing geometry to make it fit.
+        canvas.create_window((0,0), window=container_frame, anchor="nw")
+        #container_frame.pack(side='top', fill=BOTH, expand=True)#Expands container frame but breaks scroll bar.
+        container_frame.bind("<Configure>", lambda event, canvas=canvas: onFrameConfigure2(canvas))
+
         #Create different frames to hold the channel buttons.
         for i in range (0,nslots):
-            frame = Frame(win, relief=RAISED, borderwidth=2)
+            frame = Frame(container_frame, relief=RAISED, borderwidth=2)
             frame.pack(side='left', fill=BOTH, expand=True)
             RR2_lower_TDC_disc_frames.append(frame)
 
@@ -755,23 +813,32 @@ class MyFirstGUI:
                 buttons.append([])#Make this list 2D to hold the buttons of each of the frames separately.
                 for j in range(0,nrows):
                     for k in range(0,ncols):
-                        btn = Button(RR2_lower_TDC_disc_frames[i], width=1, height=1, font='Helvetica 8')
+                        btn = Button(RR2_lower_TDC_disc_frames[i], width=3, height=1, font='Helvetica 8')
 
                         #Give names and function binds to the three different columns.
                         if k == 0:
-                            text = str(nmods+1)+'-'+str(j+1)+'\n In'
+                            channel = str(j+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(nmods+1)+'-'+channel+'\n In'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR2_FE_lower_tdc_disc_info)
                             buttons[nmods].append(btn)
                         elif k == 1:
-                            text = str(nmods+1)+'-'+str(j+1)+'\n Out 1'
+                            channel = str(j+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(nmods+1)+'-'+channel+'\n Out 1'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR2_FE_lower_tdc_disc_info)
                             buttons[nmods].append(btn)
                         elif k == 2:
-                            text = str(nmods+1)+'-'+str(j+1)+'\n Out 2'
+                            channel = str(j+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(nmods+1)+'-'+channel+'\n Out 2'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR2_FE_lower_tdc_disc_info)
                             buttons[nmods].append(btn)
                 nmods = nmods + 1
 
@@ -793,6 +860,27 @@ class MyFirstGUI:
                     for k in range(0,ncols):
                         buttons[nmods][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
                 nmods = nmods +1
+
+        def onFrameConfigure2(canvas):
+            '''Reset the scroll region to encompass the inner frame'''
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_FE_lower_tdc_disc_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:8]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for Front-End Lower TDC Discriminator '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from splitter panel '+str(connections[pmt][4])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
+                print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
 
     def RR3_splitter_connections(self, event):
         win = Tk()
@@ -1134,25 +1222,37 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = str(nslots-i)+'A-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i)+'A-'+channel
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_adc_pp_info)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = str(nslots-i)+'B-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i)+'B-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_adc_pp_info)
                         buttons[i].append(btn)
                     elif j == 2:
-                        text = str(nslots-i)+'C-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i)+'C-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_adc_pp_info)
                         buttons[i].append(btn)
                     elif j == 3:
-                        text = str(nslots-i)+'D-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i)+'D-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_adc_pp_info)
                         buttons[i].append(btn)
 
         labels = []
@@ -1172,6 +1272,23 @@ class MyFirstGUI:
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_FE_adc_pp_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:7]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for Front-End fADC Patch Panel '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from amplifier '+str(connections[pmt][0])+' and its output goes to DAQ fADC patch panel '+str(connections[pmt][2])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
 
     def RR2_lower_tdc_pp_connections(self, event):
         win = Tk()
@@ -1229,36 +1346,52 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = str(nslots-i)+'A-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i+5)+'A-'+channel
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_lower_tdc_pp_info)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = str(nslots-i)+'B-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i+5)+'B-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_lower_tdc_pp_info)
                         buttons[i].append(btn)
-                    elif j == 2:
-                        text = str(nslots-i)+'C-'+str(k+1)
+                    elif j == 2 and i!=0:
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i+5)+'C-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_lower_tdc_pp_info)
                         buttons[i].append(btn)
-                    elif j == 3:
-                        text = str(nslots-i)+'D-'+str(k+1)
+                    elif j == 3 and i!=0:
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(nslots-i+5)+'D-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_lower_tdc_pp_info)
                         buttons[i].append(btn)
 
         labels = []
         #Place labels above the buttons in the grid.
         for i in range(0,nslots):
-            label = Label(RR2_lower_tdc_pp_frames[i], text='fADC Patch Panel '+str(nslots-i))
+            label = Label(RR2_lower_tdc_pp_frames[i], text='Lower TDC Patch Panel '+str(nslots-i+5))
             labels.append(label)
             labels[i].grid(row=0,columnspan=ncols)
 
         #Place the buttons in the grid.
         for i in range(0,nslots):
+            if i==0:
+                nrows = 2
+            else:
+                nrows = 4
             for j in range(1,nrows+1):
                 for k in range(0,ncols):
                     buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
@@ -1268,10 +1401,27 @@ class MyFirstGUI:
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
 
+    def RR2_FE_lower_tdc_pp_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:7]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for Front-End Lower TDC Patch Panel '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from front-end TDC discriminator '+str(connections[pmt][5])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
+                print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
+
     def RR2_upper_tdc_pp_connections(self, event):
         win = Tk()
         win.wm_title("RR2 Upper TDC Patch Panel Connections")
-        win.geometry("800x432")
+        win.geometry("900x432")
 
         RR2_upper_tdc_pp_frames = []                  #List to hold the amplifier frames.
         buttons = []                                  #List to hold the amplifier buttons.
@@ -1320,35 +1470,47 @@ class MyFirstGUI:
             for j in range(0,nrows):
                 for k in range(0,ncols):
 
-                    btn = Button(RR2_upper_tdc_pp_frames[i], width=3, height=2, font='Helvetica 8')
+                    btn = Button(RR2_upper_tdc_pp_frames[i], width=4, height=2, font='Helvetica 8')
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = str(5-i)+'A-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'A-'+channel
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_upper_tdc_pp_info)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = str(5-i)+'B-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'B-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_upper_tdc_pp_info)
                         buttons[i].append(btn)
                     elif j == 2:
-                        text = str(5-i)+'C-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'C-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_upper_tdc_pp_info)
                         buttons[i].append(btn)
                     elif j == 3:
-                        text = str(5-i)+'D-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'D-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR2_FE_upper_tdc_pp_info)
                         buttons[i].append(btn)
 
         labels = []
         #Place labels above the buttons in the grid.
         for i in range(0,nslots):
-            label = Label(RR2_upper_tdc_pp_frames[i], text='fADC Patch Panel '+str(5-i))
+            label = Label(RR2_upper_tdc_pp_frames[i], text='Upper TDC Patch Panel '+str(10-i))
             labels.append(label)
             labels[i].grid(row=0,columnspan=ncols)
 
@@ -1362,6 +1524,23 @@ class MyFirstGUI:
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR2_FE_upper_tdc_pp_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:len(text)]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for Front-End Upper TDC Patch Panel '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from front-end TDC discriminator '+str(connections[pmt][5])+' and its output goes to DAQ TDC patch panel '+str(connections[pmt][7])+'.')
+                print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
 
 root = Tk()
 root.geometry("1200x800")

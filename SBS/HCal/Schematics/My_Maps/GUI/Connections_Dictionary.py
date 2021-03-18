@@ -321,7 +321,7 @@ for row in range(0,nrows):
         elif amplifier[0]=='a':
             fe_tdc_disc_num = int(amplifier[1])+9
             fe_tdc_disc_num = str(fe_tdc_disc_num)
-        con_test[pmt].append('Disc.'+fe_tdc_disc_num+'-'+channel)
+        con_test[pmt].append('Disc'+fe_tdc_disc_num+'-'+channel)
 
 #Add FE TDC patch panel connections. 
 for row in range(0,nrows):

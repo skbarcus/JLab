@@ -75,7 +75,7 @@ class MyFirstGUI:
     def RR4_tdc_pp_connections(self, event):
         win = Tk()
         win.wm_title("RR2 Upper TDC Patch Panel Connections")
-        win.geometry("800x600")
+        win.geometry("900x600")
 
         RR4_tdc_pp_frames = []                  #List to hold the amplifier frames.
         buttons = []                                  #List to hold the amplifier buttons.
@@ -125,40 +125,56 @@ class MyFirstGUI:
             for j in range(0,nrows):
                 for k in range(0,ncols):
 
-                    btn = Button(RR4_tdc_pp_frames[i], width=3, height=2, font='Helvetica 8')
+                    btn = Button(RR4_tdc_pp_frames[i], width=4, height=2, font='Helvetica 8')
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = str(5-i)+'A-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'A-'+channel
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_tdc_pp_info)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = str(5-i)+'B-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'B-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_tdc_pp_info)
                         buttons[i].append(btn)
-                    elif j == 2:
-                        text = str(5-i)+'C-'+str(k+1)
+                    elif j == 2 and i!=2:
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'C-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_tdc_pp_info)
                         buttons[i].append(btn)
-                    elif j == 3:
-                        text = str(5-i)+'D-'+str(k+1)
+                    elif j == 3 and i!=2:
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(10-i)+'D-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_tdc_pp_info)
                         buttons[i].append(btn)
 
         labels = []
         #Place labels above the buttons in the grid.
         for i in range(0,nslots):
-            label = Label(RR4_tdc_pp_frames[i], text='TDC Patch Panel '+str(5-i))
+            label = Label(RR4_tdc_pp_frames[i], text='TDC Patch Panel '+str(10-i))
             labels.append(label)
             labels[i].grid(row=0,columnspan=ncols)
 
         #Place the buttons in the grid.
         for i in range(0,nslots):
+            if i==2:
+                nrows = 2
+            else:
+                nrows = 4
             for j in range(1,nrows+1):
                 for k in range(0,ncols):
                     buttons[i][(j-1)*ncols+k].grid(row=j, column=k, sticky='NSEW')
@@ -167,6 +183,23 @@ class MyFirstGUI:
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR4_DAQ_tdc_pp_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:len(text)]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for DAQ TDC Patch Panel '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from front-end TDC patch panel '+str(connections[pmt][6])+' and its output goes to DAQ TDC discriminator '+str(connections[pmt][8])+'.')
+                print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
 
     def RR4_tdc_disc_connections(self, event):
         win = Tk()
@@ -226,23 +259,29 @@ class MyFirstGUI:
 
                         #Give names and function binds to the three different columns.
                         if k == 0:
-                            text = str(18-nmods)+'-'+str(j*2+1)+'\n In'
+                            channel = str(j*2+1)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(18-nmods)+'-'+channel+'\n In'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR4_DAQ_tdc_disc_info_in)
                             buttons[nmods].append(btn)
                         elif k == 1:
-                            text = str(18-nmods)+'-'+str(j*2+2)+'\n In'
+                            channel = str(j*2+2)
+                            if len(channel)==1:
+                                channel = channel[:0]+'0'+channel[0:]
+                            text = 'Disc'+str(18-nmods)+'-'+channel+'\n In'
                             btn['text'] = text
-                            btn.bind("<Button-1>", self.ftest)
+                            btn.bind("<Button-1>", self.RR4_DAQ_tdc_disc_info_in)
                             buttons[nmods].append(btn)
                 #Make a button for each discriminator output.
                 btn1 = Button(RR4_tdc_disc_frames[i], width=1, height=8, font='Helvetica 8')
-                btn1['text'] = 'Ribbon \n Out 1'
-                btn1.bind("<Button-1>", self.ftest)
+                btn1['text'] = 'Ribbon '+str(18-nmods)+' \n Out 1'
+                btn1.bind("<Button-1>", self.RR4_DAQ_tdc_disc_info_out)
                 buttons[nmods].append(btn1)
                 btn2 = Button(RR4_tdc_disc_frames[i], width=1, height=8, font='Helvetica 8')
-                btn2['text'] = 'Ribbon \n Out 2'
-                btn2.bind("<Button-1>", self.ftest)
+                btn2['text'] = 'Ribbon '+str(18-nmods)+' \n Out 2'
+                btn2.bind("<Button-1>", self.RR4_DAQ_tdc_disc_info_out)
                 buttons[nmods].append(btn2)
 
                 nmods = nmods + 1
@@ -285,6 +324,40 @@ class MyFirstGUI:
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR4_DAQ_tdc_disc_info_in(self, event):
+        text = event.widget.cget('text')
+        if len(text)==12:
+            text = text[:8]
+        elif len(text)==13:
+            text = text[:9]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for DAQ TDC Discriminator '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from DAQ TDC patch panel '+str(connections[pmt][7])+' and its output goes to F1TDC '+str(connections[pmt][9])+'.')
+                print('This signal terminates at TDC '+str(connections[pmt][9])+'.')
+                print('The TDC data flow follows: PMT '+pmt+' -->  amplfier '+str(connections[pmt][0])+' --> splitter panel '+str(connections[pmt][4])+' --> front-end f1TDC discriminator '+str(connections[pmt][5])+' --> front-end TDC patch panel '+str(connections[pmt][6])+' --> DAQ TDC patch panel '+str(connections[pmt][7])+' --> DAQ TDC discriminator '+str(connections[pmt][8])+' --> F1TDC '+str(connections[pmt][9])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
+
+    def RR4_DAQ_tdc_disc_info_out(self, event):
+        ribbon2tdc = {'1':'TDC1-A','2':'TDC1-B','3':'TDC2-A','4':'TDC2-B','5':'TDC3-A','6':'TDC3-B','7':'TDC4-A','8':'TDC4-B','9':'TDC5-A','10':'TDC5-B','11':'TDC1-C','12':'TDC1-D','13':'TDC2-C','14':'TDC2-D','15':'TDC3-C','16':'TDC3-D','17':'TDC4-C','18':'TDC4-D'}
+        text = event.widget.cget('text')
+        if len(text)==17:
+            ribbon = text[7:9]
+        elif len(text)==16:
+            ribbon = text[7:8]
+        output = text[-1:]
+        #print(ribbon,output)
+        if output == '1':
+            print('Ribbon cable '+ribbon+' goes to F1TDC input '+ribbon2tdc[ribbon]+'.')
+        elif output == '2':
+            print('Empty')
 
     def RR4_adc_pp_connections(self, event):
         win = Tk()
@@ -342,25 +415,37 @@ class MyFirstGUI:
 
                     #Give names and function binds to the three different columns.
                     if j == 0:
-                        text = str(5-i)+'A-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(5-i)+'A-'+channel
                         btn['text'] = text
                         #btn['font'] = 'Helvetica 20'
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_adc_pp_info)
                         buttons[i].append(btn)
                     elif j == 1:
-                        text = str(5-i)+'B-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(5-i)+'B-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_adc_pp_info)
                         buttons[i].append(btn)
                     elif j == 2:
-                        text = str(5-i)+'C-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(5-i)+'C-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_adc_pp_info)
                         buttons[i].append(btn)
                     elif j == 3:
-                        text = str(5-i)+'D-'+str(k+1)
+                        channel = str(k+1)
+                        if len(channel)==1:
+                            channel = channel[:0]+'0'+channel[0:]
+                        text = 'PP'+str(5-i)+'D-'+channel
                         btn['text'] = text
-                        btn.bind("<Button-1>", self.ftest)
+                        btn.bind("<Button-1>", self.RR4_DAQ_adc_pp_info)
                         buttons[i].append(btn)
 
         labels = []
@@ -380,6 +465,23 @@ class MyFirstGUI:
         def onFrameConfigure2(canvas):
             '''Reset the scroll region to encompass the inner frame'''
             canvas.configure(scrollregion=canvas.bbox("all"))
+
+    def RR4_DAQ_adc_pp_info(self, event):
+        text = event.widget.cget('text')
+        text = text[:len(text)]
+        #print(text)
+        filled = 0
+        for pmt in range(1,289):
+            pmt = str(pmt)
+            if text in connections[pmt]:
+                print('******************** Information for DAQ fADC Patch Panel '+text+' ********************')
+                print(text+' connects to HV channel '+str(connections[pmt][11])+'.')
+                print(text+'\'s input comes from front-end ADC patch panel '+str(connections[pmt][1])+' and its output goes to fADC '+str(connections[pmt][3])+'.')
+                print('This signal terminates at fADC '+str(connections[pmt][3])+'.')
+                print('The fADC data flow follows: PMT '+pmt+' --> amplfier '+str(connections[pmt][0])+' --> front-end fADC patch panel '+str(connections[pmt][1])+' --> DAQ fADC patch panel'+str(connections[pmt][2])+' --> fADC '+str(connections[pmt][3])+'.')
+                filled = 1
+        if filled==0:
+            print('Empty')
 
     def RR5_vxs2_connections(self, event):
         win = Tk()
