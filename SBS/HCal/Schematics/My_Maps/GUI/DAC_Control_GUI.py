@@ -2,6 +2,7 @@ from tkinter import Tk, Label, Button, StringVar, W, E, Frame, RIGHT, BOTH, RAIS
 from tkinter.ttk import Style, Entry
 import json
 import os
+from datetime import date, datetime
 
 class DAC_Control_GUI:
     def __init__(self, primary):
@@ -80,8 +81,8 @@ class DAC_Control_GUI:
             self.voltage_setting_entries.append(self.voltage_setting_entry)
 
             #Create and store the buttons for enabling/disabling the channel voltage outputs.
-            self.power_btn = Button(ch_settings_frame, text='Enable\n Voltage', width=3, height=1, font='Helvetica 8 bold')
-            self.power_btn.configure(command=lambda button=self.power_btn, buttons=self.power_buttons, indicator_lights=self.indicator_lights: toggle_power(button,buttons,indicator_lights))
+            self.power_btn = Button(ch_settings_frame, text='Set\n Voltage', width=3, height=1, font='Helvetica 8 bold')
+            self.power_btn.configure(command=lambda button=self.power_btn, buttons=self.power_buttons, indicator_lights=self.indicator_lights, voltage_setting_entries=self.voltage_setting_entries: toggle_power(button,buttons,indicator_lights,voltage_setting_entries))
             self.power_buttons.append(self.power_btn)
 
             #Create and store indicator 'lights' to show whether a channel is energized or not.
@@ -93,7 +94,7 @@ class DAC_Control_GUI:
 
         #Create labels for the columns.
         col_labels = []
-        col_labels_text = ['Output Channels','Current Voltage\n Setting (Volts)','Predicted\n Discriminator\n Threshold (mV)','Enter New\n Voltage Setting\n (Volts)','Enable/Disable\n Channel Voltage','Power\n Indicator']
+        col_labels_text = ['Output Channels','Current Voltage\n Setting (Volts)','Predicted\n Discriminator\n Threshold (mV)','Enter New\n Voltage Setting\n (Volts)','Set & Save\n Single Channel\n Voltage','Error\n Indicator']
         for col in range(ncols):
             col_label_text = StringVar()
             col_label_text.set(col_labels_text[col])
@@ -128,11 +129,14 @@ class DAC_Control_GUI:
             voltage_settings.append(self.voltage_setting_entries[ch].get())
             print('Output channel',ch,'is now set to',voltage_settings[ch],'Volts.')
         print('New voltage settings saved to',save_file+'.')
-        #Write dictionary to json file.
+        #Write list to json file.
         out_file = json.dumps(voltage_settings)
         f = open(save_file,"w")
         f.write(out_file)
         f.close()
+
+        #Update log file with current settings.
+        save_settings_to_log_file(voltage_settings)
 
 #Function to return voltage settings.
 def get_voltage_settings(save_file):
@@ -142,32 +146,62 @@ def get_voltage_settings(save_file):
         voltage_settings = json.loads(voltage_settings)
     return voltage_settings
 
-#Function to enable and disable the voltage output for individual channels.
-def toggle_power(button,buttons,indicator_lights):
-    voltage_settings = get_voltage_settings(save_file)
-    text = button.cget('text')
-    off = 'Enable\n Voltage'
-    on = 'Disable\n Voltage'
-    
+#Function to set the voltage output for individual channels and save the current settings.
+def toggle_power(button,buttons,indicator_lights,voltage_setting_entries):
     #Check which button was pressed by searching the array holding the power buttons. 
     if button in buttons:
         ch = buttons.index(button)
-        voltage = voltage_settings[ch]
-        print('Channel',ch,'is set to',voltage,'Volts.')
+        #voltage = voltage_settings[ch]
+        #print('Channel',ch,'is set to',voltage,'Volts.')
 
-    if text==off:
-        print('Turning channel',ch,'on.')
-        button['text']=on
-        my_oval = indicator_lights[ch].create_oval(15, 5, 40, 30)#(x0,y0,x1,y1)=(top left corner of rectangle, bottom right corner)
-        indicator_lights[ch].itemconfig(my_oval, fill="green")
-        indicator_lights[ch].create_text(27,18,font='Helvetica 8 bold',text='ON')
+    #Save the voltage setting for the channel just updated.
+    voltage_settings = get_voltage_settings(save_file)
+    voltage_settings[ch] = voltage_setting_entries[ch].get()
+    print('Output channel',ch,'is now set to',voltage_settings[ch],'Volts.')
+    print('Voltage settings saved to',save_file+'.')
+    #Write list to json file.
+    out_file = json.dumps(voltage_settings)
+    f = open(save_file,"w")
+    f.write(out_file)
+    f.close()
 
-    if text==on:
-        print('Turning channel',ch,'off.')
-        button['text']=off
-        my_oval = indicator_lights[ch].create_oval(15, 5, 40, 30)#(x0,y0,x1,y1)=(top left corner of rectangle, bottom right corner)
-        indicator_lights[ch].itemconfig(my_oval, fill="red")
-        indicator_lights[ch].create_text(27,18,font='Helvetica 8 bold',text='OFF')
+    #Update log file with current settings.
+    save_settings_to_log_file(voltage_settings)
+
+    #text = button.cget('text')
+    #off = 'Enable\n Voltage'
+    #on = 'Disable\n Voltage'
+    
+    #Check which button was pressed by searching the array holding the power buttons. 
+    #if button in buttons:
+        #ch = buttons.index(button)
+        #voltage = voltage_settings[ch]
+        #print('Channel',ch,'is set to',voltage,'Volts.')
+
+    #if text==off:
+    #    print('Turning channel',ch,'on.')
+    #    button['text']=on
+    #    my_oval = indicator_lights[ch].create_oval(15, 5, 40, 30)#(x0,y0,x1,y1)=(top left corner of rectangle, bottom right corner)
+    #    indicator_lights[ch].itemconfig(my_oval, fill="green")
+    #    indicator_lights[ch].create_text(27,18,font='Helvetica 8 bold',text='ON')
+
+    #if text==on:
+    #    print('Turning channel',ch,'off.')
+    #    button['text']=off
+    #    my_oval = indicator_lights[ch].create_oval(15, 5, 40, 30)#(x0,y0,x1,y1)=(top left corner of rectangle, bottom right corner)
+    #    indicator_lights[ch].itemconfig(my_oval, fill="red")
+    #    indicator_lights[ch].create_text(27,18,font='Helvetica 8 bold',text='OFF')
+
+#Function to save current settings to log file.
+def save_settings_to_log_file(voltage_settings):
+    #Update log file.
+    log_file_name = 'mpv904_DAC_Voltage_Settings_Log_File.txt'
+    log_file = open(log_file_name,"a")#append mode
+    now = datetime.now()# datetime object containing current date and time
+    dt_string = now.strftime("%B %d, %Y, %H:%M:%S")
+    text = dt_string+":\nNew Voltage Settings = "+str(voltage_settings)+'\n'
+    log_file.write(text)
+    log_file.close()
 
 root = Tk()
 my_gui = DAC_Control_GUI(root)
