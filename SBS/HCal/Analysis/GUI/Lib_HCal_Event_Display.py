@@ -1,4 +1,10 @@
 #Library of functions for HCal_Event_Display.py.
+from tkinter import Tk, Label, Button, StringVar, W, E, Frame, RIGHT, BOTH, RAISED, LEFT, CENTER, TOP, BOTTOM, Canvas, Scrollbar, Radiobutton
+from tkinter.ttk import Style, Entry
+import json
+import os
+from datetime import date, datetime
+
 import ROOT
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1 import Divider, Size
@@ -13,7 +19,10 @@ def test():
 def test_command():
     print('Test.')
 
-def display_event(info_frame,display_frame,tree,display_entry):
+#fig, ax = plt.subplots(figsize=(4,4))
+#canvas = FigureCanvasTkAgg(fig, master=display_frame)
+
+def display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
     event = display_entry.get()
     print('Now displaying event '+str(event)+'.')
 
@@ -23,6 +32,20 @@ def display_event(info_frame,display_frame,tree,display_entry):
     nsamps = int(nsamps[0])
     samps = getattr(tree,"sbs.hcal.samps")
     print('The number of fADC samples is '+str(nsamps)+'.')
+
+    #Get the number of PMTs.
+    adc_int = getattr(tree,"sbs.hcal.a")
+    npmt = int(len(adc_int))
+    print('The number of PMTs is '+str(npmt)+'.')
+
+    #Get the number of columns and rows (should generally be 12 cols and 24 rows for HCal).
+    nrow = getattr(tree,"sbs.hcal.row")
+    nrow = int(max(nrow))
+    ncol = getattr(tree,"sbs.hcal.col")
+    ncol = int(max(ncol))
+    """
+    fig.set_figheight(1)
+    fig.set_figwidth(1)
 
     xaxis = []
     xaxis.clear()
@@ -34,61 +57,124 @@ def display_event(info_frame,display_frame,tree,display_entry):
     for i in range(nsamps):
         yaxis.append(samps[i])
 
-    #Plot 1D ROOT histogram of a single PMT fADC channel.
-    #h1dfadc = ROOT.TH1F("hfadc","hfadc test",20,0,20)
-    #for i in range (0,nsamps):
-        #h1dfadc.Fill(xaxis[i],yaxis[i])
-
-    #h1dfadc.Draw("hist")
-    #input("Please press enter to close images.") 
-
-    fig, ax = plt.subplots(figsize=(4,4))
+    ax.clear()
     hist1 = ax.hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='black')
     ax.set_ylim(200,500)
     ax.set_xlim(0,nsamps-1)
-    #plt.show()
+    """
+    xaxis = []
+    yaxis = []
+    for pmt in range(0,npmt):
+        fig_arr[pmt].set_figheight(1)
+        fig_arr[pmt].set_figwidth(1)
 
-    #canvas.get_tk_widget().destroy()
+        xaxis.clear()
+        for i in range(nsamps):
+            xaxis.append(i)
 
-    #try: 
-        #canvas.get_tk_widget().destroy()
-    #except:
-        #print('Error!')
-        #pass 
+        yaxis.clear()
+        first_bin = pmt*nsamps
+        last_bin = nsamps+pmt*nsamps
+        for i in range(first_bin,last_bin):
+            #print('PMT '+str(pmt)+': first_bin='+str(first_bin)+' last_bin='+str(last_bin)+' samps[i]='+str(samps[i])+'.')
+            yaxis.append(samps[i])
 
-    # creating the Tkinter canvas
-    # containing the Matplotlib figure
-    print(display_frame.winfo_children())
-    canvas = FigureCanvasTkAgg(fig, master=display_frame)  
+        ax_arr[pmt].clear()
+        #ax_arr[pmt].set_axis_off()
+        #ax_arr[pmt].set_xticks([])
+        #ax_arr[pmt].set_yticks([])
+        #hist1 = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='black')
+        hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='c')
+        ax_arr[pmt].set_ylim(100,500)
+        ax_arr[pmt].set_xlim(0,nsamps-1)
 
-    #try: 
-        #canvas.get_tk_widget().pack_forget()
-    #except AttributeError: 
-        #pass 
-    #canvas.delete("all")
+        row = int(pmt/ncol)
+        col = pmt%ncol
+        canvas_arr[pmt].draw()
+        canvas_arr[pmt].get_tk_widget().grid(row=row,column=col)
+        #print('Plotting PMT '+str(pmt)+' at grid location (row,col) = ('+str(row)+','+str(col)+').')
 
-    #canvas.get_tk_widget().destroy()
+    #print(display_frame.winfo_children())
 
-    canvas.draw()
-
-    #canvas.get_tk_widget().destroy()
-
-    # placing the canvas on the Tkinter window
-    canvas.get_tk_widget().pack()
-
-    #canvas.get_tk_widget().destroy()
-    #canvas.get_tk_widget().forget_pack()
+    #Plot all of the PMT fADCs on the canvases.
+    #canvas.draw()
+    #canvas.get_tk_widget().grid(row=0,column=0)
+    #for row in range(0,nrow):
+        #for col in range(0,ncol):
+            #canvas_arr[row*ncol+col].draw()
+            #canvas_arr[row*ncol+col].get_tk_widget().grid(row=row,column=col)
 
     # creating the Matplotlib toolbar
-    toolbar = NavigationToolbar2Tk(canvas,display_frame)
-    toolbar.update()
+    #toolbar = NavigationToolbar2Tk(histos[0],display_frame)
+#    toolbar = NavigationToolbar2Tk(canvas,display_frame)
+#    toolbar.update()
     
     # placing the toolbar on the Tkinter window
-    canvas.get_tk_widget().pack()
+    #histos[0].get_tk_widget().pack()
+#    canvas.get_tk_widget().pack()
 
-    #canvas.get_tk_widget().destroy()
+def next_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+    #Get the current value in the entry box.
+    event = display_entry.get()
+    #print('Event was '+str(event))
 
-    #ax.clear()
-    #canvas.get_tk_widget().forget_pack()
-    #canvas.get_tk_widget().delete("all")
-    #canvas.delete("all")
+    #Clear the entry box.
+    entry_len = len(event)
+    display_entry.delete(0,entry_len)
+
+    #Insert the new event number in the entry box.
+    display_entry.insert(0,str(int(event)+1))
+    event = display_entry.get()
+    #print('Event is currently '+str(event))
+    display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
+
+def previous_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+    #Get the current value in the entry box.
+    event = display_entry.get()
+    print('Event was '+str(event))
+
+    #Clear the entry box.
+    entry_len = len(event)
+    display_entry.delete(0,entry_len)
+
+    #Insert the new event number in the entry box.
+    display_entry.insert(0,str(int(event)-1))
+    event = display_entry.get()
+    print('Event is currently '+str(event))
+    display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
+
+def single_plot(event,fig_arr,canvas_arr):
+    single_plot_window = Tk()
+    single_plot_window.wm_title("Single fADC Plot")
+    #single_plot_label = Label(single_plot_window, text="Input")
+    #single_plot_label.grid(row=0, column=0)
+    #single_plot_btn = Button(single_plot_window, text="Close", width=8, height=4, command=single_plot_window.destroy)
+    #single_plot_btn.grid(row=0,column=0)
+
+    #Determine which canvas was clicked to find the PMT number to plot the correct fADC waveform.
+    canvas = event.widget
+    canvas_name = str(canvas)
+    #print('canvas_name = '+canvas_name)
+    #Get 3rd to last character in canvas_name to work out what the PMT number is. The canvases go canvas, canvas2,...,canvas288.
+    if canvas_name[-4:-3]=='n':
+        pmt=0
+    elif canvas_name[-4:-3]=='v':
+        pmt = int(canvas_name[-1:])-1
+    elif canvas_name[-4:-3]=='a':
+        pmt = int(canvas_name[-2:])-1
+    elif canvas_name[-4:-3]=='s':
+        pmt = int(canvas_name[-3:])-1
+    else:
+        pmt=0
+        print('ERROR: Could not identify PMT number of the fADC waveform canvas clicked. Defaulting to using PMT 0.')
+    #if canvas in canvas_arr:
+        #print('Found it!')
+    #print(canvas)
+    #fig.figure(figsize=(8,8))
+    #pmt=0
+    fig_arr[pmt].set_figheight(6)
+    fig_arr[pmt].set_figwidth(6)
+
+    canvas = FigureCanvasTkAgg(fig_arr[pmt], master=single_plot_window)
+    canvas.draw()
+    canvas.get_tk_widget().grid(row=0,column=0)
