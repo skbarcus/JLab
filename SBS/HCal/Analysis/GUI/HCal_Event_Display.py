@@ -13,10 +13,13 @@ from mpl_toolkits.axes_grid1.mpl_axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
 NavigationToolbar2Tk)
+import time
 
 read_all = 0
 loop = 1
 test_evt = 2#31823
+
+drawn = 0
 
 data = "/home/skbarcus/Machine_Learning/Tutorials/Data/"
 
@@ -123,19 +126,21 @@ class DVCS_Pulser_Control_GUI:
         fig_arr = []
         ax_arr = []
         hist_arr = []
-        for pmt in range(0,npmt):
-            xaxis = []
-            xaxis.clear()
-            for i in range(nsamps):
-                xaxis.append(i)
 
-            yaxis = []
+        xaxis = []
+        yaxis = []
+
+        xaxis.clear()
+        for i in range(nsamps):
+            xaxis.append(i)
+
+        for pmt in range(0,npmt):
             yaxis.clear()
             for i in range(nsamps):
                 yaxis.append(samps[i])
 
             fig, ax = plt.subplots(figsize=(1,1))
-            hist = ax.hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='black')
+            hist = ax.hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',ec='c',lw=1)
             ax.set_ylim(100,500)
             ax.set_xlim(0,nsamps-1)
             fig_arr.append(fig)
@@ -153,7 +158,14 @@ class DVCS_Pulser_Control_GUI:
             canvas = FigureCanvasTkAgg(fig_arr[pmt], master=display_frame)
             canvas.get_tk_widget().bind("<Button-1>", handler)
             canvas_arr.append(canvas)
-            #canvas.draw()
+            row = int(pmt/ncol)
+            col = pmt%ncol
+            canvas_arr[pmt].get_tk_widget().grid(row=row,column=col)#If here longer start for GUI initially. If in display plot function makes first plotting slower.
+            #canvas_arr[pmt].draw()
+            """
+            canvas_arr[pmt].draw()
+            canvas_arr[pmt].get_tk_widget().grid(row=row,column=col)
+            """
 
         #toolbar = NavigationToolbar2Tk(canvas,display_frame)
         #toolbar.update()
@@ -161,7 +173,7 @@ class DVCS_Pulser_Control_GUI:
 
         #Create an entry for the event number to be displayed.
         display_entry = Entry(info_frame,width=8)
-        display_btn = Button(info_frame, text='Display\nEvent', width=8, height=4, font='Helvetica 8 bold', command=lambda canvas_arr=canvas_arr, canvas=canvas,hist_arr=hist_arr,ax_arr=ax_arr, fig_arr=fig_arr, ax=ax, fig=fig, info_frame=info_frame, display_frame=display_frame, tree=tree, display_entry=display_entry: fn.display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry), bg = "grey")
+        display_btn = Button(info_frame, text='Display\nEvent', width=8, height=4, font='Helvetica 8 bold', command=lambda drawn=drawn, canvas_arr=canvas_arr, canvas=canvas,hist_arr=hist_arr,ax_arr=ax_arr, fig_arr=fig_arr, ax=ax, fig=fig, info_frame=info_frame, display_frame=display_frame, tree=tree, display_entry=display_entry: fn.display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry), bg = "grey")
         #display_btn.pack(side="bottom")
         display_btn.grid(row=1,column=1)
 
@@ -170,11 +182,11 @@ class DVCS_Pulser_Control_GUI:
         display_entry.insert(0,0)
 
         #Create a button to step forward one event.
-        next_btn = Button(info_frame, text='Next', width=8, height=4, font='Helvetica 8 bold', bg = "grey", command=lambda canvas_arr=canvas_arr, canvas=canvas,hist_arr=hist_arr,ax_arr=ax_arr, fig_arr=fig_arr, ax=ax, fig=fig, info_frame=info_frame, display_frame=display_frame, tree=tree, display_entry=display_entry: fn.next_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry))
+        next_btn = Button(info_frame, text='Next', width=8, height=4, font='Helvetica 8 bold', bg = "grey", command=lambda drawn=drawn, canvas_arr=canvas_arr, canvas=canvas,hist_arr=hist_arr,ax_arr=ax_arr, fig_arr=fig_arr, ax=ax, fig=fig, info_frame=info_frame, display_frame=display_frame, tree=tree, display_entry=display_entry: fn.next_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry))
         next_btn.grid(row=1,column=2)
 
         #Create a button to step back one event.
-        previous_btn = Button(info_frame, text='Previous', width=8, height=4, font='Helvetica 8 bold', bg = "grey", command=lambda canvas_arr=canvas_arr, canvas=canvas,hist_arr=hist_arr,ax_arr=ax_arr, fig_arr=fig_arr, ax=ax, fig=fig, info_frame=info_frame, display_frame=display_frame, tree=tree, display_entry=display_entry: fn.previous_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry))
+        previous_btn = Button(info_frame, text='Previous', width=8, height=4, font='Helvetica 8 bold', bg = "grey", command=lambda drawn=drawn, canvas_arr=canvas_arr, canvas=canvas,hist_arr=hist_arr,ax_arr=ax_arr, fig_arr=fig_arr, ax=ax, fig=fig, info_frame=info_frame, display_frame=display_frame, tree=tree, display_entry=display_entry: fn.previous_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry))
         previous_btn.grid(row=1,column=0)
 
         def key(event):

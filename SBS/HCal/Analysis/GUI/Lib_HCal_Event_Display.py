@@ -12,6 +12,7 @@ from mpl_toolkits.axes_grid1.mpl_axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
 NavigationToolbar2Tk)
+import time
 
 def test():
     print('Test')
@@ -22,16 +23,26 @@ def test_command():
 #fig, ax = plt.subplots(figsize=(4,4))
 #canvas = FigureCanvasTkAgg(fig, master=display_frame)
 
-def display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+def display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+    t0 = time.time()
+    #Get the event to display from the entry box.
     event = display_entry.get()
     print('Now displaying event '+str(event)+'.')
 
+    #Find the correct event in the ROOT tree.
     event = int(event)
     tree.GetEntry(event)
+
+    #Check how many fADC bins are in the window.
     nsamps = getattr(tree,"sbs.hcal.nsamps")
     nsamps = int(nsamps[0])
-    samps = getattr(tree,"sbs.hcal.samps")
     print('The number of fADC samples is '+str(nsamps)+'.')
+
+    #Get the fADC sample values vector. (Size per event is number of pmts * number of fADC bins in the window per PMT)
+    samps = getattr(tree,"sbs.hcal.samps")
+
+    #Get the TDC values vector. (Size per event is number of PMTs)
+    tdc = getattr(tree,"sbs.hcal.tdc")
 
     #Get the number of PMTs.
     adc_int = getattr(tree,"sbs.hcal.a")
@@ -43,34 +54,21 @@ def display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,di
     nrow = int(max(nrow))
     ncol = getattr(tree,"sbs.hcal.col")
     ncol = int(max(ncol))
-    """
-    fig.set_figheight(1)
-    fig.set_figwidth(1)
 
     xaxis = []
+    yaxis = []
+
     xaxis.clear()
     for i in range(nsamps):
         xaxis.append(i)
 
-    yaxis = []
-    yaxis.clear()
-    for i in range(nsamps):
-        yaxis.append(samps[i])
-
-    ax.clear()
-    hist1 = ax.hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='black')
-    ax.set_ylim(200,500)
-    ax.set_xlim(0,nsamps-1)
-    """
-    xaxis = []
-    yaxis = []
     for pmt in range(0,npmt):
         fig_arr[pmt].set_figheight(1)
         fig_arr[pmt].set_figwidth(1)
 
-        xaxis.clear()
-        for i in range(nsamps):
-            xaxis.append(i)
+        #xaxis.clear()
+        #for i in range(nsamps):
+        #    xaxis.append(i)
 
         yaxis.clear()
         first_bin = pmt*nsamps
@@ -79,20 +77,46 @@ def display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,di
             #print('PMT '+str(pmt)+': first_bin='+str(first_bin)+' last_bin='+str(last_bin)+' samps[i]='+str(samps[i])+'.')
             yaxis.append(samps[i])
 
-        ax_arr[pmt].clear()
+        #ax_arr[pmt].clear()
+        ax_arr[pmt].cla()
         #ax_arr[pmt].set_axis_off()
         #ax_arr[pmt].set_xticks([])
         #ax_arr[pmt].set_yticks([])
         #hist1 = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='black')
-        hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='c')
+
+        #Change the color of PMTs that have a TDC hit (could use an ADC threshold instead).
+        if tdc[pmt]!=0:
+            #hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',color='orangered',ec='darkorange',lw=1)
+            ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',color='orangered',ec='darkorange',lw=1.)#Plots over other plots without the clear statement ax.clear().
+            #ax_arr[pmt].hist(xaxis,weights=yaxis)
+        else:
+            #hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='c',lw=1)
+            #ax_arr[pmt].hist(xaxis,weights=yaxis)
+            ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',ec='c',lw=1.)#Plots over other plots without the clear statement ax.clear().
         ax_arr[pmt].set_ylim(100,500)
         ax_arr[pmt].set_xlim(0,nsamps-1)
 
         row = int(pmt/ncol)
         col = pmt%ncol
-        canvas_arr[pmt].draw()
-        canvas_arr[pmt].get_tk_widget().grid(row=row,column=col)
+        if drawn==0:
+            canvas_arr[pmt].draw()
+        else:
+            ax_arr[pmt].draw_artist(ax_arr[pmt].yaxis)
+            canvas_arr[pmt].get_tk_widget().update()
+        #canvas_arr[pmt].get_tk_widget().grid(row=row,column=col)#If here shorter start for GUI initially but display plot function does initial plotting slower.
+
+        #fig_arr[pmt].canvas.flush_events()
         #print('Plotting PMT '+str(pmt)+' at grid location (row,col) = ('+str(row)+','+str(col)+').')
+
+    t1 = time.time()
+    t_tot = t1-t0
+    print('Display event took '+str(t_tot)+' s.')
+    #global drawn
+    print('drawn =',drawn)
+    drawn = 1
+    print('drawn =',drawn)
+    #for pmt in range(0,npmt):#Worse speed.
+    #    canvas_arr[pmt].draw()
 
     #print(display_frame.winfo_children())
 
@@ -104,16 +128,7 @@ def display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,di
             #canvas_arr[row*ncol+col].draw()
             #canvas_arr[row*ncol+col].get_tk_widget().grid(row=row,column=col)
 
-    # creating the Matplotlib toolbar
-    #toolbar = NavigationToolbar2Tk(histos[0],display_frame)
-#    toolbar = NavigationToolbar2Tk(canvas,display_frame)
-#    toolbar.update()
-    
-    # placing the toolbar on the Tkinter window
-    #histos[0].get_tk_widget().pack()
-#    canvas.get_tk_widget().pack()
-
-def next_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+def next_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
     #Get the current value in the entry box.
     event = display_entry.get()
     #print('Event was '+str(event))
@@ -126,9 +141,9 @@ def next_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,displ
     display_entry.insert(0,str(int(event)+1))
     event = display_entry.get()
     #print('Event is currently '+str(event))
-    display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
+    display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
 
-def previous_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+def previous_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
     #Get the current value in the entry box.
     event = display_entry.get()
     print('Event was '+str(event))
@@ -141,7 +156,7 @@ def previous_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,d
     display_entry.insert(0,str(int(event)-1))
     event = display_entry.get()
     print('Event is currently '+str(event))
-    display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
+    display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
 
 def single_plot(event,fig_arr,canvas_arr):
     single_plot_window = Tk()
