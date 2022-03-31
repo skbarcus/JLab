@@ -55,7 +55,9 @@ Int_t useFB = 0;                         //Turn on Fourier Bessel fit.
 Int_t useFB_FM = 1;                      //0 = Turn on Fourier Bessel fit just for FC. 1 = Turn on Fourier Bessel fit attempting FC and FM.
 Int_t improve = 0;                       //1 = use mnimpr() to check for other minima around the one MIGRAD finds.
 Int_t MINOS = 0;                         //1 = use MINOS to calculate parameter errors. With ERRordef=30, npar=24, 10000 calls took about 1.5 hours and gave results only slightly different from intial parameter errors given. Several pars were hitting limits. 
-Int_t optimize_Ri = 0;                   //1 = Have code loop over each Ri value shifting it 0.1 higher and 0.1 lower until chi2 stops improving.
+Int_t optimize_Ri = 1;                   //1 = Have code loop over each Ri value shifting it 0.1 higher and 0.1 lower until chi2 stops improving.
+Int_t force_qich_1 = 1;                  //Force the sum of the Qich free pars to equal 1 (i.e. Fch(0)=1).
+Int_t force_qim_1 = 1;                   //Force the sum of the Qim free pars to equal 1 (i.e. Fm(0)=1).
 Int_t bootstrap = 0;                     //0 = No bootstrapping. 1 = Using a fixed Ri set randomly select points in the dataset a number of times equal to the number of points in the dataset and then use those points for a fit.
 Int_t npar = 48;                         //Number of parameters in fit.
 Int_t ngaus = 12;                        //Number of Gaussians used to fit data.
@@ -186,6 +188,50 @@ Double_t  Qimtot = 0.;
 Double_t amin = 0.;
 Double_t maxQ2 = 0.;
 TMarker *m1,*m2,*m3,*m4,*m5,*m6,*m7,*m8;
+
+Double_t Fch(float Q2, Double_t *par)
+{ 
+  Double_t sumchtemp = 0.;
+  Double_t fitch = 0.;
+  Double_t Q2eff = Q2;//Need to add back E0 to make this correction again.
+  
+   //Define SOG for charge FF.
+  for(Int_t i=0; i<ngaus; i++)
+    { 
+      //cout<<"par["<<i<<"] = "<<par[i]<<endl;   //Starts with Amroun's pars I believe.
+      //cout<<"R["<<i<<"] = "<<R[i]<<endl;
+      //Fit just the Qi values using predetermined R[i] values.
+      sumchtemp = (par[i]/(1.0+2.0*pow(R[i],2.0)/pow(Gamma,2.0))) * ( cos(pow(Q2eff,0.5)*R[i]) + (2.0*pow(R[i],2.0)/pow(Gamma,2.0)) * (sin(pow(Q2eff,0.5)*R[i])/(pow(Q2eff,0.5)*R[i])) );
+      //cout<<"sumchtemp = "<<sumchtemp<<endl; //Fails here 3/29/2022.
+      fitch =  fitch + sumchtemp;
+      //cout<<"fitch["<<i<<"] = "<<fitch<<endl;
+    }
+
+  fitch =  fitch * exp(-0.25*Q2eff*pow(Gamma,2.0));
+  return fitch;
+}
+
+Double_t Fm(float Q2, Double_t *par)
+{ 
+  Double_t summtemp = 0.;
+  Double_t fitm = 0.;
+  Double_t Q2eff = Q2;//Need to add back E0 to make this correction again.
+  
+   //Define SOG for charge FF.
+  for(Int_t i=0; i<ngaus; i++)
+    { 
+      //cout<<"par["<<i<<"] = "<<par[i]<<endl;   //Starts with Amroun's pars I believe.
+      //cout<<"R["<<i<<"] = "<<R[i]<<endl;
+      //Fit just the Qi values using predetermined R[i] values.
+      summtemp = (par[ngaus+i]/(1.0+2.0*pow(R[i],2.0)/pow(Gamma,2.0))) * ( cos(pow(Q2eff,0.5)*R[i]) + (2.0*pow(R[i],2.0)/pow(Gamma,2.0)) * (sin(pow(Q2eff,0.5)*R[i])/(pow(Q2eff,0.5)*R[i])) );
+      //cout<<"sumchtemp = "<<sumchtemp<<endl; //Fails here 3/29/2022.
+      fitm =  fitm + summtemp;
+      //cout<<"fitch["<<i<<"] = "<<fitch<<endl;
+    }
+
+  fitm =  fitm * exp(-0.25*Q2eff*pow(Gamma,2.0));
+  return fitm;
+}
 
 //Define SOG FFs and XS.
 Double_t XS(float E0, float theta, Double_t *par)
@@ -413,19 +459,53 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
   Double_t chisq = 0;
   Double_t delta;
   Double_t res;
+  Int_t chisq_data = datapts;
+
   if(bootstrap == 0)
     {
-      for(Int_t i=0;i<datapts;i++) 
+      if(force_qich_1==1 || force_qim_1==1)
 	{
-	  //cout<<"XS["<<i<<"] = "<<XS(E0[i],theta[i],par)<<endl;
-	  delta  = (sigexp[i]-XS(E0[i],theta[i],par))/uncertainty[i];
-	  chisq += delta*delta;
-	  Chi2[i] = delta*delta;
-	  //residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/sigexp[i]; 
-	  //residual[i] = fabs(sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par);
-	  residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par); 
-	  xsfit[i] = XS(E0[i],theta[i],par);
-	  //cout<<"xsfit["<<i<<"] = "<<xsfit[i]<<endl;
+	  chisq_data = datapts + 1;
+	}
+      if(force_qich_1==1 && force_qim_1==1)
+	{
+	  chisq_data = datapts + 2;
+	}
+
+
+      for(Int_t i=0;i<chisq_data;i++) 
+	{
+	  if(i!=datapts && i!=datapts+1)
+	    {
+	      //cout<<"XS["<<i<<"] = "<<XS(E0[i],theta[i],par)<<endl;
+	      delta  = (sigexp[i]-XS(E0[i],theta[i],par))/uncertainty[i];
+	      chisq += delta*delta;
+	      Chi2[i] = delta*delta;
+	      //cout<<"XS["<<i<<"] = "<<XS(E0[i],theta[i],par)<<endl;
+	      //residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/sigexp[i]; 
+	      //residual[i] = fabs(sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par);
+	      residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par); 
+	      xsfit[i] = XS(E0[i],theta[i],par);
+	      //cout<<"xsfit["<<i<<"] = "<<xsfit[i]<<endl;
+	    }
+	  if(i==datapts)
+	    {
+	      delta  = (1-Fch(0.0000001,par))/0.00001;
+	      chisq += delta*delta;
+	      //cout<<"Fch["<<i<<"] = "<<Fch(0.000001,par)<<endl;
+	      //Chi2[i] = delta*delta;
+	      //residual[i] = (1 - Fch(0,par))/Fch(0,par); 
+	      //fchfit[i] = Fch(0,par);
+	    }
+	  if(i==datapts+1)
+	    {
+	      delta  = (1-Fm(0.0000001,par))/0.00001;
+	      chisq += delta*delta;
+	      //cout<<"Fm["<<i<<"] = "<<Fm(0.000001,par)<<endl;
+	      //Chi2[i] = delta*delta;
+	      //residual[i] = (1 - Fm(0,par))/Fm(0,par); 
+	      //fmfit[i] = Fm(0,par);
+	    }
 	}
     }
   if(bootstrap == 1)

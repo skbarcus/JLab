@@ -1,3 +1,5 @@
+3He Fch Data from Collard 1965, McCarthy 1977, Szlata 1977, Otterman 1984, Dunn 1983, Bernheim 1972, Camsonne 2016. Left out Arnold 1978 for A^(1/2) structure function.
+Q2 [fm^-2]   |Fch|   uncertainty |Fch| 
 1	0.567	0.004
 1.5	0.431	0.004
 2	0.329	0.004
