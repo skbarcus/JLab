@@ -55,7 +55,7 @@ Int_t useFB = 0;                         //Turn on Fourier Bessel fit.
 Int_t useFB_FM = 1;                      //0 = Turn on Fourier Bessel fit just for FC. 1 = Turn on Fourier Bessel fit attempting FC and FM.
 Int_t improve = 0;                       //1 = use mnimpr() to check for other minima around the one MIGRAD finds.
 Int_t MINOS = 0;                         //1 = use MINOS to calculate parameter errors. With ERRordef=30, npar=24, 10000 calls took about 1.5 hours and gave results only slightly different from intial parameter errors given. Several pars were hitting limits. 
-Int_t optimize_Ri = 1;                   //1 = Have code loop over each Ri value shifting it 0.1 higher and 0.1 lower until chi2 stops improving.
+Int_t optimize_Ri = 0;                   //1 = Have code loop over each Ri value shifting it 0.1 higher and 0.1 lower until chi2 stops improving.
 Int_t force_qich_1 = 1;                  //Force the sum of the Qich free pars to equal 1 (i.e. Fch(0)=1).
 Int_t force_qim_1 = 1;                   //Force the sum of the Qim free pars to equal 1 (i.e. Fm(0)=1).
 Int_t bootstrap = 0;                     //0 = No bootstrapping. 1 = Using a fixed Ri set randomly select points in the dataset a number of times equal to the number of points in the dataset and then use those points for a fit.
@@ -194,6 +194,7 @@ Double_t Fch(float Q2, Double_t *par)
   Double_t sumchtemp = 0.;
   Double_t fitch = 0.;
   Double_t Q2eff = Q2;//Need to add back E0 to make this correction again.
+  //Double_t Q2eff = pow( pow(Q2,0.5) * (1.0+(1.5*Z*alpha)/(E0*pow(GeV2fm,0.5)*1.12*pow(A,1.0/3.0))) ,2.0);   //Z=2 A=3
   
    //Define SOG for charge FF.
   for(Int_t i=0; i<ngaus; i++)
@@ -216,6 +217,7 @@ Double_t Fm(float Q2, Double_t *par)
   Double_t summtemp = 0.;
   Double_t fitm = 0.;
   Double_t Q2eff = Q2;//Need to add back E0 to make this correction again.
+  //Double_t Q2eff = pow( pow(Q2,0.5) * (1.0+(1.5*Z*alpha)/(E0*pow(GeV2fm,0.5)*1.12*pow(A,1.0/3.0))) ,2.0);   //Z=2 A=3
   
    //Define SOG for charge FF.
   for(Int_t i=0; i<ngaus; i++)
@@ -946,7 +948,7 @@ void Global_Fit_3He_SOG()
   if(usedifmin == 0)
     {
       //FILE *fp = fopen("/home/skbarcus/Tritium/Analysis/SOG/3He_640.txt","r");
-      fp = fopen("/home/skbarcus/Tritium/Analysis/SOG/Amroun_3He_Data.txt","r");
+      fp = fopen("/home/skbarcus/JLab/SOG/New_Fits/Amroun_3He_Data.txt","r");
     }
 
   if(usedifmin == 1)
