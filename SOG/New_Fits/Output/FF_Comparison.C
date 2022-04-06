@@ -1,10 +1,10 @@
 void FF_Comparison()
 {
 //=========Macro generated from canvas: c5/
-//=========  (Fri Apr  1 14:38:24 2022) by ROOT version 6.18/04
+//=========  (Wed Apr  6 15:00:14 2022) by ROOT version 6.18/04
    TCanvas *c5 = new TCanvas("c5", "",65,52,700,500);
    gStyle->SetOptStat(0);
-   c5->Range(-8.749888,-4.9875,78.74999,44.8875);
+   c5->Range(-7.499888,-6.16875,67.49999,55.51875);
    c5->SetFillColor(0);
    c5->SetBorderMode(0);
    c5->SetBorderSize(2);
@@ -13,52 +13,30 @@ void FF_Comparison()
    c5->SetFrameBorderMode(0);
    c5->SetFrameBorderMode(0);
    
-   TH1F *h1__6 = new TH1F("h1__6","^{3}He Cross Section World Data Distribution",70,0.0001,70);
-   h1__6->SetBinContent(1,31);
-   h1__6->SetBinContent(2,30);
-   h1__6->SetBinContent(3,38);
-   h1__6->SetBinContent(4,33);
+   TH1F *h1__6 = new TH1F("h1__6","^{3}H Cross Section World Data Distribution",50,0.0001,60);
+   h1__6->SetBinContent(1,30);
+   h1__6->SetBinContent(2,42);
+   h1__6->SetBinContent(3,47);
+   h1__6->SetBinContent(4,35);
    h1__6->SetBinContent(5,25);
-   h1__6->SetBinContent(6,16);
-   h1__6->SetBinContent(7,7);
-   h1__6->SetBinContent(8,5);
-   h1__6->SetBinContent(9,9);
-   h1__6->SetBinContent(10,3);
-   h1__6->SetBinContent(11,4);
+   h1__6->SetBinContent(6,14);
+   h1__6->SetBinContent(7,8);
+   h1__6->SetBinContent(8,3);
+   h1__6->SetBinContent(9,4);
+   h1__6->SetBinContent(10,5);
+   h1__6->SetBinContent(11,3);
    h1__6->SetBinContent(12,3);
-   h1__6->SetBinContent(13,3);
-   h1__6->SetBinContent(14,3);
-   h1__6->SetBinContent(15,1);
+   h1__6->SetBinContent(13,1);
+   h1__6->SetBinContent(14,2);
    h1__6->SetBinContent(16,3);
-   h1__6->SetBinContent(18,1);
-   h1__6->SetBinContent(19,1);
-   h1__6->SetBinContent(20,3);
-   h1__6->SetBinContent(21,1);
-   h1__6->SetBinContent(23,3);
-   h1__6->SetBinContent(25,4);
-   h1__6->SetBinContent(26,2);
-   h1__6->SetBinContent(28,1);
-   h1__6->SetBinContent(30,3);
-   h1__6->SetBinContent(31,2);
-   h1__6->SetBinContent(32,1);
-   h1__6->SetBinContent(34,2);
-   h1__6->SetBinContent(35,2);
-   h1__6->SetBinContent(36,1);
-   h1__6->SetBinContent(37,1);
-   h1__6->SetBinContent(41,2);
-   h1__6->SetBinContent(42,1);
-   h1__6->SetBinContent(43,1);
-   h1__6->SetBinContent(45,3);
-   h1__6->SetBinContent(47,1);
-   h1__6->SetBinContent(49,1);
-   h1__6->SetBinContent(52,1);
-   h1__6->SetBinContent(55,1);
-   h1__6->SetBinContent(56,1);
-   h1__6->SetBinContent(58,1);
-   h1__6->SetBinContent(61,2);
-   h1__6->SetBinContent(65,1);
-   h1__6->SetBinContent(71,1);
-   h1__6->SetEntries(259);
+   h1__6->SetBinContent(17,1);
+   h1__6->SetBinContent(18,2);
+   h1__6->SetBinContent(20,2);
+   h1__6->SetBinContent(22,1);
+   h1__6->SetBinContent(23,1);
+   h1__6->SetBinContent(25,1);
+   h1__6->SetBinContent(27,1);
+   h1__6->SetEntries(234);
    h1__6->SetStats(0);
    h1__6->SetFillColor(4);
 
@@ -87,13 +65,13 @@ void FF_Comparison()
    h1__6->GetZaxis()->SetTitleFont(42);
    h1__6->Draw("");
    
-   TPaveText *pt = new TPaveText(0.15,0.94,0.85,0.995,"blNDC");
+   TPaveText *pt = new TPaveText(0.1547564,0.94,0.8452436,0.995,"blNDC");
    pt->SetName("title");
    pt->SetBorderSize(0);
    pt->SetFillColor(0);
    pt->SetFillStyle(0);
    pt->SetTextFont(42);
-   TText *pt_LaTex = pt->AddText("^{3}He Cross Section World Data Distribution");
+   TText *pt_LaTex = pt->AddText("^{3}H Cross Section World Data Distribution");
    pt->Draw();
    c5->Modified();
    c5->cd();
