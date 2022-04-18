@@ -8,6 +8,9 @@ from scipy.optimize import curve_fit
 from numpy.polynomial import Polynomial
 #import sympy as sym
 from scipy.misc import derivative
+import scipy.integrate as integrate
+from scipy.integrate import quad
+from scipy.stats import norm
 
 show_theory = 0
 show_amroun = 1
@@ -33,6 +36,10 @@ gamma = 0.8*np.power(2.0/3.0,0.5);  #Gaussian width [fm] from Amroun gamma*sqrt(
 
 ngaus = 12
 
+#Create arrays to hold radii values.
+radii_3He = []
+radii_3H = []
+
 #My 3He thesis values.
 R_He3_thesis = (0.3, 0.7, 0.9, 1.1, 1.5, 1.6, 2.2, 2.7, 3.3, 4.2, 4.3, 4.8)
 Qich_He3_thesis = (0.0996392,0.214304,0.0199385,0.195676,0.0785533,0.167223,0.126926,0.0549379,0.0401401,0.0100803,0.0007217,4.98962e-12)
@@ -55,7 +62,8 @@ Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.0
 
 #Read in the 3He data line by line.
 #with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
-with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
+with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -80,8 +88,8 @@ He3_Fits = np.array(He3_Fits)
 print('He3_Fits.shape = ',He3_Fits.shape)
 print('He3_Fits[0] = ',He3_Fits[0])
 
-for i in range(0,len(He3_Fits)):
-    print('Entry',i,' Length',len(He3_Fits[i]))
+#for i in range(0,len(He3_Fits)):
+    #print('Entry',i,' Length',len(He3_Fits[i]))
 
 #Split array into targets (elastic or not elastic) and training data.
 He3_Fits = np.hsplit(He3_Fits,np.array([6,18,30]))
@@ -107,7 +115,8 @@ print('Qim_He3[0]',Qim_He3[0])
 
 #Read in the 3H data line by line. Remember last 4 entries for R, Qich, and Qim are meaningless and can just be ignored.
 #with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
-with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
+with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -313,6 +322,9 @@ H3_Fm_Amroun_Error_Band_Up_y = np.array(theory_test[23][1].astype('float'))
 print('He3_fch_conv_x.shape',He3_fch_conv_x.shape)
 print('He3_fch_conv_y.shape',He3_fch_conv_y.shape)
 
+def gaus_fit(x, C, mu, sigma):
+    return ( C * np.exp(-1.0 * (x - mu)**2 / (2 * sigma**2)) )
+
 #Define charge form factor function.
 def Fch(Q2eff,Qich,R):
     sumFch_ff = 0
@@ -347,6 +359,31 @@ def Fm(Q2eff,Qim,R):
         Fm_ff = Fm_ff + sumFm_ff
     Fm_ff =  Fm_ff * np.exp(-0.25*Q2eff*np.power(gamma,2.0))
     return Fm_ff
+
+#Define the charge density from I. Sick. 
+def rho_ch(r,Qich,R,Z):
+    rho = 0;
+    rho_temp = 0;
+   
+    for i in range(ngaus):
+        rho_temp = Qich[i]/( 1+2*np.power(R[i],2.)/np.power(gamma,2.) ) * (  np.exp( -np.power((r-R[i]),2.)/np.power(gamma,2.) ) + np.exp( -np.power((r+R[i]),2.)/np.power(gamma,2.) )  );
+        rho = rho + rho_temp;
+    
+    rho = Z/(2*np.power(pi,1.5)*np.power(gamma,3.)) * rho; #Really Z*e factor but to make the units of rho be e/fm^3 I divided out e here.
+    return rho;
+
+#Define the charge density from I. Sick. 
+def rho_ch_int(r,Qich,R,Z):
+    rho = 0;
+    rho_temp = 0;
+   
+    for i in range(ngaus):
+        rho_temp = Qich[i]/( 1+2*np.power(R[i],2.)/np.power(gamma,2.) ) * (  np.exp( -np.power((r-R[i]),2.)/np.power(gamma,2.) ) + np.exp( -np.power((r+R[i]),2.)/np.power(gamma,2.) )  );
+        rho = rho + rho_temp;
+    
+    rho = 4*pi*np.power(r,2.) * Z/(2*np.power(pi,1.5)*np.power(gamma,3.)) * rho; #Really Z*e factor but to make the units of rho be e/fm^3 I divided out e here.
+    return rho;
+
 
 x0 = 1
 
@@ -469,12 +506,6 @@ Q2eff = np.linspace(0.00001,60,600)
 
 
 
-
-
-
-
-
-
 #Plot ensemble of 3He fits surviving x^2 cut.
 if show_ensemble==1:
     for fit in range(0,len(R_He3)):
@@ -483,8 +514,11 @@ if show_ensemble==1:
             Ri = R_He3[fit]
             Qich = Qich_He3[fit]
             d = derivative(Fch_deriv, 0.0015, dx=1e-5)
-            #radius = rms_radius(d)
+            radius = rms_radius(d)
+            radii_3He.append(radius)
             #print ('Fch_deriv =',d,'radius =',radius)
+
+radii_3He = np.array(radii_3He)
 
 #Dummy plot just to add a label for the ensemble fits.
 plt.plot(0, 0, color='red',label='Ensemble Fits')
@@ -527,6 +561,75 @@ plt.plot(*He3_Fch_Amroun_Error_Band_Down_Fit.linspace(),color='yellow')
 """
 
 ax.legend(loc='upper right')
+plt.show()
+
+#Plot the 3He charge distributions.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_title('$^3$He Charge Density',fontsize=20)
+ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=16)
+ax.set_xlabel('Radius (fm)',fontsize=16)
+#ax.set_yscale('log')
+
+#Define radii range to plot.
+r = np.linspace(0.00001,5,5000)
+
+if show_ensemble==1:
+    for fit in range(0,len(R_He3)):
+        if stats_He3[fit][0]<He3_x2_cut:
+            plt.plot(r, rho_ch(r,Qich_He3[fit],R_He3[fit],2), color='red', alpha=0.2)
+            Ri = R_He3[fit]
+            Qich = Qich_He3[fit]
+            #print('3He Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_He3[fit],R_He3[fit],2)))
+
+#Dummy plot just to add a label for the ensemble fits.
+plt.plot(0, 0, color='red',label='Ensemble Fits')
+
+#Plot Amroun charge FF representative fit.
+if show_amroun==1:
+    plt.plot(r, rho_ch(r,Qich_He3_Amroun,R_He3_Amroun,2), color='blue',label='Amroun Fit')
+    print('Amroun 3He Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_He3_Amroun,R_He3_Amroun,2)))
+
+ax.legend(loc='upper right')
+plt.show()
+
+
+#Plot distribution of charge radii.
+#User defined Gaussian fit.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Occurrences',fontsize=16)
+ax.set_xlabel('RMS Radius (fm)',fontsize=16)
+
+xmin = 1.85 #thesis -> 1.89. sum q1 = 1 -> 1.85
+xmax = 1.875 #thesis -> 1.915.sum q1 = 1 -> 1.875
+nbins = 50
+
+#Define range and number of bins.
+bins = np.linspace(xmin, xmax, nbins)
+
+#Create a histogram and fill the bins with the radii data.
+data_entries_1, bins_1 = np.histogram(radii_3He, bins=bins)
+
+#Define where the bin centers are for fitting.
+binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
+
+#Fit the histogram with the Gaussian fit and some starting parameters.
+popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[1, 1.9, 0.1])
+print('3He popt =',popt)
+#print('pcov =',pcov)
+
+#Add the average value and standard deviation of the charge radii to the title. 
+ax.set_title('$^3$He Charge Radii: Average={:.3f} Standard Deviation={:.4f}'.format(popt[1], popt[2]),fontsize=20)
+
+#Define enough points to make a smooth curve.
+xspace = np.linspace(xmin, xmax, 100000)
+
+#Plot the histogram.
+plt.bar(binscenters, data_entries_1, width=bins[1] - bins[0], color='navy', label=r'Histogram entries')
+
+#Plot the Gaussian fit to the histogram.
+plt.plot(xspace, gaus_fit(xspace, *popt), color='darkorange', linewidth=2.5, label=r'Fitted function')
+
+#Display both the histogram and the Gaussian fit.
 plt.show()
 
 #Plot the 3He magnetic FF Fits.
@@ -576,14 +679,6 @@ ax.legend(loc='upper right')
 plt.show()
 
 
-
-
-
-
-
-
-
-
 #Plot the 3H charge FF Fits.
 ngaus = 8
 fig, ax = plt.subplots(figsize=(12,6))
@@ -607,8 +702,11 @@ if show_ensemble==1:
             Ri = R_H3[fit]
             Qich = Qich_H3[fit]
             d = derivative(Fch_deriv, 0.0015, dx=1e-5)
-            #radius = rms_radius(d)
+            radius = rms_radius(d)
+            radii_3H.append(radius)
             #print ('Fch_deriv =',d,'radius =',radius)
+
+radii_3H = np.array(radii_3H)
 
 #Dummy plot just to add a label for the ensemble fits.
 plt.plot(0, 0, color='red',label='Ensemble Fits')
@@ -634,6 +732,74 @@ if show_theory==1:
 
 ax.legend(loc='upper right')
 
+plt.show()
+
+#Plot the 3H charge distributions.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_title('$^3$H Charge Density',fontsize=20)
+ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=16)
+ax.set_xlabel('Radius (fm)',fontsize=16)
+#ax.set_yscale('log')
+
+#Define radii range to plot.
+r = np.linspace(0.00001,5,5000)
+
+if show_ensemble==1:
+    for fit in range(0,len(R_H3)):
+        if stats_H3[fit][0]<H3_x2_cut:
+            plt.plot(r, rho_ch(r,Qich_H3[fit],R_H3[fit],1), color='red', alpha=0.2)
+            Ri = R_H3[fit]
+            Qich = Qich_H3[fit]
+            #print('3H Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_H3[fit],R_H3[fit],1)))
+
+#Dummy plot just to add a label for the ensemble fits.
+plt.plot(0, 0, color='red',label='Ensemble Fits')
+
+#Plot Amroun charge FF representative fit.
+if show_amroun==1:
+    plt.plot(r, rho_ch(r,Qich_H3_Amroun,R_H3_Amroun,1), color='blue',label='Amroun Fit')
+    print('Amroun 3H Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_H3_Amroun,R_H3_Amroun,1)))
+
+ax.legend(loc='upper right')
+plt.show()
+
+#Plot distribution of charge radii.
+#User defined Gaussian fit.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Occurrences',fontsize=16)
+ax.set_xlabel('RMS Radius (fm)',fontsize=16)
+
+xmin = 1.65 #thesis -> 1.97. sum q1 = 1 -> 1.65
+xmax = 1.75 #thesis -> 2.06. sum q1 = 1 -> 1.75
+nbins = 50
+
+#Define range and number of bins.
+bins = np.linspace(xmin, xmax, nbins)
+
+#Create a histogram and fill the bins with the radii data.
+data_entries_1, bins_1 = np.histogram(radii_3H, bins=bins)
+
+#Define where the bin centers are for fitting.
+binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
+
+#Fit the histogram with the Gaussian fit and some starting parameters.
+popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[1, 1.9, 0.1])
+print('3H popt =',popt)
+#print('pcov =',pcov)
+
+#Add the average value and standard deviation of the charge radii to the title. 
+ax.set_title('$^3$H Charge Radii: Average={:.3f} Standard Deviation={:.4f}'.format(popt[1], popt[2]),fontsize=20)
+
+#Define enough points to make a smooth curve.
+xspace = np.linspace(xmin, xmax, 100000)
+
+#Plot the histogram.
+plt.bar(binscenters, data_entries_1, width=bins[1] - bins[0], color='navy', label=r'Histogram entries')
+
+#Plot the Gaussian fit to the histogram.
+plt.plot(xspace, gaus_fit(xspace, *popt), color='darkorange', linewidth=2.5, label=r'Fitted function')
+
+#Display both the histogram and the Gaussian fit.
 plt.show()
 
 #Plot the 3H magnetic FF Fits.
