@@ -12,13 +12,16 @@ import scipy.integrate as integrate
 from scipy.integrate import quad
 from scipy.stats import norm
 
-show_theory = 0
-show_amroun = 1
-show_rep = 1
-show_ensemble = 1
+show_theory = 0     #Show Marcucci's theory curves.
+show_amroun = 1     #Show Amroun's fits. 
+show_rep = 1        #Show the representative fit from my thesis.
+show_ensemble = 1   #Show all the individual fits in the ensemble of fits.
+calc_avgs = 1       #Create a lookup table for the ensemble average form factors. Also find fit closest to this average.
+sum_qi_1 = 0        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
+chi2_plots = 0      #Display a plot of the chi2 values for the fits.
 
-He3_x2_cut = 500    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits).
-H3_x2_cut = 750     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits).
+He3_x2_cut = 500    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500.
+H3_x2_cut = 603     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -39,6 +42,18 @@ ngaus = 12
 #Create arrays to hold radii values.
 radii_3He = []
 radii_3H = []
+
+#Create arrays to hold the lookup tables for the various fits at regular intervals. This way a mid point can be calculated and a best representative fit can be extracted from the ensemble. 
+fch_3He_vals = []
+fm_3He_vals = []
+fch_3H_vals = []
+fm_3H_vals = []
+
+#Create arrays to store the average form factor values for the look-up tables.
+fch_3He_avg = []
+fm_3He_avg = []
+fch_3H_avg = []
+fm_3H_avg = []
 
 #My 3He thesis values.
 R_He3_thesis = (0.3, 0.7, 0.9, 1.1, 1.5, 1.6, 2.2, 2.7, 3.3, 4.2, 4.3, 4.8)
@@ -61,9 +76,9 @@ Qich_H3_Amroun = (0.054706, 0.172505, 0.313852, 0.072056, 0.225333, 0.020849, 0.
 Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.098445, 0.040160, 0.016696, 0.015077)#Amroun 3H
 
 #Read in the 3He data line by line.
-#with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
+with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
-with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -114,9 +129,9 @@ print('Qim_He3.shape',Qim_He3.shape)
 print('Qim_He3[0]',Qim_He3[0])
 
 #Read in the 3H data line by line. Remember last 4 entries for R, Qich, and Qim are meaningless and can just be ignored.
-#with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
+with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
-with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -485,6 +500,83 @@ print('H3 1-sigma AIC =',H3_AIC_1sig)
 #Turn on TeX for labels.
 plt.rcParams['text.usetex'] = True
 
+#Make histograms of the chi2 values for the fits.
+#if chi2_plots==1:
+    #for fit in range(0,len(R_He3)):
+        #Stats_He3
+
+#Calculate midpoint of the 1-sigma fits.
+min_q2 = 0.1
+max_q2 = 60
+steps_q2 = 600
+q2_range = np.linspace(min_q2,max_q2,steps_q2)
+fit_chi2_cut = 1  #Used to reindex the fits surviving the chi2 cut.
+zero = 0.000001   #Value close to zero but won't cause poles.
+smallest_residual_val = 10000.0 
+smallest_residual_idx = 1000000
+original_3He_fit_idx = []#Array with length of the fits surviving the chi2 cut. It stores the index value of the original fit so the parameters can be accessed after the reindexing for things like the fit closest to the average of the ensemble.
+original_3H_fit_idx = []
+
+if calc_avgs==1:
+    #Store all the q2 values in q2_range in the first element of the array for future plotting.
+    fch_3He_vals.append([])
+    fch_3He_vals[0].append(0)
+    fm_3He_vals.append([])
+    fm_3He_vals[0].append(0)
+    for q2 in q2_range:
+        fch_3He_vals[0].append(q2)
+        fm_3He_vals[0].append(q2)
+    #Calculate the value of the FF at each point in q2_range and store it in the array.
+    for fit in range(0,len(R_He3)):
+        if stats_He3[fit][0]<He3_x2_cut:
+            original_3He_fit_idx.append(fit) #Store the index of the original fit for later access.
+            fch_3He_vals.append([])
+            fch_3He_vals[fit_chi2_cut].append(np.absolute(Fm(zero,Qim_He3[fit],R_He3[fit])))
+            fm_3He_vals.append([])
+            fm_3He_vals[fit_chi2_cut].append(np.absolute(Fm(zero,Qim_He3[fit],R_He3[fit])))
+            for q2 in q2_range:
+                fch_3He_vals[fit_chi2_cut].append(np.absolute(Fch(q2,Qich_He3[fit],R_He3[fit])))
+                fm_3He_vals[fit_chi2_cut].append(np.absolute(Fm(q2,Qim_He3[fit],R_He3[fit])))
+                #print(np.absolute(Fch(q2,Qich_He3[fit],R_He3[fit])))
+            fit_chi2_cut = fit_chi2_cut + 1
+
+    fch_3He_vals = np.array(fch_3He_vals)
+    print('fch_3He_vals.shape',fch_3He_vals.shape)
+    print('fch_3He_vals',fch_3He_vals)
+    fm_3He_vals = np.array(fm_3He_vals)
+    print('fm_3He_vals.shape',fm_3He_vals.shape)
+    print('fm_3He_vals',fm_3He_vals)
+
+    #Find the average value at each q2 point in q2_range and store it.
+    fch_3He_avg = np.mean(fch_3He_vals[1:],axis=0)
+    print('fch_3He_avg.shape',fch_3He_avg.shape)
+    print('fch_3He_avg',fch_3He_avg)
+    fm_3He_avg = np.mean(fm_3He_vals[1:],axis=0)
+    print('fm_3He_avg.shape',fm_3He_avg.shape)
+    print('fm_3He_avg',fm_3He_avg)
+
+    #Find the fit function that is closest to the average to provide an explicit parametrization. Calculate residual at each step and sum.
+    for fit in range(1,len(fch_3He_vals)):
+        residual_tot = 0  #Value to store residual per fit.
+        for val in range(0,len(fch_3He_vals[0])):
+            residual_tot = residual_tot + abs(fch_3He_vals[fit][val] - fch_3He_avg[val]) + abs(fm_3He_vals[fit][val] - fm_3He_avg[val])
+        if residual_tot<smallest_residual_val:
+            smallest_residual_val = residual_tot
+            smallest_residual_idx = fit
+            
+    #Use the stored indices to extract the parameters of the fit with the lowest residual.
+    R_He3_New_Rep = np.zeros(ngaus)
+    Qich_He3_New_Rep = np.zeros(ngaus)
+    Qim_He3_New_Rep = np.zeros(ngaus)
+
+    print('Index of 3He fit closest to the ensemble average =',original_3He_fit_idx[smallest_residual_idx])
+    for i in range(0,ngaus):
+        R_He3_New_Rep[i] = R_He3[original_3He_fit_idx[smallest_residual_idx]][i]
+        Qich_He3_New_Rep[i] = Qich_He3[original_3He_fit_idx[smallest_residual_idx]][i]
+        Qim_He3_New_Rep[i] = Qim_He3[original_3He_fit_idx[smallest_residual_idx]][i]
+
+    print('New representative 3He fit: Ri=',R_He3_New_Rep,' Qich =',Qich_He3_New_Rep,' Qim =',Qim_He3_New_Rep)
+
 #Plot the 3He charge FF Fits.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Charge Form Factor',fontsize=20)
@@ -504,13 +596,13 @@ Q2eff = np.linspace(0.00001,60,600)
 #d = derivative(Fch(Q2eff,Qich_He3_thesis,R_He3_thesis), 1.0, dx=1e-3)
 #print ('d=',d)
 
-
-
 #Plot ensemble of 3He fits surviving x^2 cut.
 if show_ensemble==1:
     for fit in range(0,len(R_He3)):
         if stats_He3[fit][0]<He3_x2_cut:
-            plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3[fit],R_He3[fit])), color='red', alpha=0.2)
+            fit_fch = np.absolute(Fch(Q2eff,Qich_He3[fit],R_He3[fit]))
+            #print(np.absolute(Fch(1.0,Qich_He3[fit],R_He3[fit])))
+            plt.plot(Q2eff, fit_fch, color='red', alpha=0.2)
             Ri = R_He3[fit]
             Qich = Qich_He3[fit]
             d = derivative(Fch_deriv, 0.0015, dx=1e-5)
@@ -560,6 +652,10 @@ He3_Fch_Amroun_Error_Band_Down_Fit = Polynomial.fit(He3_Fch_Amroun_Error_Band_Do
 plt.plot(*He3_Fch_Amroun_Error_Band_Down_Fit.linspace(),color='yellow')
 """
 
+if calc_avgs==1:
+    plt.plot(fch_3He_vals[0], fch_3He_avg, color='cyan',label='Average Charge Form Factor')
+    plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_New_Rep,R_He3_New_Rep)), color='darkorange',label='New Representative Fit')
+
 ax.legend(loc='upper right')
 plt.show()
 
@@ -599,9 +695,14 @@ fig, ax = plt.subplots(figsize=(12,6))
 ax.set_ylabel('Occurrences',fontsize=16)
 ax.set_xlabel('RMS Radius (fm)',fontsize=16)
 
-xmin = 1.85 #thesis -> 1.89. sum q1 = 1 -> 1.85
-xmax = 1.875 #thesis -> 1.915.sum q1 = 1 -> 1.875
-nbins = 50
+if sum_qi_1 == 1:
+    xmin = 1.85 #thesis -> 1.89. sum q1 = 1 -> 1.85
+    xmax = 1.875 #thesis -> 1.915.sum q1 = 1 -> 1.875
+    nbins = 50
+else:
+    xmin = 1.89 #thesis -> 1.89. sum q1 = 1 -> 1.85
+    xmax = 1.915 #thesis -> 1.915.sum q1 = 1 -> 1.875
+    nbins = 50
 
 #Define range and number of bins.
 bins = np.linspace(xmin, xmax, nbins)
@@ -663,6 +764,7 @@ if show_amroun==1:
     y = np.append(He3_Fm_Amroun_Error_Band_Down_y,np.flip(He3_Fm_Amroun_Error_Band_Up_y))
     plt.fill(x,y)
 
+
 #Plot new 3He magnetic FF representative fit.
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qim_He3_thesis,R_He3_thesis)), color='black',label='New Representative Fit') #Plot 3He representative fit.
@@ -673,6 +775,10 @@ if show_theory==1:
     plt.plot(He3_fm_CST_x, He3_fm_CST_y, color='cyan',label='Covalent Spectator Theorem Marcucci 2016')
     plt.plot(He3_Fm_XEFT500_x, He3_Fm_XEFT500_y, color='m',label='$\chi$EFT500 Marcucci 2016')
     plt.plot(He3_Fm_XEFT600_x, He3_Fm_XEFT600_y, color='brown',label='$\chi$EFT600 Marcucci 2016')
+
+if calc_avgs==1:
+    plt.plot(fm_3He_vals[0], fm_3He_avg, color='cyan',label='Average Magnetic Form Factor')
+    plt.plot(Q2eff, np.absolute(Fm(Q2eff,Qim_He3_New_Rep,R_He3_New_Rep)), color='darkorange',label='New Representative Fit')
 
 ax.legend(loc='upper right')
 
@@ -769,9 +875,14 @@ fig, ax = plt.subplots(figsize=(12,6))
 ax.set_ylabel('Occurrences',fontsize=16)
 ax.set_xlabel('RMS Radius (fm)',fontsize=16)
 
-xmin = 1.65 #thesis -> 1.97. sum q1 = 1 -> 1.65
-xmax = 1.75 #thesis -> 2.06. sum q1 = 1 -> 1.75
-nbins = 50
+if sum_qi_1==1:
+    xmin = 1.65 #thesis -> 1.97. sum q1 = 1 -> 1.65
+    xmax = 1.75 #thesis -> 2.06. sum q1 = 1 -> 1.75
+    nbins = 50
+else:
+    xmin = 1.97 #thesis -> 1.97. sum q1 = 1 -> 1.65
+    xmax = 2.06 #thesis -> 2.06. sum q1 = 1 -> 1.75
+    nbins = 50
 
 #Define range and number of bins.
 bins = np.linspace(xmin, xmax, nbins)
