@@ -16,12 +16,13 @@ show_theory = 0     #Show Marcucci's theory curves.
 show_amroun = 1     #Show Amroun's fits. 
 show_rep = 1        #Show the representative fit from my thesis.
 show_ensemble = 1   #Show all the individual fits in the ensemble of fits.
-calc_avgs = 1       #Create a lookup table for the ensemble average form factors. Also find fit closest to this average.
-sum_qi_1 = 0        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
-chi2_plots = 0      #Display a plot of the chi2 values for the fits.
+calc_avgs_3He = 0       #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
+calc_avgs_3H = 0    #Create a lookup table for the ensemble average of 3H form factors. Also find fit closest to this average.
+sum_qi_1 = 1        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
+chi2_plots = 1      #Display a plot of the chi2 values for the fits.
 
 He3_x2_cut = 500    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500.
-H3_x2_cut = 603     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+H3_x2_cut = 750     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -76,9 +77,10 @@ Qich_H3_Amroun = (0.054706, 0.172505, 0.313852, 0.072056, 0.225333, 0.020849, 0.
 Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.098445, 0.040160, 0.016696, 0.015077)#Amroun 3H
 
 #Read in the 3He data line by line.
-with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
+with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_4-22-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -129,9 +131,10 @@ print('Qim_He3.shape',Qim_He3.shape)
 print('Qim_He3[0]',Qim_He3[0])
 
 #Read in the 3H data line by line. Remember last 4 entries for R, Qich, and Qim are meaningless and can just be ignored.
-with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
+with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_4-22-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -155,6 +158,9 @@ H3_Fits = np.array(H3_Fits)
 #Examine data shape and check output.
 print('H3_Fits.shape = ',H3_Fits.shape)
 print('H3_Fits[0] = ',H3_Fits[0])
+
+#for i in range(0,len(H3_Fits)):
+    #print('Entry',i,' Length',len(H3_Fits[i]))
 
 #Split array into targets (elastic or not elastic) and training data.
 H3_Fits = np.hsplit(H3_Fits,np.array([6,14,18,26,30,38]))
@@ -500,10 +506,33 @@ print('H3 1-sigma AIC =',H3_AIC_1sig)
 #Turn on TeX for labels.
 plt.rcParams['text.usetex'] = True
 
+############################
+#3He Plots 
+############################
+
 #Make histograms of the chi2 values for the fits.
-#if chi2_plots==1:
-    #for fit in range(0,len(R_He3)):
-        #Stats_He3
+if chi2_plots==1:
+    fig, ax = plt.subplots(figsize=(12,6))
+    ax.set_ylabel('Occurrences',fontsize=16)
+    ax.set_xlabel(r'$\chi^2$',fontsize=16)
+    ax.set_title(r'$^3$He SOG Fit $\chi^2$ Values',fontsize=20)
+
+    xmin = 0 
+    xmax = 1000 
+    nbins = 1000
+
+    #Define range and number of bins.
+    bins = np.linspace(xmin, xmax, nbins)
+
+    #Create a histogram and fill the bins with the radii data.
+    data_entries_1, bins_1 = np.histogram(He3_x2, bins=bins)
+
+    #Define where the bin centers are for fitting.
+    binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
+
+    #Plot the histogram.
+    plt.bar(binscenters, data_entries_1, width=bins[1] - bins[0], color='navy', label=r'Histogram entries')
+    plt.show()
 
 #Calculate midpoint of the 1-sigma fits.
 min_q2 = 0.1
@@ -517,7 +546,7 @@ smallest_residual_idx = 1000000
 original_3He_fit_idx = []#Array with length of the fits surviving the chi2 cut. It stores the index value of the original fit so the parameters can be accessed after the reindexing for things like the fit closest to the average of the ensemble.
 original_3H_fit_idx = []
 
-if calc_avgs==1:
+if calc_avgs_3He==1:
     #Store all the q2 values in q2_range in the first element of the array for future plotting.
     fch_3He_vals.append([])
     fch_3He_vals[0].append(0)
@@ -531,7 +560,7 @@ if calc_avgs==1:
         if stats_He3[fit][0]<He3_x2_cut:
             original_3He_fit_idx.append(fit) #Store the index of the original fit for later access.
             fch_3He_vals.append([])
-            fch_3He_vals[fit_chi2_cut].append(np.absolute(Fm(zero,Qim_He3[fit],R_He3[fit])))
+            fch_3He_vals[fit_chi2_cut].append(np.absolute(Fch(zero,Qich_He3[fit],R_He3[fit])))
             fm_3He_vals.append([])
             fm_3He_vals[fit_chi2_cut].append(np.absolute(Fm(zero,Qim_He3[fit],R_He3[fit])))
             for q2 in q2_range:
@@ -550,10 +579,10 @@ if calc_avgs==1:
     #Find the average value at each q2 point in q2_range and store it.
     fch_3He_avg = np.mean(fch_3He_vals[1:],axis=0)
     print('fch_3He_avg.shape',fch_3He_avg.shape)
-    print('fch_3He_avg',fch_3He_avg)
+    #print('fch_3He_avg',fch_3He_avg)
     fm_3He_avg = np.mean(fm_3He_vals[1:],axis=0)
     print('fm_3He_avg.shape',fm_3He_avg.shape)
-    print('fm_3He_avg',fm_3He_avg)
+    #print('fm_3He_avg',fm_3He_avg)
 
     #Find the fit function that is closest to the average to provide an explicit parametrization. Calculate residual at each step and sum.
     for fit in range(1,len(fch_3He_vals)):
@@ -652,9 +681,9 @@ He3_Fch_Amroun_Error_Band_Down_Fit = Polynomial.fit(He3_Fch_Amroun_Error_Band_Do
 plt.plot(*He3_Fch_Amroun_Error_Band_Down_Fit.linspace(),color='yellow')
 """
 
-if calc_avgs==1:
+if calc_avgs_3He==1:
     plt.plot(fch_3He_vals[0], fch_3He_avg, color='cyan',label='Average Charge Form Factor')
-    plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_New_Rep,R_He3_New_Rep)), color='darkorange',label='New Representative Fit')
+    plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_New_Rep,R_He3_New_Rep)), color='darkorange',label='New New Representative Fit')
 
 ax.legend(loc='upper right')
 plt.show()
@@ -776,17 +805,118 @@ if show_theory==1:
     plt.plot(He3_Fm_XEFT500_x, He3_Fm_XEFT500_y, color='m',label='$\chi$EFT500 Marcucci 2016')
     plt.plot(He3_Fm_XEFT600_x, He3_Fm_XEFT600_y, color='brown',label='$\chi$EFT600 Marcucci 2016')
 
-if calc_avgs==1:
+if calc_avgs_3He==1:
     plt.plot(fm_3He_vals[0], fm_3He_avg, color='cyan',label='Average Magnetic Form Factor')
-    plt.plot(Q2eff, np.absolute(Fm(Q2eff,Qim_He3_New_Rep,R_He3_New_Rep)), color='darkorange',label='New Representative Fit')
+    plt.plot(Q2eff, np.absolute(Fm(Q2eff,Qim_He3_New_Rep,R_He3_New_Rep)), color='darkorange',label='New New Representative Fit')
 
 ax.legend(loc='upper right')
 
 plt.show()
 
+############################
+#3H Plots 
+############################
+
+ngaus = 8 #Switch to 8 Gaussians for 3H.
+
+#Make histograms of the chi2 values for the 3H fits.
+if chi2_plots==1:
+    fig, ax = plt.subplots(figsize=(12,6))
+    ax.set_ylabel('Occurrences',fontsize=16)
+    ax.set_xlabel(r'$\chi^2$',fontsize=16)
+    ax.set_title(r'$^3$H SOG Fit $\chi^2$ Values',fontsize=20)
+
+    xmin = 600 
+    xmax = 900 
+    nbins = 300
+
+    #Define range and number of bins.
+    bins = np.linspace(xmin, xmax, nbins)
+
+    #Create a histogram and fill the bins with the radii data.
+    data_entries_1, bins_1 = np.histogram(H3_x2, bins=bins)
+
+    #Define where the bin centers are for fitting.
+    binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
+
+    #Plot the histogram.
+    plt.bar(binscenters, data_entries_1, width=bins[1] - bins[0], color='navy', label=r'Histogram entries')
+    plt.show()
+
+
+#Calculate midpoint of the 1-sigma fits.
+min_q2 = 0.1
+max_q2 = 60
+steps_q2 = 600
+q2_range = np.linspace(min_q2,max_q2,steps_q2)
+fit_chi2_cut = 1  #Used to reindex the fits surviving the chi2 cut.
+zero = 0.000001   #Value close to zero but won't cause poles.
+smallest_residual_val = 10000.0 
+smallest_residual_idx = 1000000
+
+if calc_avgs_3H==1:
+    #Store all the q2 values in q2_range in the first element of the array for future plotting.
+    fch_3H_vals.append([])
+    fch_3H_vals[0].append(0)
+    fm_3H_vals.append([])
+    fm_3H_vals[0].append(0)
+    for q2 in q2_range:
+        fch_3H_vals[0].append(q2)
+        fm_3H_vals[0].append(q2)
+    #Calculate the value of the FF at each point in q2_range and store it in the array.
+    for fit in range(0,len(R_H3)):
+        if stats_H3[fit][0]<H3_x2_cut:
+            original_3H_fit_idx.append(fit) #Store the index of the original fit for later access.
+            fch_3H_vals.append([])
+            #print('Qich_H3[fit] =',Qich_H3[fit],'   R_H3[fit] =',R_H3[fit])
+            fch_3H_vals[fit_chi2_cut].append(np.absolute(Fch(zero,Qich_H3[fit],R_H3[fit])))
+            fm_3H_vals.append([])
+            fm_3H_vals[fit_chi2_cut].append(np.absolute(Fm(zero,Qim_H3[fit],R_H3[fit])))
+            for q2 in q2_range:
+                fch_3H_vals[fit_chi2_cut].append(np.absolute(Fch(q2,Qich_H3[fit],R_H3[fit])))
+                fm_3H_vals[fit_chi2_cut].append(np.absolute(Fm(q2,Qim_H3[fit],R_H3[fit])))
+                #print(np.absolute(Fch(q2,Qich_H3[fit],R_H3[fit])))
+            fit_chi2_cut = fit_chi2_cut + 1
+
+    fch_3H_vals = np.array(fch_3H_vals)
+    print('fch_3H_vals.shape',fch_3H_vals.shape)
+    print('fch_3H_vals',fch_3H_vals)
+    fm_3H_vals = np.array(fm_3H_vals)
+    print('fm_3H_vals.shape',fm_3H_vals.shape)
+    print('fm_3H_vals',fm_3H_vals)
+
+    #Find the average value at each q2 point in q2_range and store it.
+    fch_3H_avg = np.mean(fch_3H_vals[1:],axis=0)
+    print('fch_3H_avg.shape',fch_3H_avg.shape)
+    #print('fch_3H_avg',fch_3H_avg)
+    fm_3H_avg = np.mean(fm_3H_vals[1:],axis=0)
+    print('fm_3H_avg.shape',fm_3H_avg.shape)
+    #print('fm_3H_avg',fm_3H_avg)
+
+    #Find the fit function that is closest to the average to provide an explicit parametrization. Calculate residual at each step and sum.
+    for fit in range(1,len(fch_3H_vals)):
+        residual_tot = 0  #Value to store residual per fit.
+        for val in range(0,len(fch_3H_vals[0])):
+            residual_tot = residual_tot + abs(fch_3H_vals[fit][val] - fch_3H_avg[val]) + abs(fm_3H_vals[fit][val] - fm_3H_avg[val])
+        if residual_tot<smallest_residual_val:
+            smallest_residual_val = residual_tot
+            smallest_residual_idx = fit
+            
+    #Use the stored indices to extract the parameters of the fit with the lowest residual.
+    R_H3_New_Rep = np.zeros(ngaus)
+    Qich_H3_New_Rep = np.zeros(ngaus)
+    Qim_H3_New_Rep = np.zeros(ngaus)
+
+    print('Index of 3H fit closest to the ensemble average =',original_3H_fit_idx[smallest_residual_idx])
+    for i in range(0,ngaus):
+        R_H3_New_Rep[i] = R_H3[original_3H_fit_idx[smallest_residual_idx]][i]
+        Qich_H3_New_Rep[i] = Qich_H3[original_3H_fit_idx[smallest_residual_idx]][i]
+        Qim_H3_New_Rep[i] = Qim_H3[original_3H_fit_idx[smallest_residual_idx]][i]
+
+    print('New representative 3H fit: Ri=',R_H3_New_Rep,' Qich =',Qich_H3_New_Rep,' Qim =',Qim_H3_New_Rep)
+
 
 #Plot the 3H charge FF Fits.
-ngaus = 8
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Charge Form Factor',fontsize=20)
 ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=16)
@@ -835,6 +965,10 @@ if show_theory==1:
     plt.plot(H3_fch_CST_x, H3_fch_CST_y, color='cyan',label='Covalent Spectator Theorem Marcucci 2016')
     plt.plot(H3_Fch_XEFT500_x, H3_Fch_XEFT500_y, color='m',label='$\chi$EFT500 Marcucci 2016')
     plt.plot(H3_Fch_XEFT600_x, H3_Fch_XEFT600_y, color='brown',label='$\chi$EFT600 Marcucci 2016')
+
+if calc_avgs_3H==1:
+    plt.plot(fch_3H_vals[0], fch_3H_avg, color='cyan',label='Average Charge Form Factor')
+    plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_H3_New_Rep,R_H3_New_Rep)), color='darkorange',label='New New Representative Fit')
 
 ax.legend(loc='upper right')
 
@@ -954,6 +1088,10 @@ if show_theory==1:
     plt.plot(H3_fm_CST_x, H3_fm_CST_y, color='cyan',label='Covalent Spectator Theorem Marcucci 2016')
     plt.plot(H3_Fm_XEFT500_x, H3_Fm_XEFT500_y, color='m',label='$\chi$EFT500 Marcucci 2016')
     plt.plot(H3_Fm_XEFT600_x, H3_Fm_XEFT600_y, color='brown',label='$\chi$EFT600 Marcucci 2016')
+
+if calc_avgs_3H==1:
+    plt.plot(fm_3H_vals[0], fm_3H_avg, color='cyan',label='Average Magnetic Form Factor')
+    plt.plot(Q2eff, np.absolute(Fm(Q2eff,Qim_H3_New_Rep,R_H3_New_Rep)), color='darkorange',label='New New Representative Fit')
 
 ax.legend(loc='upper right')
 
