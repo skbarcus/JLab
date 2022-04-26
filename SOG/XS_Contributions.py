@@ -27,7 +27,7 @@ MtHe3 = 3.0160293*0.9315            #Mass of He3 in GeV.
 gamma = 0.8*np.power(2.0/3.0,0.5)   #Gaussian width [fm] from Amroun gamma*sqrt(3/2) = 0.8 fm.
 theta = 0.#21.04;
 theta_cor = 0.                 #Theta that corrects for the Q^2eff adjustment. Basically when we plot the XS and FFs the Q2[0] is really Q^2eff if we don't use this theta_cor. This variable is for the slightly smaller theta representing the real scattering angle.
-E0 = 1                     #3.356 Initial e- energy GeV.#2.216
+E0 = 100                     #3.356 Initial e- energy GeV.#2.216
 Ef = 0. 
 
 #My 3He thesis values.
@@ -80,31 +80,46 @@ def XS(Q2eff,E0):
 print(XS(10,E0))
 
 #Plot the XS along with the contributions from the charge and magnetic parts.
-fig, ax = plt.subplots(figsize=(12,6))
-ax.set_title('$^3$He Cross Section at {:.3f} GeV'.format(E0),fontsize=20)
-ax.set_ylabel(r'$\frac{d\sigma}{d\Omega}$ (fm$^2$/sr)',fontsize=16)
-ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
-ax.set_yscale('log')
-
-min = 0
-max = 60
-plt.xticks(np.arange(min, max+1, 2.0))
+fig, ax1 = plt.subplots(figsize=(12,6))
+ax1.set_title('$^3$He Cross Section at {:.3f} GeV'.format(E0),fontsize=20)
+ax1.set_ylabel(r'$\frac{d\sigma}{d\Omega}$ (fm$^2$/sr)',fontsize=16)
+ax1.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax1.set_yscale('log')
 
 #Define Q2eff range to plot.
 Q2eff = np.linspace(0.00001,60,600)
+def theta_2_Q2(Q2eff):
+    return 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )
+
+def Q2_2_theta(theta):
+    return ( 4*E0*E0/(1.0+2.0*E0*np.power(np.sin(theta/2.0),2.0)/MtHe3) )*(np.sin(theta/2.0),2.0)
+
+min = 0
+max = 60
+dstep = 2
+plt.xticks(np.arange(min,max,step=dstep))
+#plt.xticks(np.arange(min, max+1, 2.0))
+
+#ax2 = ax1.secondary_xaxis('top',functions=(theta_2_Q2,Q2_2_theta))
+#ax2 = ax1.twiny()
 
 plt.plot(Q2eff, XS(Q2eff,E0)[0], color='red', alpha=1.)
 plt.plot(Q2eff, XS(Q2eff,E0)[1], color='blue', alpha=1.)
 plt.plot(Q2eff, XS(Q2eff,E0)[2], color='green', alpha=1.)
 
+#ax2 = ax1.secondary_xaxis('top',functions=(theta_2_Q2,Q2_2_theta))
+
 plt.show()
 
-#Plot the relative contributions of the charge and magnetic FFs.
-fig, ax = plt.subplots(figsize=(12,6))
-ax.set_title('$^3$He Cross Section Charge and Magnetic Contributions at {:.3f} GeV'.format(E0),fontsize=20)
-ax.set_ylabel('Relative Contribution to Cross Section',fontsize=16)
-ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
-#ax.set_yscale('log')
+
+#################################################################
+#Plot the relative contributions of the charge and magnetic FFs.#
+#################################################################
+fig, ax1 = plt.subplots(figsize=(12,6))
+ax1.set_title('$^3$He Cross Section Charge and Magnetic Contributions at {:.3f} GeV'.format(E0),fontsize=20)
+ax1.set_ylabel('Relative Contribution to Cross Section',fontsize=16)
+ax1.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+#ax1.set_yscale('log')
 
 min = 0
 max = 60
