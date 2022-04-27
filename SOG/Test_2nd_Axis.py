@@ -24,16 +24,17 @@ def XS(Q2eff):
     return Q2eff
 
 #Define Q2eff range to plot.
-minq2 = 1     #0.48 for E0=1GeV
-maxq2 = 17    #10.075
-nsteps = 10000     #100
+minq2 = 0     #0.48 for E0=1GeV
+maxq2 = 60    #10.075
+nsteps = 1000     #100
+dstep = 5
 Q2eff = np.linspace(minq2,maxq2,nsteps)
 
 def Q2_2_theta(Q2eff):
     #return 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  ) * rad2deg #Converts correctly.
     print('Q2 =',Q2eff,' Theta =', 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg)
-    return 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg
-
+    theta =  2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg
+    return ["%.2f" % z for z in theta]
     #return Q2eff/4
 
 def theta_2_Q2(theta):
@@ -43,9 +44,9 @@ def theta_2_Q2(theta):
     #return theta
     #return theta #*5 -77
 
-
-Q2eff_test = np.linspace(1,21,100)
 """
+Q2eff_test = np.linspace(1,21,100)
+
 for x in Q2eff_test:
     #Q2_2_theta(x)
     theta_2_Q2(x)
@@ -53,12 +54,49 @@ for x in Q2eff_test:
 print('*******************************')
 """
 
+
+
+fig = plt.figure(figsize=(12,6))
+ax1 = fig.add_subplot(111)
+ax2 = ax1.twiny()
+
+X = np.linspace(0,1,1000)
+Y = np.cos(X*20)
+
+ax1.plot(Q2eff, XS(Q2eff), color='red', alpha=1.)
+ax1.set_xlabel(r"Original x-axis: $X$")
+
+new_tick_locations = np.arange(minq2,maxq2,step=dstep)#np.linspace(0,15,15)#np.array([1, 5, 10])
+
+def tick_function(X):
+    V = 1/(1+X)
+    return ["%.3f" % z for z in V]
+
+ax2.set_xlim(ax1.get_xlim())
+ax2.set_xticks(new_tick_locations)
+ax2.set_xticklabels(Q2_2_theta(new_tick_locations))
+ax2.set_xlabel(r"Modified x-axis: $1/(1+X)$")
+plt.show()
+
+
+
+
+
+
+
 fig, ax1 = plt.subplots(figsize=(12,6))
 
 ax1.plot(Q2eff, XS(Q2eff), color='red', alpha=1.)
 
-ax2 = ax1.secondary_xaxis('top',functions=(Q2_2_theta,theta_2_Q2))
+#ax2 = ax1.secondary_xaxis('top',functions=(Q2_2_theta,theta_2_Q2))
 #ax2 = ax1.secondary_xaxis('top',functions=(theta_2_Q2,Q2_2_theta))
+
+ax2 = ax1.twiny()
+ax2.set_xlim(ax1.get_xlim())
+new_tick_locations = [.2, .5, .9]#np.array([.2, .5, .9])#np.linspace(minq2,maxq2,20)
+ax2.set_xticks(new_tick_locations)
+Q2eff_top = np.linspace(minq2,maxq2,8)# np.linspace(1,60,100)
+ax2.set_xticklabels(Q2_2_theta(Q2eff_top))
 
 dstep = 2
 plt.xticks(np.arange(minq2,maxq2,step=dstep))

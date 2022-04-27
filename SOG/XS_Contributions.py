@@ -14,6 +14,7 @@ from scipy.stats import norm
 
 pi = 3.141592654
 deg2rad = pi/180.0
+rad2deg = 180.0/pi
 GeV2fm = 1./0.0389                  #Convert Q^2 units from GeV^2 to fm^-2.
 hbar = 6.582*np.power(10.0,-16.0)   #hbar in [eV*s].
 C = 299792458.0                     #Speed of light [m/s]. 
@@ -27,8 +28,9 @@ MtHe3 = 3.0160293*0.9315            #Mass of He3 in GeV.
 gamma = 0.8*np.power(2.0/3.0,0.5)   #Gaussian width [fm] from Amroun gamma*sqrt(3/2) = 0.8 fm.
 theta = 0.#21.04;
 theta_cor = 0.                 #Theta that corrects for the Q^2eff adjustment. Basically when we plot the XS and FFs the Q2[0] is really Q^2eff if we don't use this theta_cor. This variable is for the slightly smaller theta representing the real scattering angle.
-E0 = 100                     #3.356 Initial e- energy GeV.#2.216
+E0 = 1                     #3.356 Initial e- energy GeV.#2.216
 Ef = 0. 
+max_He3_Q2_val = 4*np.power(E0,2) / (1 + 2*E0/MtHe3) * GeV2fm #Calculate the maximum attainable Q2 value for 3He for the given beam energy.
 
 #My 3He thesis values.
 R = (0.3, 0.7, 0.9, 1.1, 1.5, 1.6, 2.2, 2.7, 3.3, 4.2, 4.3, 4.8)
@@ -79,56 +81,91 @@ def XS(Q2eff,E0):
 
 print(XS(10,E0))
 
-#Plot the XS along with the contributions from the charge and magnetic parts.
-fig, ax1 = plt.subplots(figsize=(12,6))
-ax1.set_title('$^3$He Cross Section at {:.3f} GeV'.format(E0),fontsize=20)
-ax1.set_ylabel(r'$\frac{d\sigma}{d\Omega}$ (fm$^2$/sr)',fontsize=16)
-ax1.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
-ax1.set_yscale('log')
+def Q2_2_theta(Q2eff):
+    #print('Q2 =',Q2eff,' Theta =', 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg)
+    theta =  2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg
+    return ["%.0f" % z for z in theta]
+
+def Q2_2_theta_vals(Q2eff):
+    #print('Q2 =',Q2eff,' Theta =', 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg)
+    theta =  2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg
+    return theta
+
+def theta_2_Q2(theta):
+    #print('theta =',theta,' Q2 =',4*E0*E0*np.power(np.sin(theta*deg2rad/2.0),2.0) * GeV2fm / (1.0+2.0*E0*np.power(np.sin(theta*deg2rad/2.0),2.0)/MtHe3))
+    return 4*E0*E0*np.power(np.sin(theta*deg2rad/2.0),2.0) * GeV2fm / (1.0+2.0*E0*np.power(np.sin(theta*deg2rad/2.0),2.0)/MtHe3)
+
+###########################################################
+#Plot the XS and the charge and magnetic FF contributions.#
+###########################################################
 
 #Define Q2eff range to plot.
-Q2eff = np.linspace(0.00001,60,600)
-def theta_2_Q2(Q2eff):
-    return 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )
+minq2 = 0.00001 #Avoid poles at zero.
+if max_He3_Q2_val < 60:
+    maxq2 = max_He3_Q2_val-0.1
+else:
+    maxq2 = 60
+nsteps = 1000
+dstep = 5
+Q2eff = np.linspace(minq2,maxq2,nsteps)
 
-def Q2_2_theta(theta):
-    return ( 4*E0*E0/(1.0+2.0*E0*np.power(np.sin(theta/2.0),2.0)/MtHe3) )*(np.sin(theta/2.0),2.0)
+print("Q2_2_theta_vals(0.959)",Q2_2_theta_vals(0.959))
 
-min = 0
-max = 60
-dstep = 2
-plt.xticks(np.arange(min,max,step=dstep))
-#plt.xticks(np.arange(min, max+1, 2.0))
+#Plot the XS along with the contributions from the charge and magnetic parts.
+fig, ax1 = plt.subplots(figsize=(12,7))
+ax1.set_title('$^3$He Cross Section', fontsize=20)
+#ax1.set_ylabel(r'$\frac{d\sigma}{d\Omega}$ (fm$^2$/sr)',fontsize=16)
+ax1.set_ylabel(r'$d\sigma/d\Omega$ (fm$^2$/sr)',fontsize=16)
+ax1.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax1.set_yscale('log')
+#Define secondary X-axis twinned off of first one's Y-axis.
+ax2 = ax1.twiny()
+ax2.set_xlabel(r"Scattering Angle ($^\circ$)",fontsize=16)
+ax2.xaxis.set_label_coords(.48, .95)
 
-#ax2 = ax1.secondary_xaxis('top',functions=(theta_2_Q2,Q2_2_theta))
-#ax2 = ax1.twiny()
+ax1.plot(Q2eff, XS(Q2eff,E0)[0], color='red', label='$^3$He Cross Section',alpha=1.,linewidth=2,zorder=2.5)
+ax1.plot(Q2eff, XS(Q2eff,E0)[1], color='blue', label='Electric Form Factor Cross Section Contribution', alpha=1.,linewidth=2.5,zorder=1)
+ax1.plot(Q2eff, XS(Q2eff,E0)[2], color='green', label='Magnetic Form Factor Cross Section Contribution', alpha=1.,linewidth=2.5,zorder=0)
 
-plt.plot(Q2eff, XS(Q2eff,E0)[0], color='red', alpha=1.)
-plt.plot(Q2eff, XS(Q2eff,E0)[1], color='blue', alpha=1.)
-plt.plot(Q2eff, XS(Q2eff,E0)[2], color='green', alpha=1.)
+new_tick_locations = np.arange(minq2,maxq2+5,step=dstep)
+#new_tick_locations = np.arange(minq2,maxq2+5,step=dstep) #1GeV nice scattering angle ticks.
+ax2.set_xlim(ax1.get_xlim())
+ax2.set_xticks(new_tick_locations)
+ax2.set_xticklabels(Q2_2_theta(new_tick_locations))
 
-#ax2 = ax1.secondary_xaxis('top',functions=(theta_2_Q2,Q2_2_theta))
-
+ax2.plot([], [], ' ', label='Initial Electron Energy = {:.3f} GeV'.format(E0))
+ax2.plot([], [], ' ', label='Maximum $Q^2$ = {:.3f} fm$^2$'.format(max_He3_Q2_val))
+ax1.legend(loc='center right',fontsize=12)
+ax2.legend(loc='upper right',fontsize=12)
 plt.show()
-
 
 #################################################################
 #Plot the relative contributions of the charge and magnetic FFs.#
 #################################################################
-fig, ax1 = plt.subplots(figsize=(12,6))
-ax1.set_title('$^3$He Cross Section Charge and Magnetic Contributions at {:.3f} GeV'.format(E0),fontsize=20)
+fig, ax1 = plt.subplots(figsize=(12,7))
+ax1.set_title('$^3$He Cross Section Charge and Magnetic Contributions',fontsize=20)
 ax1.set_ylabel('Relative Contribution to Cross Section',fontsize=16)
 ax1.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
 #ax1.set_yscale('log')
 
-min = 0
-max = 60
-plt.xticks(np.arange(min, max+1, 2.0))
+#Define secondary X-axis twinned off of first one's Y-axis.
+ax2 = ax1.twiny()
+ax2.set_xlabel(r"Scattering Angle ($^\circ$)",fontsize=16)
+ax2.xaxis.set_label_coords(.48, .95)
 
-#Define Q2eff range to plot.
-Q2eff = np.linspace(0.00001,60,600)
+new_tick_locations = np.arange(minq2,maxq2,step=dstep)
+ax2.set_xlim(ax1.get_xlim())
+ax2.set_xticks(new_tick_locations)
+ax2.set_xticklabels(Q2_2_theta(new_tick_locations))
 
-plt.plot(Q2eff, XS(Q2eff,E0)[3], color='blue', alpha=1.)
-plt.plot(Q2eff, XS(Q2eff,E0)[4], color='green', alpha=1.)
+plt.xticks(np.arange(minq2, maxq2, dstep))
 
+ax1.plot(Q2eff, XS(Q2eff,E0)[3], color='blue', label='Electric Form Factor', alpha=1.)
+ax1.plot(Q2eff, XS(Q2eff,E0)[4], color='green', label='Magnetic Form Factor', alpha=1.)
+
+# Create empty plot with blank marker containing extra label.
+ax2.plot([], [], ' ', label='Initial Electron Energy = {:.3f} GeV'.format(E0))
+ax2.plot([], [], ' ', label='Maximum $Q^2$ = {:.3f} fm$^2$'.format(max_He3_Q2_val))
+ax1.legend(loc='center left',title='Fraction of Cross Section Due to:',fontsize=12)
+ax2.legend(loc='upper right',fontsize=12)
 plt.show()
