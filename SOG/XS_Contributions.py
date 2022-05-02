@@ -69,17 +69,44 @@ def XS(Q2eff,E0):
     #Calculate Mott XS.
     mottxs = (  (np.power(Z,2.)*(Ef/E0)) * (np.power(alpha,2.0)/(4.0*np.power(E0,2.0)*np.power(np.sin(theta/2.0),4.0)))*np.power(np.cos(theta/2.0),2.0)  ) * 1.0/25.7    #Convert GeV^-2 to fm^2 by multiplying by 1/25.7.
     
-    #Calculate XS from FFs.
-    xs = mottxs * (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) + (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
-    xs_ch = mottxs * (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) )
-    xs_m = mottxs * (1./eta) * ( (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
+    #Calculate XS from FFs. Divide out Mott for pretty plots.
+    xs = (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) + (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
+    xs_ch = (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) )
+    xs_m = (1./eta) * ( (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
 
     ratio_ch = xs_ch / xs
     ratio_m = xs_m / xs
 
-    return xs, xs_ch, xs_m, ratio_ch, ratio_m; 
+    return xs, xs_ch, xs_m, ratio_ch, ratio_m, Q2eff, Ef, theta*180/pi; 
 
-print(XS(10,E0))
+def XS_Data(E0,theta):
+
+    #theta = 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )
+    #theta_cor = 2*np.arcsin(  np.power( (1/((4*np.power(E0,2.)*GeV2fm/   np.power(  np.power(Q2eff,0.5)/(1+(1.5*2*alpha)/(E0*np.power(GeV2fm,0.5)*1.12*np.power(3.,1./3.)))  ,2.)   )-(2.*E0/MtHe3))) , 0.5 )  )
+    Ef = E0/(1.0+2.0*E0*np.power(np.sin(theta*deg2rad/2.0),2.0)/MtHe3)
+    Q2 = 4.0*E0*Ef*np.power(np.sin(theta*deg2rad/2.0),2.0) * GeV2fm
+    Q2eff = np.power( np.power(Q2,0.5) * (1.0+(1.5*Z*alpha)/(E0*np.power(GeV2fm,0.5)*1.12*np.power(A,1.0/3.0))) ,2.0)
+
+    W = E0 - Ef
+    q2_3 = abs(  np.power(W,2.0)*GeV2fm - Q2eff  )        #Convert w^2 from GeV^2 to fm^-2 to match Q2. [fm^-2]
+    eta = 1.0 + Q2eff/(4.0*np.power(MtHe3,2.0)*GeV2fm)       #Make sure Mt^2 is converted from GeV^2 to fm^-2 to match Q^2. 
+
+    #Calculate Mott XS.
+    mottxs = (  (np.power(Z,2.)*(Ef/E0)) * (np.power(alpha,2.0)/(4.0*np.power(E0,2.0)*np.power(np.sin(theta/2.0),4.0)))*np.power(np.cos(theta/2.0),2.0)  ) * 1.0/25.7    #Convert GeV^-2 to fm^2 by multiplying by 1/25.7.
+    
+    #Calculate XS from FFs. Divide out Mott for pretty plots.
+    xs = (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) + (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
+    xs_ch = (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) )
+    xs_m = (1./eta) * ( (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
+
+    ratio_ch = xs_ch / xs
+    ratio_m = xs_m / xs
+
+    return xs, xs_ch, xs_m, ratio_ch, ratio_m, Q2eff, Ef, theta; 
+
+#print('XS predicted for my 3He data point (Q2,E0) =',XS(34.19,3.356))
+
+#print('XS predicted for my 3He data point (E0,theta) =',XS_Data(3.356,20.51))
 
 def Q2_2_theta(Q2eff):
     #print('Q2 =',Q2eff,' Theta =', 2*np.arcsin(  np.power( (1/(4*np.power(E0,2.)*GeV2fm/Q2eff-2*E0/MtHe3)) , 0.5 )  )  * rad2deg)
@@ -109,13 +136,13 @@ nsteps = 1000
 dstep = 5
 Q2eff = np.linspace(minq2,maxq2,nsteps)
 
-print("Q2_2_theta_vals(0.959)",Q2_2_theta_vals(0.959))
+#print("Q2_2_theta_vals(0.959)",Q2_2_theta_vals(0.959))
 
 #Plot the XS along with the contributions from the charge and magnetic parts.
 fig, ax1 = plt.subplots(figsize=(12,7))
 ax1.set_title('$^3$He Cross Section', fontsize=20)
 #ax1.set_ylabel(r'$\frac{d\sigma}{d\Omega}$ (fm$^2$/sr)',fontsize=16)
-ax1.set_ylabel(r'$d\sigma/d\Omega$ (fm$^2$/sr)',fontsize=16)
+ax1.set_ylabel(r'$\left( d\sigma/d\Omega \right) \; / \; \left( d\sigma/d\Omega \right)_{Mott}$',fontsize=16)
 ax1.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
 ax1.set_yscale('log')
 #Define secondary X-axis twinned off of first one's Y-axis.
@@ -135,7 +162,7 @@ ax2.set_xticklabels(Q2_2_theta(new_tick_locations))
 
 ax2.plot([], [], ' ', label='Initial Electron Energy = {:.3f} GeV'.format(E0))
 ax2.plot([], [], ' ', label='Maximum $Q^2$ = {:.3f} fm$^2$'.format(max_He3_Q2_val))
-ax1.legend(loc='center right',fontsize=12)
+ax1.legend(loc=(0.5,0.65),fontsize=12)
 ax2.legend(loc='upper right',fontsize=12)
 plt.show()
 
@@ -169,3 +196,125 @@ ax2.plot([], [], ' ', label='Maximum $Q^2$ = {:.3f} fm$^2$'.format(max_He3_Q2_va
 ax1.legend(loc='center left',title='Fraction of Cross Section Due to:',fontsize=12)
 ax2.legend(loc='upper right',fontsize=12)
 plt.show()
+
+#Read in data.
+with open('/home/skbarcus/JLab/SOG/3He_Data.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis.txt') as f:
+    lines = f.readlines()
+
+#Remove lines with column labels.
+del lines[0]
+del lines[0]
+
+#Create arrays.
+Raw_Data = []          #Array to store raw data.
+
+#Read each line and split by the spaces and store as array.
+#['Energy (GeV)', 'Theta (Degrees)', 'Sigma Experimental', 'Uncertainties', 'Dataset']
+for line in lines:
+    event = line.split()
+    Raw_Data.append(event)
+
+#Turn data into numpy array and swap char to float.
+Raw_Data = np.array(Raw_Data)
+Raw_Data = np.array(Raw_Data.astype('float'))
+
+#Examine data shape and check output.
+#print('Raw_Data.shape = ',Raw_Data.shape)
+#print('Raw_Data[0] = ',Raw_Data[0])
+
+XS_Data_Q2eff = [[],[],[],[],[],[],[],[]]
+XS_Data_ch_frac = [[],[],[],[],[],[],[],[]]
+XS_Data_mag_frac = [[],[],[],[],[],[],[],[]]
+
+for i in range(0,len(Raw_Data)):
+    if Raw_Data[i][4]==1:#Amroun 1994
+        XS_Data_Q2eff[0].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[0].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[0].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==2:#Collard 1965
+        XS_Data_Q2eff[1].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[1].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[1].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==3:#Szalata 1977
+        XS_Data_Q2eff[2].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[2].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[2].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==4:#Dunn 1983
+        XS_Data_Q2eff[3].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[3].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[3].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==5:#Camsonne 2016
+        XS_Data_Q2eff[4].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[4].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[4].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==6:#Nakagawa 2001
+        XS_Data_Q2eff[5].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[5].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[5].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==7:#Barcus 2019
+        XS_Data_Q2eff[6].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[6].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[6].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+    if Raw_Data[i][4]==8:#Arnold 1978
+        XS_Data_Q2eff[7].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+        XS_Data_ch_frac[7].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+        XS_Data_mag_frac[7].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+
+
+XS_Data_Q2eff = np.array(XS_Data_Q2eff)
+XS_Data_ch_frac= np.array(XS_Data_ch_frac)
+XS_Data_mag_frac= np.array(XS_Data_mag_frac)
+
+#print(XS_Data(Raw_Data[0],Raw_Data[1])[5])
+#print(XS_Data_Q2eff)
+print('Raw_Data.shape =',Raw_Data.shape)
+print('XS_Data_Q2eff.shape =',XS_Data_Q2eff.shape)
+
+#Histogram the world data by charge and magnetic XS fractions.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Fractional Charge Contribution to the Cross Section',fontsize=16)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_title(r'Charge Contribution to the $^3$He Cross Section',fontsize=20)
+
+#print(XS_Data_Q2eff[0],XS_Data_ch_frac[0])
+plt.plot(XS_Data_Q2eff[0],XS_Data_ch_frac[0],'bo')#Amroun 1994
+plt.plot(XS_Data_Q2eff[1],XS_Data_ch_frac[1],'ro')#Collard 1965
+plt.plot(XS_Data_Q2eff[2],XS_Data_ch_frac[2],'go')#Szalata 1977
+plt.plot(XS_Data_Q2eff[3],XS_Data_ch_frac[3],'co')#Dunn 1983
+plt.plot(XS_Data_Q2eff[4],XS_Data_ch_frac[4],'mo')#Camsonne 2016
+plt.plot(XS_Data_Q2eff[5],XS_Data_ch_frac[5],'o',color='brown')#Nakagawa 2001
+plt.plot(XS_Data_Q2eff[6],XS_Data_ch_frac[6],'o',color='orange')#Barcus 2019
+plt.plot(XS_Data_Q2eff[7],XS_Data_ch_frac[7],'yo')#Arnold 1978
+
+plt.show()
+
+
+"""
+XS_Data_Q2eff = []
+XS_Data_ch_frac = []
+XS_Data_mag_frac = []
+
+for i in range(0,len(Raw_Data)):
+    XS_Data_Q2eff.append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
+    XS_Data_ch_frac.append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
+    XS_Data_mag_frac.append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+
+XS_Data_Q2eff = np.array(XS_Data_Q2eff)
+XS_Data_ch_frac= np.array(XS_Data_ch_frac)
+XS_Data_mag_frac= np.array(XS_Data_mag_frac)
+
+#print(XS_Data(Raw_Data[0],Raw_Data[1])[5])
+#print(XS_Data_Q2eff)
+
+#Histogram the world data by charge and magnetic XS fractions.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Fractional Charge Contribution to the Cross Section',fontsize=16)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_title(r'Charge Contribution to the $^3$He Cross Section',fontsize=20)
+
+#print(XS_Data_Q2eff[0],XS_Data_ch_frac[0])
+plt.plot(XS_Data_Q2eff,XS_Data_ch_frac,'bo')
+
+plt.show()
+"""
