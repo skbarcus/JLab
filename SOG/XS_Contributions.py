@@ -12,6 +12,8 @@ import scipy.integrate as integrate
 from scipy.integrate import quad
 from scipy.stats import norm
 
+#use_3He = 0                         #If plotting 3He data. 
+#use_3H  = 1                         #
 pi = 3.141592654
 deg2rad = pi/180.0
 rad2deg = 180.0/pi
@@ -197,8 +199,13 @@ ax1.legend(loc='center left',title='Fraction of Cross Section Due to:',fontsize=
 ax2.legend(loc='upper right',fontsize=12)
 plt.show()
 
+###############################################################################################
+#Plot the charge and magnetic fractional contributions to the total XS for the 3He world data.#
+###############################################################################################
+
 #Read in data.
 with open('/home/skbarcus/JLab/SOG/3He_Data.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis_Datasets.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis.txt') as f:
     lines = f.readlines()
 
@@ -207,114 +214,192 @@ del lines[0]
 del lines[0]
 
 #Create arrays.
-Raw_Data = []          #Array to store raw data.
+Raw_Data_He3 = []          #Array to store raw data.
 
 #Read each line and split by the spaces and store as array.
 #['Energy (GeV)', 'Theta (Degrees)', 'Sigma Experimental', 'Uncertainties', 'Dataset']
 for line in lines:
     event = line.split()
-    Raw_Data.append(event)
+    Raw_Data_He3.append(event)
 
 #Turn data into numpy array and swap char to float.
-Raw_Data = np.array(Raw_Data)
-Raw_Data = np.array(Raw_Data.astype('float'))
+Raw_Data_He3 = np.array(Raw_Data_He3)
+Raw_Data_He3 = np.array(Raw_Data_He3.astype('float'))
 
 #Examine data shape and check output.
-#print('Raw_Data.shape = ',Raw_Data.shape)
-#print('Raw_Data[0] = ',Raw_Data[0])
+#print('Raw_Data_He3.shape = ',Raw_Data_He3.shape)
+#print('Raw_Data_He3[0] = ',Raw_Data_He3[0])
 
-XS_Data_Q2eff = [[],[],[],[],[],[],[],[]]
-XS_Data_ch_frac = [[],[],[],[],[],[],[],[]]
-XS_Data_mag_frac = [[],[],[],[],[],[],[],[]]
+XS_Data_Q2eff_He3 = [[],[],[],[],[],[],[],[]]
+XS_Data_ch_frac_He3 = [[],[],[],[],[],[],[],[]]
+XS_Data_mag_frac_He3 = [[],[],[],[],[],[],[],[]]
 
-for i in range(0,len(Raw_Data)):
-    if Raw_Data[i][4]==1:#Amroun 1994
-        XS_Data_Q2eff[0].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[0].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[0].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==2:#Collard 1965
-        XS_Data_Q2eff[1].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[1].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[1].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==3:#Szalata 1977
-        XS_Data_Q2eff[2].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[2].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[2].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==4:#Dunn 1983
-        XS_Data_Q2eff[3].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[3].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[3].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==5:#Camsonne 2016
-        XS_Data_Q2eff[4].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[4].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[4].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==6:#Nakagawa 2001
-        XS_Data_Q2eff[5].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[5].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[5].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==7:#Barcus 2019
-        XS_Data_Q2eff[6].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[6].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[6].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-    if Raw_Data[i][4]==8:#Arnold 1978
-        XS_Data_Q2eff[7].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-        XS_Data_ch_frac[7].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-        XS_Data_mag_frac[7].append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
+for i in range(0,len(Raw_Data_He3)):
+    if Raw_Data_He3[i][4]==1:#Amroun 1994
+        XS_Data_Q2eff_He3[0].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[0].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[0].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+    if Raw_Data_He3[i][4]==2:#Collard 1965
+        XS_Data_Q2eff_He3[1].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[1].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[1].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        #if XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4]>0.75:
+            #print(Raw_Data_He3[i])
+    if Raw_Data_He3[i][4]==3:#Szalata 1977
+        XS_Data_Q2eff_He3[2].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[2].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[2].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+    if Raw_Data_He3[i][4]==4:#Dunn 1983
+        XS_Data_Q2eff_He3[3].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[3].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[3].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+    if Raw_Data_He3[i][4]==5:#Camsonne 2016
+        XS_Data_Q2eff_He3[4].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[4].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[4].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+    if Raw_Data_He3[i][4]==6:#Nakagawa 2001
+        XS_Data_Q2eff_He3[5].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[5].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[5].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+    if Raw_Data_He3[i][4]==7:#Barcus 2019
+        XS_Data_Q2eff_He3[6].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[6].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[6].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+    if Raw_Data_He3[i][4]==8:#Arnold 1978
+        XS_Data_Q2eff_He3[7].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
+        XS_Data_ch_frac_He3[7].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
+        XS_Data_mag_frac_He3[7].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
 
 
-XS_Data_Q2eff = np.array(XS_Data_Q2eff)
-XS_Data_ch_frac= np.array(XS_Data_ch_frac)
-XS_Data_mag_frac= np.array(XS_Data_mag_frac)
+XS_Data_Q2eff_He3 = np.array(XS_Data_Q2eff_He3)
+XS_Data_ch_frac_He3= np.array(XS_Data_ch_frac_He3)
+XS_Data_mag_frac_He3= np.array(XS_Data_mag_frac_He3)
 
-#print(XS_Data(Raw_Data[0],Raw_Data[1])[5])
-#print(XS_Data_Q2eff)
-print('Raw_Data.shape =',Raw_Data.shape)
-print('XS_Data_Q2eff.shape =',XS_Data_Q2eff.shape)
+#print(XS_Data(Raw_Data_He3[0],Raw_Data_He3[1])[5])
+#print(XS_Data_Q2eff_He3)
+print('Raw_Data_He3.shape =',Raw_Data_He3.shape)
+print('XS_Data_Q2eff_He3.shape =',XS_Data_Q2eff_He3.shape)
 
-#Histogram the world data by charge and magnetic XS fractions.
+#Plot the world data by charge and magnetic XS fractions.
+#Plot the charge contributions.
 fig, ax = plt.subplots(figsize=(12,6))
-ax.set_ylabel('Fractional Charge Contribution to the Cross Section',fontsize=16)
-ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_ylabel('Fractional Charge Contribution to Cross Section',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_title(r'Charge Contribution to the $^3$He Cross Section',fontsize=20)
 
-#print(XS_Data_Q2eff[0],XS_Data_ch_frac[0])
-plt.plot(XS_Data_Q2eff[0],XS_Data_ch_frac[0],'bo')#Amroun 1994
-plt.plot(XS_Data_Q2eff[1],XS_Data_ch_frac[1],'ro')#Collard 1965
-plt.plot(XS_Data_Q2eff[2],XS_Data_ch_frac[2],'go')#Szalata 1977
-plt.plot(XS_Data_Q2eff[3],XS_Data_ch_frac[3],'co')#Dunn 1983
-plt.plot(XS_Data_Q2eff[4],XS_Data_ch_frac[4],'mo')#Camsonne 2016
-plt.plot(XS_Data_Q2eff[5],XS_Data_ch_frac[5],'o',color='brown')#Nakagawa 2001
-plt.plot(XS_Data_Q2eff[6],XS_Data_ch_frac[6],'o',color='orange')#Barcus 2019
-plt.plot(XS_Data_Q2eff[7],XS_Data_ch_frac[7],'yo')#Arnold 1978
+#print(XS_Data_Q2eff_He3[0],XS_Data_ch_frac_He3[0])
+plt.plot(XS_Data_Q2eff_He3[1],XS_Data_ch_frac_He3[1],'ro',label='Collard 1965')#Collard 1965
+plt.plot(XS_Data_Q2eff_He3[2],XS_Data_ch_frac_He3[2],'go',color='saddlebrown',label='Szalata 1977')#Szalata 1977
+plt.plot(XS_Data_Q2eff_He3[7],XS_Data_ch_frac_He3[7],'yo',label='Arnold 1978')#Arnold 1978
+plt.plot(XS_Data_Q2eff_He3[3],XS_Data_ch_frac_He3[3],'co',label='Dunn 1983')#Dunn 1983
+plt.plot(XS_Data_Q2eff_He3[0],XS_Data_ch_frac_He3[0],'bo',label='Amroun 1994')#Amroun 1994
+plt.plot(XS_Data_Q2eff_He3[5],XS_Data_ch_frac_He3[5],'o',color='g',label='Nakagawa 2001')#Nakagawa 2001
+plt.plot(XS_Data_Q2eff_He3[4],XS_Data_ch_frac_He3[4],'mo',label='Camsonne 2016')#Camsonne 2016
+plt.plot(XS_Data_Q2eff_He3[6],XS_Data_ch_frac_He3[6],'o',color='darkorange',label='Barcus 2019')#Barcus 2019
 
+ax.legend(loc='best',fontsize=16)
 plt.show()
 
-
-"""
-XS_Data_Q2eff = []
-XS_Data_ch_frac = []
-XS_Data_mag_frac = []
-
-for i in range(0,len(Raw_Data)):
-    XS_Data_Q2eff.append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[5])
-    XS_Data_ch_frac.append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[3])
-    XS_Data_mag_frac.append(XS_Data(Raw_Data[i][0],Raw_Data[i][1])[4])
-
-XS_Data_Q2eff = np.array(XS_Data_Q2eff)
-XS_Data_ch_frac= np.array(XS_Data_ch_frac)
-XS_Data_mag_frac= np.array(XS_Data_mag_frac)
-
-#print(XS_Data(Raw_Data[0],Raw_Data[1])[5])
-#print(XS_Data_Q2eff)
-
-#Histogram the world data by charge and magnetic XS fractions.
+#Plot the magnetic contributions.
 fig, ax = plt.subplots(figsize=(12,6))
-ax.set_ylabel('Fractional Charge Contribution to the Cross Section',fontsize=16)
-ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=16)
-ax.set_title(r'Charge Contribution to the $^3$He Cross Section',fontsize=20)
+ax.set_ylabel('Fractional Magnetic Contribution to Cross Section',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
+ax.set_title(r'Magnetic Contribution to the $^3$He Cross Section',fontsize=20)
 
-#print(XS_Data_Q2eff[0],XS_Data_ch_frac[0])
-plt.plot(XS_Data_Q2eff,XS_Data_ch_frac,'bo')
+#print(XS_Data_Q2eff_He3[0],XS_Data_ch_frac_He3[0])
+plt.plot(XS_Data_Q2eff_He3[1],XS_Data_mag_frac_He3[1],'ro',label='Collard 1965')#Collard 1965
+plt.plot(XS_Data_Q2eff_He3[2],XS_Data_mag_frac_He3[2],'o',color='saddlebrown',label='Szalata 1977')#Szalata 1977
+plt.plot(XS_Data_Q2eff_He3[7],XS_Data_mag_frac_He3[7],'yo',label='Arnold 1978')#Arnold 1978
+plt.plot(XS_Data_Q2eff_He3[3],XS_Data_mag_frac_He3[3],'co',label='Dunn 1983')#Dunn 1983
+plt.plot(XS_Data_Q2eff_He3[0],XS_Data_mag_frac_He3[0],'bo',label='Amroun 1994')#Amroun 1994
+plt.plot(XS_Data_Q2eff_He3[5],XS_Data_mag_frac_He3[5],'o',color='g',label='Nakagawa 2001')#Nakagawa 2001
+plt.plot(XS_Data_Q2eff_He3[4],XS_Data_mag_frac_He3[4],'mo',label='Camsonne 2016')#Camsonne 2016
+plt.plot(XS_Data_Q2eff_He3[6],XS_Data_mag_frac_He3[6],'o',color='darkorange',label='Barcus 2019')#Barcus 2019
 
+ax.legend(loc='best',fontsize=16)
 plt.show()
-"""
+
+###############################################################################################
+#Plot the charge and magnetic fractional contributions to the total XS for the 3H world data.#
+###############################################################################################
+#Read in data.
+with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis_Datasets.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis.txt') as f:
+    lines = f.readlines()
+
+#Remove lines with column labels.
+del lines[0]
+del lines[0]
+
+#Create arrays.
+Raw_Data_H3 = []          #Array to store raw data.
+
+#Read each line and split by the spaces and store as array.
+#['Energy (GeV)', 'Theta (Degrees)', 'Sigma Experimental', 'Uncertainties', 'Dataset']
+for line in lines:
+    event = line.split()
+    Raw_Data_H3.append(event)
+
+#Turn data into numpy array and swap char to float.
+Raw_Data_H3 = np.array(Raw_Data_H3)
+Raw_Data_H3 = np.array(Raw_Data_H3.astype('float'))
+
+#Examine data shape and check output.
+#print('Raw_Data_H3.shape = ',Raw_Data_H3.shape)
+#print('Raw_Data_H3[0] = ',Raw_Data_H3[0])
+
+XS_Data_Q2eff_H3 = [[],[],[],[],[],[],[],[]]
+XS_Data_ch_frac_H3 = [[],[],[],[],[],[],[],[]]
+XS_Data_mag_frac_H3 = [[],[],[],[],[],[],[],[]]
+
+for i in range(0,len(Raw_Data_H3)):
+    if Raw_Data_H3[i][4]==1:#Collard 1965
+        XS_Data_Q2eff_H3[0].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[5])
+        XS_Data_ch_frac_H3[0].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[3])
+        XS_Data_mag_frac_H3[0].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[4])
+    if Raw_Data_H3[i][4]==2:#Beck 1984
+        XS_Data_Q2eff_H3[1].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[5])
+        XS_Data_ch_frac_H3[1].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[3])
+        XS_Data_mag_frac_H3[1].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[4])
+    if Raw_Data_H3[i][4]==3:#Amroun 1994
+        XS_Data_Q2eff_H3[2].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[5])
+        XS_Data_ch_frac_H3[2].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[3])
+        XS_Data_mag_frac_H3[2].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[4])
+
+XS_Data_Q2eff_H3 = np.array(XS_Data_Q2eff_H3)
+XS_Data_ch_frac_H3= np.array(XS_Data_ch_frac_H3)
+XS_Data_mag_frac_H3= np.array(XS_Data_mag_frac_H3)
+
+#print(XS_Data(Raw_Data_H3[0],Raw_Data_H3[1])[5])
+#print(XS_Data_Q2eff_H3)
+print('Raw_Data_H3.shape =',Raw_Data_H3.shape)
+print('XS_Data_Q2eff_H3.shape =',XS_Data_Q2eff_H3.shape)
+
+#Plot the world data by charge and magnetic XS fractions.
+#Plot the charge contributions.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Fractional Charge Contribution to Cross Section',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
+ax.set_title(r'Charge Contribution to the $^3$H Cross Section',fontsize=20)
+
+#print(XS_Data_Q2eff_H3[0],XS_Data_ch_frac_H3[0])
+plt.plot(XS_Data_Q2eff_H3[0],XS_Data_ch_frac_H3[0],'ro',label='Collard 1965')#Collard 1965
+plt.plot(XS_Data_Q2eff_H3[1],XS_Data_ch_frac_H3[1],'go',label='Beck 1984')#Beck 1984
+plt.plot(XS_Data_Q2eff_H3[2],XS_Data_ch_frac_H3[2],'bo',label='Amroun 1994')#Amroun 1994
+
+ax.legend(loc='best',fontsize=16)
+plt.show()
+
+#Plot the magnetic contributions.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Fractional Magnetic Contribution to Cross Section',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
+ax.set_title(r'Magnetic Contribution to the $^3$H Cross Section',fontsize=20)
+
+#print(XS_Data_Q2eff_H3[0],XS_Data_ch_frac_H3[0])
+plt.plot(XS_Data_Q2eff_H3[0],XS_Data_mag_frac_H3[0],'ro',label='Collard 1965')#Collard 1965
+plt.plot(XS_Data_Q2eff_H3[1],XS_Data_mag_frac_H3[1],'go',label='Beck 1984')#Beck 1984
+plt.plot(XS_Data_Q2eff_H3[2],XS_Data_mag_frac_H3[2],'bo',label='Amroun 1994')#Amroun 1994
+
+ax.legend(loc='best',fontsize=16)
+plt.show()

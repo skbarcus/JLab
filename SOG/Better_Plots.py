@@ -18,11 +18,11 @@ show_rep = 1        #Show the representative fit from my thesis.
 show_ensemble = 1   #Show all the individual fits in the ensemble of fits.
 calc_avgs_3He = 0       #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
 calc_avgs_3H = 0    #Create a lookup table for the ensemble average of 3H form factors. Also find fit closest to this average.
-sum_qi_1 = 1        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
+sum_qi_1 = 0        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
 chi2_plots = 1      #Display a plot of the chi2 values for the fits.
 
-He3_x2_cut = 500    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500.
-H3_x2_cut = 750     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+He3_x2_cut = 10000    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500.
+H3_x2_cut = 10000     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -80,7 +80,8 @@ Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.0
 #with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
-with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_4-22-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_4-22-2022.txt') as f:
+with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Bootstrap1_5-2-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -134,7 +135,8 @@ print('Qim_He3[0]',Qim_He3[0])
 #with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
-with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_4-22-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_4-22-2022.txt') as f:
+with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Bootstrap1_5-2-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -729,8 +731,8 @@ if sum_qi_1 == 1:
     xmax = 1.875 #thesis -> 1.915.sum q1 = 1 -> 1.875
     nbins = 50
 else:
-    xmin = 1.89 #thesis -> 1.89. sum q1 = 1 -> 1.85
-    xmax = 1.915 #thesis -> 1.915.sum q1 = 1 -> 1.875
+    xmin = 1.8 #thesis -> 1.89. sum q1 = 1 -> 1.85
+    xmax = 2. #thesis -> 1.915.sum q1 = 1 -> 1.875
     nbins = 50
 
 #Define range and number of bins.
@@ -826,7 +828,7 @@ if chi2_plots==1:
     ax.set_xlabel(r'$\chi^2$',fontsize=16)
     ax.set_title(r'$^3$H SOG Fit $\chi^2$ Values',fontsize=20)
 
-    xmin = 600 
+    xmin = 200 
     xmax = 900 
     nbins = 300
 
@@ -1014,8 +1016,8 @@ if sum_qi_1==1:
     xmax = 1.75 #thesis -> 2.06. sum q1 = 1 -> 1.75
     nbins = 50
 else:
-    xmin = 1.97 #thesis -> 1.97. sum q1 = 1 -> 1.65
-    xmax = 2.06 #thesis -> 2.06. sum q1 = 1 -> 1.75
+    xmin = 1.5 #thesis -> 1.97. sum q1 = 1 -> 1.65
+    xmax = 2.5 #thesis -> 2.06. sum q1 = 1 -> 1.75
     nbins = 50
 
 #Define range and number of bins.
