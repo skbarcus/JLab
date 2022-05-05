@@ -21,8 +21,8 @@ calc_avgs_3H = 0    #Create a lookup table for the ensemble average of 3H form f
 sum_qi_1 = 0        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
 chi2_plots = 1      #Display a plot of the chi2 values for the fits.
 
-He3_x2_cut = 10000    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500.
-H3_x2_cut = 10000     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+He3_x2_cut = 500    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
+H3_x2_cut = 603     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -77,11 +77,13 @@ Qich_H3_Amroun = (0.054706, 0.172505, 0.313852, 0.072056, 0.225333, 0.020849, 0.
 Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.098445, 0.040160, 0.016696, 0.015077)#Amroun 3H
 
 #Read in the 3He data line by line.
-#with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
+with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_4-22-2022.txt') as f:
-with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Bootstrap1_5-2-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Bootstrap1_5-2-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_Fm1.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_New_Frequentist_5-3-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -107,7 +109,7 @@ print('He3_Fits.shape = ',He3_Fits.shape)
 print('He3_Fits[0] = ',He3_Fits[0])
 
 #for i in range(0,len(He3_Fits)):
-    #print('Entry',i,' Length',len(He3_Fits[i]))
+    #print('Entry',i,' Length',len(He3_Fits[i]),He3_Fits[i][0])
 
 #Split array into targets (elastic or not elastic) and training data.
 He3_Fits = np.hsplit(He3_Fits,np.array([6,18,30]))
@@ -132,11 +134,13 @@ print('Qim_He3.shape',Qim_He3.shape)
 print('Qim_He3[0]',Qim_He3[0])
 
 #Read in the 3H data line by line. Remember last 4 entries for R, Qich, and Qim are meaningless and can just be ignored.
-#with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
+with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_4-22-2022.txt') as f:
-with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Bootstrap1_5-2-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Bootstrap1_5-2-2022.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_Fm1.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_New_Frequentist_5-3-2022.txt') as f:
     lines = f.readlines()
 
 #Remove first line with column labels.
@@ -362,10 +366,11 @@ def Fch(Q2eff,Qich,R):
 def Fch_deriv(Q2eff):
     sumFch_ff = 0
     Fch_ff = 0
+    norm = 1.0        #Thesis 3He sum Qch=1.008, 3H sum Qich=1.089.
     for i in range(ngaus):
         sumFch_ff = (Qich[i]/(1.0+2.0*np.power(Ri[i],2.0)/np.power(gamma,2.0))) * ( np.cos(np.power(Q2eff,0.5)*Ri[i]) + (2.0*np.power(Ri[i],2.0)/np.power(gamma,2.0)) * (np.sin(np.power(Q2eff,0.5)*Ri[i])/(np.power(Q2eff,0.5)*Ri[i])) )
         Fch_ff = Fch_ff + sumFch_ff
-    Fch_ff =  Fch_ff * np.exp(-0.25*Q2eff*np.power(gamma,2.0))
+    Fch_ff =  Fch_ff * np.exp(-0.25*Q2eff*np.power(gamma,2.0)) * norm
     return Fch_ff
 
 #Define function to calculate rms charge radius.

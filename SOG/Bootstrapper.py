@@ -8,8 +8,8 @@ from random import random
 from random import randint
 
 #Read in data.
-with open('/home/skbarcus/JLab/SOG/3He_Data.txt') as f:
-#with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/3He_Data.txt') as f:
+with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis.txt') as f:
     lines = f.readlines()
 
 #Remove lines with column labels.
@@ -35,7 +35,7 @@ print('Raw_Data.shape = ',Raw_Data.shape)
 print('Raw_Data[0] = ',Raw_Data[0])
 
 #Create text file for bootstrapped data.
-with open('He3_Bootstrapped_Data1.txt', 'w') as f:
+with open('H3_Bootstrapped_Data3.txt', 'w') as f:
     #Add some header lines.
     f.write('Bootstrapped Data\n')
     f.write('Energy (GeV)   Theta (Degrees)   Sigma Experimental   Uncertainties   Dataset\n')

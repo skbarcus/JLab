@@ -39,6 +39,11 @@ R = (0.3, 0.7, 0.9, 1.1, 1.5, 1.6, 2.2, 2.7, 3.3, 4.2, 4.3, 4.8)
 Qich = (0.0996392,0.214304,0.0199385,0.195676,0.0785533,0.167223,0.126926,0.0549379,0.0401401,0.0100803,0.0007217,4.98962e-12)
 Qim = (0.159649,0.0316168,0.277843,0.0364955,0.0329718,0.233469,0.117059,0.0581085,0.0485212,1.77602e-12,0.0240927,8.94934e-12)
 
+#My 3H thesis values.
+R_H3_thesis = (0.3,0.8,1.4,1.9,2.5,3.3,4.1,4.8)
+Qich_H3_thesis = (0.151488,0.348372,0.29635,0.0978631,0.121983,0.0242654,0.049329,4.40751e-11)
+Qim_H3_thesis = (0.190646,0.301416,0.318972,0.159433,0.173933,0.106361,0.0665564,0.0148866)
+
 #Define charge form factor function.
 def Fch(Q2eff,Qich,R):
     sumFch_ff = 0
@@ -94,12 +99,12 @@ def XS_Data(E0,theta):
     eta = 1.0 + Q2eff/(4.0*np.power(MtHe3,2.0)*GeV2fm)       #Make sure Mt^2 is converted from GeV^2 to fm^-2 to match Q^2. 
 
     #Calculate Mott XS.
-    mottxs = (  (np.power(Z,2.)*(Ef/E0)) * (np.power(alpha,2.0)/(4.0*np.power(E0,2.0)*np.power(np.sin(theta/2.0),4.0)))*np.power(np.cos(theta/2.0),2.0)  ) * 1.0/25.7    #Convert GeV^-2 to fm^2 by multiplying by 1/25.7.
+    mottxs = (  (np.power(Z,2.)*(Ef/E0)) * (np.power(alpha,2.0)/(4.0*np.power(E0,2.0)*np.power(np.sin(theta/2.0*deg2rad),4.0)))*np.power(np.cos(theta/2.0*deg2rad),2.0)  ) * 1.0/25.7    #Convert GeV^-2 to fm^2 by multiplying by 1/25.7.
     
     #Calculate XS from FFs. Divide out Mott for pretty plots.
-    xs = (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) + (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
-    xs_ch = (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) )
-    xs_m = (1./eta) * ( (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
+    xs = mottxs * (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) + (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
+    xs_ch = mottxs * (1./eta) * ( (Q2eff/q2_3)*np.power(Fch(Q2eff,Qich,R),2.) )
+    xs_m = mottxs * (1./eta) * ( (np.power(muHe3,2.0)*Q2eff/(2*np.power(MtHe3,2)*GeV2fm))*(0.5*Q2eff/q2_3 + np.power(np.tan(theta/2),2))*np.power(Fm(Q2eff,Qim,R),2.) )
 
     ratio_ch = xs_ch / xs
     ratio_m = xs_m / xs
@@ -233,43 +238,54 @@ Raw_Data_He3 = np.array(Raw_Data_He3.astype('float'))
 XS_Data_Q2eff_He3 = [[],[],[],[],[],[],[],[]]
 XS_Data_ch_frac_He3 = [[],[],[],[],[],[],[],[]]
 XS_Data_mag_frac_He3 = [[],[],[],[],[],[],[],[]]
+XS_Data_Residual_He3 = [[],[],[],[],[],[],[],[]]
 
 for i in range(0,len(Raw_Data_He3)):
+    #Calculate the residual per data point using the SOG fit result.
+    res = (Raw_Data_He3[i][2] - XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[0] ) /  XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[0]
+    #print('XSexp =',Raw_Data_He3[i][2],'   XSfit =',XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[0],'   Residual =',res)
     if Raw_Data_He3[i][4]==1:#Amroun 1994
         XS_Data_Q2eff_He3[0].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[0].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[0].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[0].append(res)
     if Raw_Data_He3[i][4]==2:#Collard 1965
         XS_Data_Q2eff_He3[1].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[1].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[1].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[1].append(res)
         #if XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4]>0.75:
             #print(Raw_Data_He3[i])
     if Raw_Data_He3[i][4]==3:#Szalata 1977
         XS_Data_Q2eff_He3[2].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[2].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[2].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[2].append(res)
     if Raw_Data_He3[i][4]==4:#Dunn 1983
         XS_Data_Q2eff_He3[3].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[3].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[3].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[3].append(res)
     if Raw_Data_He3[i][4]==5:#Camsonne 2016
         XS_Data_Q2eff_He3[4].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[4].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[4].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[4].append(res)
     if Raw_Data_He3[i][4]==6:#Nakagawa 2001
         XS_Data_Q2eff_He3[5].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[5].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[5].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[5].append(res)
     if Raw_Data_He3[i][4]==7:#Barcus 2019
         XS_Data_Q2eff_He3[6].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[6].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[6].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
+        XS_Data_Residual_He3[6].append(res)
     if Raw_Data_He3[i][4]==8:#Arnold 1978
         XS_Data_Q2eff_He3[7].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[5])
         XS_Data_ch_frac_He3[7].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[3])
         XS_Data_mag_frac_He3[7].append(XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[4])
-
+        XS_Data_Residual_He3[7].append(res)
 
 XS_Data_Q2eff_He3 = np.array(XS_Data_Q2eff_He3)
 XS_Data_ch_frac_He3= np.array(XS_Data_ch_frac_He3)
@@ -297,7 +313,7 @@ plt.plot(XS_Data_Q2eff_He3[5],XS_Data_ch_frac_He3[5],'o',color='g',label='Nakaga
 plt.plot(XS_Data_Q2eff_He3[4],XS_Data_ch_frac_He3[4],'mo',label='Camsonne 2016')#Camsonne 2016
 plt.plot(XS_Data_Q2eff_He3[6],XS_Data_ch_frac_He3[6],'o',color='darkorange',label='Barcus 2019')#Barcus 2019
 
-ax.legend(loc='best',fontsize=16)
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3)
 plt.show()
 
 #Plot the magnetic contributions.
@@ -316,12 +332,41 @@ plt.plot(XS_Data_Q2eff_He3[5],XS_Data_mag_frac_He3[5],'o',color='g',label='Nakag
 plt.plot(XS_Data_Q2eff_He3[4],XS_Data_mag_frac_He3[4],'mo',label='Camsonne 2016')#Camsonne 2016
 plt.plot(XS_Data_Q2eff_He3[6],XS_Data_mag_frac_He3[6],'o',color='darkorange',label='Barcus 2019')#Barcus 2019
 
-ax.legend(loc='best',fontsize=16)
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3)
+plt.show()
+
+#Plot the residuals for each data point.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Residual of SOG Fit',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
+ax.set_title(r'Residuals for the $^3$He Cross Section SOG Fit',fontsize=20)
+
+#print(XS_Data_Q2eff_He3[0],XS_Data_ch_frac_He3[0])
+plt.plot(XS_Data_Q2eff_He3[1],XS_Data_Residual_He3[1],'ro',label='Collard 1965')#Collard 1965
+plt.plot(XS_Data_Q2eff_He3[2],XS_Data_Residual_He3[2],'o',color='saddlebrown',label='Szalata 1977')#Szalata 1977
+plt.plot(XS_Data_Q2eff_He3[7],XS_Data_Residual_He3[7],'yo',label='Arnold 1978')#Arnold 1978
+plt.plot(XS_Data_Q2eff_He3[3],XS_Data_Residual_He3[3],'co',label='Dunn 1983')#Dunn 1983
+plt.plot(XS_Data_Q2eff_He3[0],XS_Data_Residual_He3[0],'bo',label='Amroun 1994')#Amroun 1994
+plt.plot(XS_Data_Q2eff_He3[5],XS_Data_Residual_He3[5],'o',color='g',label='Nakagawa 2001')#Nakagawa 2001
+plt.plot(XS_Data_Q2eff_He3[4],XS_Data_Residual_He3[4],'mo',label='Camsonne 2016')#Camsonne 2016
+plt.plot(XS_Data_Q2eff_He3[6],XS_Data_Residual_He3[6],'o',color='darkorange',label='Barcus 2019')#Barcus 2019
+
+#plt.ylim([-1,1])
+
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3)
 plt.show()
 
 ###############################################################################################
 #Plot the charge and magnetic fractional contributions to the total XS for the 3H world data.#
 ###############################################################################################
+ngaus = 8      #Number of Gaussians used to fit 3H data.
+Z = 1          #Atomic number H3.
+
+#My 3H thesis values.
+R = (0.3,0.8,1.4,1.9,2.5,3.3,4.1,4.8)
+Qich = (0.151488,0.348372,0.29635,0.0978631,0.121983,0.0242654,0.049329,4.40751e-11)
+Qim = (0.190646,0.301416,0.318972,0.159433,0.173933,0.106361,0.0665564,0.0148866)
+
 #Read in data.
 with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis_Datasets.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/3H_Data_Thesis.txt') as f:
@@ -351,20 +396,27 @@ Raw_Data_H3 = np.array(Raw_Data_H3.astype('float'))
 XS_Data_Q2eff_H3 = [[],[],[],[],[],[],[],[]]
 XS_Data_ch_frac_H3 = [[],[],[],[],[],[],[],[]]
 XS_Data_mag_frac_H3 = [[],[],[],[],[],[],[],[]]
+XS_Data_Residual_H3 = [[],[],[],[],[],[],[],[]]
 
 for i in range(0,len(Raw_Data_H3)):
+    #Calculate the residual per data point using the SOG fit result.
+    res = (Raw_Data_H3[i][2] - XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[0] ) /  XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[0]
+    #print('XSexp =',Raw_Data_He3[i][2],'   XSfit =',XS_Data(Raw_Data_He3[i][0],Raw_Data_He3[i][1])[0],'   Residual =',res)
     if Raw_Data_H3[i][4]==1:#Collard 1965
         XS_Data_Q2eff_H3[0].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[5])
         XS_Data_ch_frac_H3[0].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[3])
         XS_Data_mag_frac_H3[0].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[4])
+        XS_Data_Residual_H3[0].append(res)
     if Raw_Data_H3[i][4]==2:#Beck 1984
         XS_Data_Q2eff_H3[1].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[5])
         XS_Data_ch_frac_H3[1].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[3])
         XS_Data_mag_frac_H3[1].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[4])
+        XS_Data_Residual_H3[1].append(res)
     if Raw_Data_H3[i][4]==3:#Amroun 1994
         XS_Data_Q2eff_H3[2].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[5])
         XS_Data_ch_frac_H3[2].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[3])
         XS_Data_mag_frac_H3[2].append(XS_Data(Raw_Data_H3[i][0],Raw_Data_H3[i][1])[4])
+        XS_Data_Residual_H3[2].append(res)
 
 XS_Data_Q2eff_H3 = np.array(XS_Data_Q2eff_H3)
 XS_Data_ch_frac_H3= np.array(XS_Data_ch_frac_H3)
@@ -387,7 +439,7 @@ plt.plot(XS_Data_Q2eff_H3[0],XS_Data_ch_frac_H3[0],'ro',label='Collard 1965')#Co
 plt.plot(XS_Data_Q2eff_H3[1],XS_Data_ch_frac_H3[1],'go',label='Beck 1984')#Beck 1984
 plt.plot(XS_Data_Q2eff_H3[2],XS_Data_ch_frac_H3[2],'bo',label='Amroun 1994')#Amroun 1994
 
-ax.legend(loc='best',fontsize=16)
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3)
 plt.show()
 
 #Plot the magnetic contributions.
@@ -401,5 +453,20 @@ plt.plot(XS_Data_Q2eff_H3[0],XS_Data_mag_frac_H3[0],'ro',label='Collard 1965')#C
 plt.plot(XS_Data_Q2eff_H3[1],XS_Data_mag_frac_H3[1],'go',label='Beck 1984')#Beck 1984
 plt.plot(XS_Data_Q2eff_H3[2],XS_Data_mag_frac_H3[2],'bo',label='Amroun 1994')#Amroun 1994
 
-ax.legend(loc='best',fontsize=16)
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3)
+plt.show()
+
+#Plot the residuals for each data point.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('Residual of SOG Fit',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
+ax.set_title(r'Residuals for the $^3$H Cross Section SOG Fit',fontsize=20)
+
+plt.plot(XS_Data_Q2eff_H3[0],XS_Data_Residual_H3[0],'ro',label='Collard 1965')#Collard 1965
+plt.plot(XS_Data_Q2eff_H3[1],XS_Data_Residual_H3[1],'go',label='Beck 1984')#Beck 1984
+plt.plot(XS_Data_Q2eff_H3[2],XS_Data_Residual_H3[2],'bo',label='Amroun 1994')#Amroun 1994
+
+#plt.ylim([-1,1])
+
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3)
 plt.show()
