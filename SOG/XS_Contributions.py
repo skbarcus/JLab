@@ -388,7 +388,7 @@ plt.show()
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_ylabel('Epsilon',fontsize=18)
 ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
-ax.set_title(r'World Data $Q^2$ vs. Epsilon',fontsize=20)
+ax.set_title(r'$^3$He World Data $Q^2$ vs. Epsilon',fontsize=20)
 
 outer_rad = 80 #Marker size = (diameter in points)^2 
 """
@@ -568,7 +568,7 @@ plt.show()
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_ylabel('Epsilon',fontsize=18)
 ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
-ax.set_title(r'World Data $Q^2$ vs. Epsilon',fontsize=20)
+ax.set_title(r'$^3$H World Data $Q^2$ vs. Epsilon',fontsize=20)
 
 #print(XS_Data_Q2eff_H3[0],XS_Data_ch_frac_H3[0])
 plt.plot(XS_Data_Q2eff_H3[0],XS_Data_Epsilon_H3[0],'ro',label='Collard 1965')#Collard 1965

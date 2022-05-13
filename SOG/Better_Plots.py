@@ -14,15 +14,15 @@ from scipy.stats import norm
 
 show_theory = 0     #Show Marcucci's theory curves.
 show_amroun = 1     #Show Amroun's fits. 
-show_rep = 1        #Show the representative fit from my thesis.
+show_rep = 0        #Show the representative fit from my thesis.
 show_ensemble = 1   #Show all the individual fits in the ensemble of fits.
 calc_avgs_3He = 0       #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
 calc_avgs_3H = 0    #Create a lookup table for the ensemble average of 3H form factors. Also find fit closest to this average.
 sum_qi_1 = 0        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
 chi2_plots = 1      #Display a plot of the chi2 values for the fits.
 
-He3_x2_cut = 500    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
-H3_x2_cut = 603     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+He3_x2_cut = 10000    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
+H3_x2_cut = 10000     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -444,6 +444,9 @@ He3_x2 = []
 He3_BIC = []
 He3_AIC = []
 
+#sig1 = 0.6827
+sig1 = 1
+
 #Fill the stat arrays.
 for fit in range(0,len(stats_He3)):
     if stats_He3[fit][0]<He3_x2_cut:
@@ -462,10 +465,10 @@ He3_AIC = np.sort(He3_AIC)
 
 #Calculate the 1-sigma cut values.
 He3_nfits = len(He3_x2)
-He3_nfits_1sig = round(len(He3_x2)*0.6827)
-He3_x2_1sig = He3_x2[round(len(He3_x2)*0.6827)]
-He3_BIC_1sig = He3_BIC[round(len(He3_BIC)*0.6827)]
-He3_AIC_1sig = He3_AIC[round(len(He3_AIC)*0.6827)]
+He3_nfits_1sig = round(len(He3_x2)*sig1)
+He3_x2_1sig = He3_x2[round((len(He3_x2)-1)*sig1)]
+He3_BIC_1sig = He3_BIC[round((len(He3_BIC)-1)*sig1)]
+He3_AIC_1sig = He3_AIC[round((len(He3_AIC)-1)*sig1)]
 
 #Print 1-sigma results.
 print('len(He3_x2) =',He3_nfits)
@@ -498,10 +501,10 @@ H3_AIC = np.sort(H3_AIC)
 
 #Calculate the 1-sigma cut values.
 H3_nfits = len(H3_x2)
-H3_nfits_1sig = round(len(H3_x2)*0.6827)
-H3_x2_1sig = H3_x2[round(len(H3_x2)*0.6827)]
-H3_BIC_1sig = H3_BIC[round(len(H3_BIC)*0.6827)]
-H3_AIC_1sig = H3_AIC[round(len(H3_AIC)*0.6827)]
+H3_nfits_1sig = round(len(H3_x2)*sig1)
+H3_x2_1sig = H3_x2[round((len(H3_x2)-1)*sig1)]
+H3_BIC_1sig = H3_BIC[round((len(H3_BIC)-1)*sig1)]
+H3_AIC_1sig = H3_AIC[round((len(H3_AIC)-1)*sig1)]
 
 #Print 1-sigma results.
 print('len(H3_x2) =',H3_nfits)
@@ -520,8 +523,8 @@ plt.rcParams['text.usetex'] = True
 #Make histograms of the chi2 values for the fits.
 if chi2_plots==1:
     fig, ax = plt.subplots(figsize=(12,6))
-    ax.set_ylabel('Occurrences',fontsize=16)
-    ax.set_xlabel(r'$\chi^2$',fontsize=16)
+    ax.set_ylabel('Occurrences',fontsize=18)
+    ax.set_xlabel(r'$\chi^2$',fontsize=18)
     ax.set_title(r'$^3$He SOG Fit $\chi^2$ Values',fontsize=20)
 
     xmin = 0 
@@ -616,8 +619,8 @@ if calc_avgs_3He==1:
 #Plot the 3He charge FF Fits.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Charge Form Factor',fontsize=20)
-ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=16)
-ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=18)
+ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
 
 min = 0
@@ -698,8 +701,8 @@ plt.show()
 #Plot the 3He charge distributions.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Charge Density',fontsize=20)
-ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=16)
-ax.set_xlabel('Radius (fm)',fontsize=16)
+ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=18)
+ax.set_xlabel('Radius (fm)',fontsize=18)
 #ax.set_yscale('log')
 
 #Define radii range to plot.
@@ -728,8 +731,8 @@ plt.show()
 #Plot distribution of charge radii.
 #User defined Gaussian fit.
 fig, ax = plt.subplots(figsize=(12,6))
-ax.set_ylabel('Occurrences',fontsize=16)
-ax.set_xlabel('RMS Radius (fm)',fontsize=16)
+ax.set_ylabel('Occurrences',fontsize=18)
+ax.set_xlabel('RMS Radius (fm)',fontsize=18)
 
 if sum_qi_1 == 1:
     xmin = 1.85 #thesis -> 1.89. sum q1 = 1 -> 1.85
@@ -772,8 +775,8 @@ plt.show()
 #Plot the 3He magnetic FF Fits.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Magnetic Form Factor',fontsize=20)
-ax.set_ylabel('$F_{m}(Q^2)$',fontsize=16)
-ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_ylabel('$F_{m}(Q^2)$',fontsize=18)
+ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
 
 min = 0
@@ -829,8 +832,8 @@ ngaus = 8 #Switch to 8 Gaussians for 3H.
 #Make histograms of the chi2 values for the 3H fits.
 if chi2_plots==1:
     fig, ax = plt.subplots(figsize=(12,6))
-    ax.set_ylabel('Occurrences',fontsize=16)
-    ax.set_xlabel(r'$\chi^2$',fontsize=16)
+    ax.set_ylabel('Occurrences',fontsize=18)
+    ax.set_xlabel(r'$\chi^2$',fontsize=18)
     ax.set_title(r'$^3$H SOG Fit $\chi^2$ Values',fontsize=20)
 
     xmin = 200 
@@ -926,8 +929,8 @@ if calc_avgs_3H==1:
 #Plot the 3H charge FF Fits.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Charge Form Factor',fontsize=20)
-ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=16)
-ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=18)
+ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
 
 min = 0
@@ -984,8 +987,8 @@ plt.show()
 #Plot the 3H charge distributions.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Charge Density',fontsize=20)
-ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=16)
-ax.set_xlabel('Radius (fm)',fontsize=16)
+ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=18)
+ax.set_xlabel('Radius (fm)',fontsize=18)
 #ax.set_yscale('log')
 
 #Define radii range to plot.
@@ -1013,8 +1016,8 @@ plt.show()
 #Plot distribution of charge radii.
 #User defined Gaussian fit.
 fig, ax = plt.subplots(figsize=(12,6))
-ax.set_ylabel('Occurrences',fontsize=16)
-ax.set_xlabel('RMS Radius (fm)',fontsize=16)
+ax.set_ylabel('Occurrences',fontsize=18)
+ax.set_xlabel('RMS Radius (fm)',fontsize=18)
 
 if sum_qi_1==1:
     xmin = 1.65 #thesis -> 1.97. sum q1 = 1 -> 1.65
@@ -1057,8 +1060,8 @@ plt.show()
 #Plot the 3H magnetic FF Fits.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Magnetic Form Factor',fontsize=20)
-ax.set_ylabel('$F_{m}(Q^2)$',fontsize=16)
-ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=16)
+ax.set_ylabel('$F_{m}(Q^2)$',fontsize=18)
+ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
 
 min = 0
