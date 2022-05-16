@@ -42,7 +42,9 @@ const int nvar=6; //Number of free parameters in the fit.
 const int n7 = 6; //This definition lets you use the variable as the number of array elements so you don't need to hard code it in each time.
 Double_t Q[n7]  ={1,2,3,4,5,6};
 //Double_t F[n7]  ={1,4,9,16,25,36};
-Double_t F[n7]  ={1.2,3.6,10.8,14.4,30,32.4};
+Double_t NormA = 1.2;
+Double_t NormB = 0.9;
+Double_t F[n7]  ={1*NormA,4*NormB,9*NormA,16*NormB,25*NormA,36*NormB};
 Int_t Dataset[n7] = {1,2,1,2,1,2};
 Double_t eQ[n7] = {0};
 Double_t eF[n7] ={0.2,0.4,1.8,1.6,5,3.6};
@@ -74,10 +76,12 @@ Double_t poly3_norm(Double_t *X, Int_t Dataset, Double_t *par)
   if(Dataset==1)
     {
       val = par[4] * ( par[0] + par[1]*X[0] + par[2]*pow(X[0],2) + par[3]*pow(X[0],3) );
+      cout<<"Set 1"<<endl;
     }
   else if(Dataset==2)
     {
       val = par[5] * ( par[0] + par[1]*X[0] + par[2]*pow(X[0],2) + par[3]*pow(X[0],3) );
+      cout<<"Set 2"<<endl;
     }
   
   return val;
@@ -119,8 +123,8 @@ void Fit_Data_Norm()
   // Set starting values and step sizes for parameters
   //static Double_t vstart[nvar] = {1, -4.21077e-01 , 0.0713488  , -0.00447744, 1, 1};
   //static Double_t vstart[nvar] = {1, -0.4, 0.07, -0.005, 1.0, 1.0};
-  //static Double_t vstart[nvar] = {0.0, 0.0, 1., 0.0, 1.0, 1.0};
-  static Double_t vstart[nvar] = {-0.89894, -0.150002, 0.974971, -0.00416685, 0.9, 1.2};
+  static Double_t vstart[nvar] = {0.0, 0.0, 1., 0.0, 1., 1.};
+  //static Double_t vstart[nvar] = {-0.89894, -0.150002, 0.974971, -0.00416685, 1, 1};
   //static Double_t vstart[nvar] = {0.966523, -0.400214, 0.0697626, -0.00526376, 1.0, 1.0};
   //static Double_t vstart[nvar] = {1, -0.400214, 0.0697626, -0.00526376, 1.0, 1.0};
   //static Double_t vstart[nvar] = {1, 1, 1, 1};
@@ -201,13 +205,13 @@ void Fit_Data_Norm()
       if(Dataset[i]==1)
 	{
 	  //Multiply the form factor and its uncertainty by the fitted floating normalization constant.
-	  F_norm[i] = F[i]*Fit_Pars[4];
-	  eF_norm[i] = eF[i]*Fit_Pars[4];
+	  F_norm[i] = F[i]/Fit_Pars[4];
+	  eF_norm[i] = eF[i]/Fit_Pars[4];
 	}
       else if(Dataset[i]==2)
 	{
-	  F_norm[i] = F[i]*Fit_Pars[5];
-	  eF_norm[i] = eF[i]*Fit_Pars[5];
+	  F_norm[i] = F[i]/Fit_Pars[5];
+	  eF_norm[i] = eF[i]/Fit_Pars[5];
 	}
       //cout<<"Data point "<<i<<": F_norm = "<<F_norm[i]<<" eF_norm = "<<eF_norm[i]<<endl;
     }

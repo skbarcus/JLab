@@ -67,6 +67,108 @@ def Fm(Q2eff,Qim,R):
     Fm_ff =  Fm_ff * np.exp(-0.25*Q2eff*np.power(gamma,2.0))
     return Fm_ff
 
+######################################################
+#Plot the 3He charge FF world data.
+######################################################
+
+#Read in the 3He data line by line.
+with open('/home/skbarcus/JLab/SOG/New_Fits/3He_Fch_Data.txt') as f:
+    lines = f.readlines()
+
+#Remove first line with column labels.
+del lines[0]
+del lines[0]
+
+#Create array to store data.
+FF_Data_He3_Fch = []
+
+#Read each line and split by the spaces and store as array.
+for line in lines:
+    event = line.split()
+    FF_Data_He3_Fch.append(event)
+    #print(event)
+
+#Turn data into numpy array.
+FF_Data_He3_Fch = np.array(FF_Data_He3_Fch)
+FF_Data_He3_Fch = FF_Data_He3_Fch.astype('float')
+
+#Examine data shape and check output.
+print('FF_Data_He3_Fch.shape = ',FF_Data_He3_Fch.shape)
+print('FF_Data_He3_Fch[0] = ',FF_Data_He3_Fch[0])
+
+#Plot the residuals for each data point.
+fig, ax = plt.subplots(figsize=(12,6))
+ax.set_ylabel('|$F_{ch}$|',fontsize=18)
+ax.set_xlabel(r'$Q^2$ (fm$^{-2}$)',fontsize=18)
+ax.set_title(r'$^3$He Charge Form Factor',fontsize=20)
+ax.set_yscale('log')
+#plt.ylim([-1,1])
+
+#Define Q2eff range to plot.
+Q2eff = np.linspace(0.00001,60,600)
+
+#Plot Amroun and Representative fits.
+plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_Amroun,R_He3_Amroun)), color='blue',label='Amroun Fit')
+plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_thesis,R_He3_thesis)), color='black',label='Representative Fit')
+
+FF_Data_Dataset_He3_Fch = [[],[],[],[],[],[],[]]
+
+#Sort by datasets.
+for i in range(0,len(FF_Data_He3_Fch)):
+    if FF_Data_He3_Fch[i][3]==2:#Collard 1964
+        FF_Data_Dataset_He3_Fch[0].append(FF_Data_He3_Fch[i])
+    if FF_Data_He3_Fch[i][3]==11:#Bernheim 1977
+        FF_Data_Dataset_He3_Fch[1].append(FF_Data_He3_Fch[i])
+    if FF_Data_He3_Fch[i][3]==9:#McCarthy 1977
+        FF_Data_Dataset_He3_Fch[2].append(FF_Data_He3_Fch[i])
+    if FF_Data_He3_Fch[i][3]==3:#Szalata 1977
+        FF_Data_Dataset_He3_Fch[3].append(FF_Data_He3_Fch[i])
+    if FF_Data_He3_Fch[i][3]==4:#Dunn 1983
+        FF_Data_Dataset_He3_Fch[4].append(FF_Data_He3_Fch[i])
+    if FF_Data_He3_Fch[i][3]==10:#Otterman 1984
+        FF_Data_Dataset_He3_Fch[5].append(FF_Data_He3_Fch[i])
+    if FF_Data_He3_Fch[i][3]==5:#Camsonne 2016
+        FF_Data_Dataset_He3_Fch[6].append(FF_Data_He3_Fch[i])
+
+#Turn data into numpy array.
+FF_Data_Dataset_He3_Fch[0] = np.array(FF_Data_Dataset_He3_Fch[0])
+FF_Data_Dataset_He3_Fch[1] = np.array(FF_Data_Dataset_He3_Fch[1])
+FF_Data_Dataset_He3_Fch[2] = np.array(FF_Data_Dataset_He3_Fch[2])
+FF_Data_Dataset_He3_Fch[3] = np.array(FF_Data_Dataset_He3_Fch[3])
+FF_Data_Dataset_He3_Fch[4] = np.array(FF_Data_Dataset_He3_Fch[4])
+FF_Data_Dataset_He3_Fch[5] = np.array(FF_Data_Dataset_He3_Fch[5])
+FF_Data_Dataset_He3_Fch[6] = np.array(FF_Data_Dataset_He3_Fch[6])
+FF_Data_Dataset_He3_Fch = np.array(FF_Data_Dataset_He3_Fch)
+
+#Examine data shape and check output.
+print('FF_Data_Dataset_He3_Fch.shape =',FF_Data_Dataset_He3_Fch.shape)
+print('FF_Data_Dataset_He3_Fch[0][:,0] =',FF_Data_Dataset_He3_Fch[0][:,0])
+print('FF_Data_Dataset_He3_Fch[0][:,1] =',FF_Data_Dataset_He3_Fch[0][:,1])
+print('FF_Data_Dataset_He3_Fch[0][:,2] =',FF_Data_Dataset_He3_Fch[0][:,2])
+#print('FF_Data_He3_Fch[:,0] =',FF_Data_He3_Fch[:,0])
+#print('FF_Data_Dataset_He3_Fch = ',FF_Data_Dataset_He3_Fch)
+
+#Plot the world data.
+#plt.errorbar(FF_Data[:,0],FF_Data[:,1],yerr = FF_Data[:,2],fmt='o',color='black',label='World Data')
+plt.errorbar(FF_Data_Dataset_He3_Fch[0][:,0],FF_Data_Dataset_He3_Fch[0][:,1],yerr = FF_Data_Dataset_He3_Fch[0][:,2],fmt='o',ms=5,color='red',label='Collard 1965')
+plt.errorbar(FF_Data_Dataset_He3_Fch[1][:,0],FF_Data_Dataset_He3_Fch[1][:,1],yerr = FF_Data_Dataset_He3_Fch[1][:,2],fmt='o',ms=5,color='saddlebrown',label='Bernheim 1977')
+plt.errorbar(FF_Data_Dataset_He3_Fch[2][:,0],FF_Data_Dataset_He3_Fch[2][:,1],yerr = FF_Data_Dataset_He3_Fch[2][:,2],fmt='o',ms=5,color='y',label='McCarthy 1977')
+plt.errorbar([],[],0,label=' ',alpha=0)#Fake data to make blank space to arrange legend nicely around the data.
+plt.errorbar(FF_Data_Dataset_He3_Fch[3][:,0],FF_Data_Dataset_He3_Fch[3][:,1],yerr = FF_Data_Dataset_He3_Fch[3][:,2],fmt='o',ms=5,color='y',label='Szalata 1977')
+plt.errorbar(FF_Data_Dataset_He3_Fch[4][:,0],FF_Data_Dataset_He3_Fch[4][:,1],yerr = FF_Data_Dataset_He3_Fch[4][:,2],fmt='o',ms=5,color='c',label='Dunn 1983')
+plt.errorbar(FF_Data_Dataset_He3_Fch[5][:,0],FF_Data_Dataset_He3_Fch[5][:,1],yerr = FF_Data_Dataset_He3_Fch[5][:,2],fmt='o',ms=5,color='purple',label='Otterman 1984')
+plt.errorbar(FF_Data_Dataset_He3_Fch[6][:,0],FF_Data_Dataset_He3_Fch[6][:,1],yerr = FF_Data_Dataset_He3_Fch[6][:,2],fmt='o',ms=5,color='m',label='Camsonne 2016')
+#Plot just my data point. Add errors of the ensemble 1-sigma band later.
+plt.errorbar(34.19,8.7996E-4,0,fmt='o',ms=5,color='darkorange',label='Barcus 2019')
+
+ax.legend(loc='best',fontsize=16,fancybox=True,framealpha=0.3,ncol=2)
+plt.show()
+
+
+######################################################
+#Plot the 3He magnetic FF world data.
+######################################################
+
 #Read in the 3He data line by line.
 with open('/home/skbarcus/JLab/SOG/New_Fits/3He_Fm_Data.txt') as f:
     lines = f.readlines()
@@ -76,21 +178,21 @@ del lines[0]
 del lines[0]
 
 #Create array to store data.
-FF_Data = []
+FF_Data_He3_Fm = []
 
 #Read each line and split by the spaces and store as array.
 for line in lines:
     event = line.split()
-    FF_Data.append(event)
+    FF_Data_He3_Fm.append(event)
     #print(event)
 
 #Turn data into numpy array.
-FF_Data = np.array(FF_Data)
-FF_Data = FF_Data.astype('float')
+FF_Data_He3_Fm = np.array(FF_Data_He3_Fm)
+FF_Data_He3_Fm = FF_Data_He3_Fm.astype('float')
 
 #Examine data shape and check output.
-print('FF_Data.shape = ',FF_Data.shape)
-print('FF_Data[0] = ',FF_Data[0])
+print('FF_Data_He3_Fm.shape = ',FF_Data_He3_Fm.shape)
+print('FF_Data_He3_Fm[0] = ',FF_Data_He3_Fm[0])
 
 #Plot the residuals for each data point.
 fig, ax = plt.subplots(figsize=(12,6))
@@ -107,57 +209,57 @@ Q2eff = np.linspace(0.00001,60,600)
 plt.plot(Q2eff, np.absolute(Fm(Q2eff,Qim_He3_Amroun,R_He3_Amroun)), color='blue',label='Amroun Fit')
 plt.plot(Q2eff, np.absolute(Fm(Q2eff,Qim_He3_thesis,R_He3_thesis)), color='black',label='Representative Fit')
 
-FF_Data_Dataset = [[],[],[],[],[],[],[],[],]
+FF_Data_Dataset_He3_Fm = [[],[],[],[],[],[],[],[],]
 
 #Sort by datasets.
-for i in range(0,len(FF_Data)):
-    if FF_Data[i][3]==2:#Collard 1964
-        FF_Data_Dataset[0].append(FF_Data[i])
-    if FF_Data[i][3]==11:#Bernheim 1977
-        FF_Data_Dataset[1].append(FF_Data[i])
-    if FF_Data[i][3]==9:#McCarthy 1977
-        FF_Data_Dataset[2].append(FF_Data[i])
-    if FF_Data[i][3]==4:#Dunn 1983
-        FF_Data_Dataset[3].append(FF_Data[i])
-    if FF_Data[i][3]==10:#Otterman 1984
-        FF_Data_Dataset[4].append(FF_Data[i])
-    if FF_Data[i][3]==1:#Amroun 1994
-        FF_Data_Dataset[5].append(FF_Data[i])
-    if FF_Data[i][3]==6:#Nakagawa 2001
-        FF_Data_Dataset[6].append(FF_Data[i])
-    if FF_Data[i][3]==5:#Camsonne 2016
-        FF_Data_Dataset[7].append(FF_Data[i])
+for i in range(0,len(FF_Data_He3_Fm)):
+    if FF_Data_He3_Fm[i][3]==2:#Collard 1964
+        FF_Data_Dataset_He3_Fm[0].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==11:#Bernheim 1977
+        FF_Data_Dataset_He3_Fm[1].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==9:#McCarthy 1977
+        FF_Data_Dataset_He3_Fm[2].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==4:#Dunn 1983
+        FF_Data_Dataset_He3_Fm[3].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==10:#Otterman 1984
+        FF_Data_Dataset_He3_Fm[4].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==1:#Amroun 1994
+        FF_Data_Dataset_He3_Fm[5].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==6:#Nakagawa 2001
+        FF_Data_Dataset_He3_Fm[6].append(FF_Data_He3_Fm[i])
+    if FF_Data_He3_Fm[i][3]==5:#Camsonne 2016
+        FF_Data_Dataset_He3_Fm[7].append(FF_Data_He3_Fm[i])
 
 #Turn data into numpy array.
-FF_Data_Dataset[0] = np.array(FF_Data_Dataset[0])
-FF_Data_Dataset[1] = np.array(FF_Data_Dataset[1])
-FF_Data_Dataset[2] = np.array(FF_Data_Dataset[2])
-FF_Data_Dataset[3] = np.array(FF_Data_Dataset[3])
-FF_Data_Dataset[4] = np.array(FF_Data_Dataset[4])
-FF_Data_Dataset[5] = np.array(FF_Data_Dataset[5])
-FF_Data_Dataset[6] = np.array(FF_Data_Dataset[6])
-FF_Data_Dataset[7] = np.array(FF_Data_Dataset[7])
-FF_Data_Dataset = np.array(FF_Data_Dataset)
+FF_Data_Dataset_He3_Fm[0] = np.array(FF_Data_Dataset_He3_Fm[0])
+FF_Data_Dataset_He3_Fm[1] = np.array(FF_Data_Dataset_He3_Fm[1])
+FF_Data_Dataset_He3_Fm[2] = np.array(FF_Data_Dataset_He3_Fm[2])
+FF_Data_Dataset_He3_Fm[3] = np.array(FF_Data_Dataset_He3_Fm[3])
+FF_Data_Dataset_He3_Fm[4] = np.array(FF_Data_Dataset_He3_Fm[4])
+FF_Data_Dataset_He3_Fm[5] = np.array(FF_Data_Dataset_He3_Fm[5])
+FF_Data_Dataset_He3_Fm[6] = np.array(FF_Data_Dataset_He3_Fm[6])
+FF_Data_Dataset_He3_Fm[7] = np.array(FF_Data_Dataset_He3_Fm[7])
+FF_Data_Dataset_He3_Fm = np.array(FF_Data_Dataset_He3_Fm)
 
 #Examine data shape and check output.
-print('FF_Data_Dataset.shape =',FF_Data_Dataset.shape)
-print('FF_Data_Dataset[0][:,0] =',FF_Data_Dataset[0][:,0])
-print('FF_Data_Dataset[0][:,1] =',FF_Data_Dataset[0][:,1])
-print('FF_Data_Dataset[0][:,2] =',FF_Data_Dataset[0][:,2])
+print('FF_Data_Dataset_He3_Fm.shape =',FF_Data_Dataset_He3_Fm.shape)
+print('FF_Data_Dataset_He3_Fm[0][:,0] =',FF_Data_Dataset_He3_Fm[0][:,0])
+print('FF_Data_Dataset_He3_Fm[0][:,1] =',FF_Data_Dataset_He3_Fm[0][:,1])
+print('FF_Data_Dataset_He3_Fm[0][:,2] =',FF_Data_Dataset_He3_Fm[0][:,2])
 #print('FF_Data[:,0] =',FF_Data[:,0])
 #print('FF_Data_Dataset = ',FF_Data_Dataset)
 
 #Plot the world data.
 #plt.errorbar(FF_Data[:,0],FF_Data[:,1],yerr = FF_Data[:,2],fmt='o',color='black',label='World Data')
-plt.errorbar(FF_Data_Dataset[0][:,0],FF_Data_Dataset[0][:,1],yerr = FF_Data_Dataset[0][:,2],fmt='o',ms=5,color='red',label='Collard 1965')
-plt.errorbar(FF_Data_Dataset[1][:,0],FF_Data_Dataset[1][:,1],yerr = FF_Data_Dataset[1][:,2],fmt='o',ms=5,color='saddlebrown',label='Bernheim 1977')
-plt.errorbar(FF_Data_Dataset[2][:,0],FF_Data_Dataset[2][:,1],yerr = FF_Data_Dataset[2][:,2],fmt='o',ms=5,color='y',label='McCarthy 1977')
+plt.errorbar(FF_Data_Dataset_He3_Fm[0][:,0],FF_Data_Dataset_He3_Fm[0][:,1],yerr = FF_Data_Dataset_He3_Fm[0][:,2],fmt='o',ms=5,color='red',label='Collard 1965')
+plt.errorbar(FF_Data_Dataset_He3_Fm[1][:,0],FF_Data_Dataset_He3_Fm[1][:,1],yerr = FF_Data_Dataset_He3_Fm[1][:,2],fmt='o',ms=5,color='saddlebrown',label='Bernheim 1977')
+plt.errorbar(FF_Data_Dataset_He3_Fm[2][:,0],FF_Data_Dataset_He3_Fm[2][:,1],yerr = FF_Data_Dataset_He3_Fm[2][:,2],fmt='o',ms=5,color='y',label='McCarthy 1977')
 plt.errorbar([],[],0,label=' ',alpha=0)#Fake data to make blank space to arrange legend nicely around the data.
-plt.errorbar(FF_Data_Dataset[3][:,0],FF_Data_Dataset[3][:,1],yerr = FF_Data_Dataset[3][:,2],fmt='o',ms=5,color='c',label='Dunn 1983')
-plt.errorbar(FF_Data_Dataset[4][:,0],FF_Data_Dataset[4][:,1],yerr = FF_Data_Dataset[4][:,2],fmt='o',ms=5,color='purple',label='Otterman 1984')
-plt.errorbar(FF_Data_Dataset[5][:,0],FF_Data_Dataset[5][:,1],yerr = FF_Data_Dataset[5][:,2],fmt='o',ms=5,color='blue',label='Amroun 1994')
-plt.errorbar(FF_Data_Dataset[6][:,0],FF_Data_Dataset[6][:,1],yerr = FF_Data_Dataset[6][:,2],fmt='o',ms=5,color='g',label='Nakagawa 2001')
-plt.errorbar(FF_Data_Dataset[7][:,0],FF_Data_Dataset[7][:,1],yerr = FF_Data_Dataset[7][:,2],fmt='o',ms=5,color='m',label='Camsonne 2016')
+plt.errorbar(FF_Data_Dataset_He3_Fm[3][:,0],FF_Data_Dataset_He3_Fm[3][:,1],yerr = FF_Data_Dataset_He3_Fm[3][:,2],fmt='o',ms=5,color='c',label='Dunn 1983')
+plt.errorbar(FF_Data_Dataset_He3_Fm[4][:,0],FF_Data_Dataset_He3_Fm[4][:,1],yerr = FF_Data_Dataset_He3_Fm[4][:,2],fmt='o',ms=5,color='purple',label='Otterman 1984')
+plt.errorbar(FF_Data_Dataset_He3_Fm[5][:,0],FF_Data_Dataset_He3_Fm[5][:,1],yerr = FF_Data_Dataset_He3_Fm[5][:,2],fmt='o',ms=5,color='blue',label='Amroun 1994')
+plt.errorbar(FF_Data_Dataset_He3_Fm[6][:,0],FF_Data_Dataset_He3_Fm[6][:,1],yerr = FF_Data_Dataset_He3_Fm[6][:,2],fmt='o',ms=5,color='g',label='Nakagawa 2001')
+plt.errorbar(FF_Data_Dataset_He3_Fm[7][:,0],FF_Data_Dataset_He3_Fm[7][:,1],yerr = FF_Data_Dataset_He3_Fm[7][:,2],fmt='o',ms=5,color='m',label='Camsonne 2016')
 #Plot just my data point. Add errors of the ensemble 1-sigma band later.
 plt.errorbar(34.19,2.968E-4,0,fmt='o',ms=5,color='darkorange',label='Barcus 2019')
 

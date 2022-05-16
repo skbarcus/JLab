@@ -12,17 +12,18 @@ import scipy.integrate as integrate
 from scipy.integrate import quad
 from scipy.stats import norm
 
-show_theory = 0     #Show Marcucci's theory curves.
-show_amroun = 1     #Show Amroun's fits. 
-show_rep = 0        #Show the representative fit from my thesis.
-show_ensemble = 1   #Show all the individual fits in the ensemble of fits.
-calc_avgs_3He = 0       #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
-calc_avgs_3H = 0    #Create a lookup table for the ensemble average of 3H form factors. Also find fit closest to this average.
-sum_qi_1 = 0        #Did the fits being plotted force the sum of the Qi parameters to equal 1.
-chi2_plots = 1      #Display a plot of the chi2 values for the fits.
+show_theory = 0             #Show Marcucci's theory curves.
+show_amroun = 1             #Show Amroun's fits. 
+show_rep = 1                #Show the representative fit from my thesis.
+show_ensemble_uncert = 1    #Show the 1-sigma uncertainty bands for the ensemble.
+show_ensemble = 0           #Show all the individual fits in the ensemble of fits.
+calc_avgs_3He = 0           #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
+calc_avgs_3H = 0            #Create a lookup table for the ensemble average of 3H form factors. Also find fit closest to this average.
+sum_qi_1 = 0                #Did the fits being plotted force the sum of the Qi parameters to equal 1.
+chi2_plots = 1              #Display a plot of the chi2 values for the fits.
 
-He3_x2_cut = 10000    #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
-H3_x2_cut = 10000     #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+He3_x2_cut = 500            #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
+H3_x2_cut = 603             #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -245,7 +246,9 @@ files = ['/home/skbarcus/Tritium/Analysis/SOG/3He_Fch_Conventional_Q2.txt',
          '/home/skbarcus/Tritium/Analysis/SOG/3H_Fch_Amroun_Error_Band_Down.txt',
          '/home/skbarcus/Tritium/Analysis/SOG/3H_Fch_Amroun_Error_Band_Up.txt',
          '/home/skbarcus/Tritium/Analysis/SOG/3H_Fm_Amroun_Error_Band_Down.txt',
-         '/home/skbarcus/Tritium/Analysis/SOG/3H_Fm_Amroun_Error_Band_Up.txt']
+         '/home/skbarcus/Tritium/Analysis/SOG/3H_Fm_Amroun_Error_Band_Up.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fch_Upper.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fch_Lower.txt']
 
 lines = []
 
@@ -346,6 +349,12 @@ H3_Fm_Amroun_Error_Band_Down_y = np.array(theory_test[22][1].astype('float'))
 H3_Fm_Amroun_Error_Band_Up_x = np.array(theory_test[23][0].astype('float'))
 H3_Fm_Amroun_Error_Band_Up_y = np.array(theory_test[23][1].astype('float'))
 
+#New fit ensemble uncertainty bands.
+He3_Fch_Uncert_Upper_x = np.array(theory_test[24][0].astype('float'))
+He3_Fch_Uncert_Upper_y = np.array(theory_test[24][1].astype('float'))
+He3_Fch_Uncert_Lower_x = np.array(theory_test[25][0].astype('float'))
+He3_Fch_Uncert_Lower_y = np.array(theory_test[25][1].astype('float'))
+
 print('He3_fch_conv_x.shape',He3_fch_conv_x.shape)
 print('He3_fch_conv_y.shape',He3_fch_conv_y.shape)
 
@@ -444,8 +453,8 @@ He3_x2 = []
 He3_BIC = []
 He3_AIC = []
 
-#sig1 = 0.6827
-sig1 = 1
+sig1 = 0.6827
+#sig1 = 1
 
 #Fill the stat arrays.
 for fit in range(0,len(stats_He3)):
@@ -665,6 +674,11 @@ if show_amroun==1:
 #Plot new 3He charge FF representative fit.
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_thesis,R_He3_thesis)), color='black',label='New Representative Fit') #Plot 3He representative fit.
+
+if show_ensemble_uncert==1:
+    x = np.append(He3_Fch_Uncert_Lower_x,np.flip(He3_Fch_Uncert_Upper_x))
+    y = np.append(He3_Fch_Uncert_Lower_y,np.flip(He3_Fch_Uncert_Upper_y))
+    plt.fill(x,y,color='red',alpha=0.5)
 
 #Plot theory curves.
 #Make curves smoother with spline. Doesn't help much. Leave for possible future use.
