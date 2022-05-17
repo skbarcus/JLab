@@ -248,7 +248,13 @@ files = ['/home/skbarcus/Tritium/Analysis/SOG/3He_Fch_Conventional_Q2.txt',
          '/home/skbarcus/Tritium/Analysis/SOG/3H_Fm_Amroun_Error_Band_Down.txt',
          '/home/skbarcus/Tritium/Analysis/SOG/3H_Fm_Amroun_Error_Band_Up.txt',
          '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fch_Upper.txt',
-         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fch_Lower.txt']
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fch_Lower.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fm_Upper.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_He3_Fm_Lower.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_H3_Fch_Upper.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_H3_Fch_Lower.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_H3_Fm_Upper.txt',
+         '/home/skbarcus/JLab/SOG/New_Fits/Uncertainty_Band_H3_Fm_Lower.txt']
 
 lines = []
 
@@ -354,6 +360,21 @@ He3_Fch_Uncert_Upper_x = np.array(theory_test[24][0].astype('float'))
 He3_Fch_Uncert_Upper_y = np.array(theory_test[24][1].astype('float'))
 He3_Fch_Uncert_Lower_x = np.array(theory_test[25][0].astype('float'))
 He3_Fch_Uncert_Lower_y = np.array(theory_test[25][1].astype('float'))
+
+He3_Fm_Uncert_Upper_x = np.array(theory_test[26][0].astype('float'))
+He3_Fm_Uncert_Upper_y = np.array(theory_test[26][1].astype('float'))
+He3_Fm_Uncert_Lower_x = np.array(theory_test[27][0].astype('float'))
+He3_Fm_Uncert_Lower_y = np.array(theory_test[27][1].astype('float'))
+
+H3_Fch_Uncert_Upper_x = np.array(theory_test[28][0].astype('float'))
+H3_Fch_Uncert_Upper_y = np.array(theory_test[28][1].astype('float'))
+H3_Fch_Uncert_Lower_x = np.array(theory_test[29][0].astype('float'))
+H3_Fch_Uncert_Lower_y = np.array(theory_test[29][1].astype('float'))
+
+H3_Fm_Uncert_Upper_x = np.array(theory_test[30][0].astype('float'))
+H3_Fm_Uncert_Upper_y = np.array(theory_test[30][1].astype('float'))
+H3_Fm_Uncert_Lower_x = np.array(theory_test[31][0].astype('float'))
+H3_Fm_Uncert_Lower_y = np.array(theory_test[31][1].astype('float'))
 
 print('He3_fch_conv_x.shape',He3_fch_conv_x.shape)
 print('He3_fch_conv_y.shape',He3_fch_conv_y.shape)
@@ -822,6 +843,11 @@ if show_amroun==1:
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qim_He3_thesis,R_He3_thesis)), color='black',label='New Representative Fit') #Plot 3He representative fit.
 
+if show_ensemble_uncert==1:
+    x = np.append(He3_Fm_Uncert_Lower_x,np.flip(He3_Fm_Uncert_Upper_x))
+    y = np.append(He3_Fm_Uncert_Lower_y,np.flip(He3_Fm_Uncert_Upper_y))
+    plt.fill(x,y,color='red',alpha=0.5)
+
 #Plot theory curves.
 if show_theory==1:
     plt.plot(He3_fm_conv_x, He3_fm_conv_y, color='green',label='Conventional Approach Marcucci 2016')
@@ -983,6 +1009,11 @@ if show_amroun==1:
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_H3_thesis,R_H3_thesis)), color='black',label='New Representative Fit') #Plot 3H representative fit.
 
+if show_ensemble_uncert==1:
+    x = np.append(H3_Fch_Uncert_Lower_x,np.flip(H3_Fch_Uncert_Upper_x))
+    y = np.append(H3_Fch_Uncert_Lower_y,np.flip(H3_Fch_Uncert_Upper_y))
+    plt.fill(x,y,color='red',alpha=0.5)
+
 #Plot theory curves.
 if show_theory==1:
     plt.plot(H3_fch_conv_x, H3_fch_conv_y, color='green',label='Conventional Approach Marcucci 2016')
@@ -1105,6 +1136,11 @@ if show_amroun==1:
 #Plot new 3H magnetic FF representative fit.
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qim_H3_thesis,R_H3_thesis)), color='black',label='New Representative Fit') #Plot 3H representative fit.
+
+if show_ensemble_uncert==1:
+    x = np.append(H3_Fm_Uncert_Lower_x,np.flip(H3_Fm_Uncert_Upper_x))
+    y = np.append(H3_Fm_Uncert_Lower_y,np.flip(H3_Fm_Uncert_Upper_y))
+    plt.fill(x,y,color='red',alpha=0.5)
 
 #Plot theory curves.
 if show_theory==1:
