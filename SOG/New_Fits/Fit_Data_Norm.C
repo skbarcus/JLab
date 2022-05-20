@@ -25,6 +25,7 @@
 
 #include "Math/Functor.h"
 #include "Math/RichardsonDerivator.h"
+
 /*
 const int nvar=6; //Number of free parameters in the fit.
 const int n7 = 33; //This definition lets you use the variable as the number of array elements so you don't need to hard code it in each time.
@@ -39,15 +40,19 @@ Double_t eF[n7] ={0.014, 0.012, 0.010, 0.008, 0.007, 0.006, 0.005, 0.004, 0.005,
 
 
 const int nvar=6; //Number of free parameters in the fit.
-const int n7 = 6; //This definition lets you use the variable as the number of array elements so you don't need to hard code it in each time.
-Double_t Q[n7]  ={1,2,3,4,5,6};
+const int n7 = 12; //This definition lets you use the variable as the number of array elements so you don't need to hard code it in each time.
+Double_t Q[n7]  ={1,2,3,4,5,6,7,8,9,10,11,12};
 //Double_t F[n7]  ={1,4,9,16,25,36};
-Double_t NormA = 1.2;
-Double_t NormB = 0.9;
-Double_t F[n7]  ={1*NormA,4*NormB,9*NormA,16*NormB,25*NormA,36*NormB};
-Int_t Dataset[n7] = {1,2,1,2,1,2};
+Double_t dA = 0.2;
+Double_t dB = -0.1;
+Double_t NormA = 1+dA;
+Double_t NormB = 1+dB;
+//Double_t F[n7]  ={1*NormA,4*NormB,9*NormA,16*NormB,25*NormA,36*NormB};
+Double_t F[n7] = {pow(Q[0],2)*NormA,pow(Q[1],2)*NormB,pow(Q[2],2)*NormA,pow(Q[3],2)*NormB,pow(Q[4],2)*NormA,pow(Q[5],2)*NormB,pow(Q[6],2)*NormA,pow(Q[7],2)*NormB,pow(Q[8],2)*NormA,pow(Q[9],2)*NormB,pow(Q[10],2)*NormA,pow(Q[11],2)*NormB};
+Int_t Dataset[n7] = {1,2,1,2,1,2,1,2,1,2,1,2};
 Double_t eQ[n7] = {0};
-Double_t eF[n7] ={0.2,0.4,1.8,1.6,5,3.6};
+//Double_t eF[n7] = {0.2,0.4,1.8,1.6,5,3.6};
+Double_t eF[n7] = {pow(Q[0],2)*abs(dA*0.3),pow(Q[1],2)*abs(dB*0.3),pow(Q[2],2)*abs(dA*0.3),pow(Q[3],2)*abs(dB*0.3),pow(Q[4],2)*abs(dA*0.3),pow(Q[5],2)*abs(dB*0.3),pow(Q[6],2)*abs(dA*0.3),pow(Q[7],2)*abs(dB*0.3),pow(Q[8],2)*abs(dA*0.3),pow(Q[9],2)*abs(dB*0.3),pow(Q[10],2)*abs(dA*0.3),pow(Q[11],2)*abs(dB*0.3)};
 
 
 // fixed chi2 parameters with prof. Long
@@ -70,20 +75,48 @@ Double_t poly3_norm(Double_t *X, Int_t Dataset, Double_t *par)
   //This way the polynomial coefficients are shared between data sets, but each form factor value is multiplied by a floating normalization parameter.
   //You'll also need to change the number of free parameters in TF1 and Minuit to represent the new free parameters.
   Double_t val = 0.;
-  
-  //cout<<Dataset<<endl;
+  //Double_t c0;
+  //Double_t c1;
   
   if(Dataset==1)
     {
-      val = par[4] * ( par[0] + par[1]*X[0] + par[2]*pow(X[0],2) + par[3]*pow(X[0],3) );
-      cout<<"Set 1"<<endl;
+      //c0 = 1;
+      //c1 = 0;
+      val = par[4] * poly3(X,par);
     }
   else if(Dataset==2)
     {
-      val = par[5] * ( par[0] + par[1]*X[0] + par[2]*pow(X[0],2) + par[3]*pow(X[0],3) );
-      cout<<"Set 2"<<endl;
+      //c0 = 0;
+      //c1 = 1;
+      val = par[5] * poly3(X,par);
     }
   
+  //val =  c0 * par[4] * ( par[0] + par[1]*X[0] + par[2]*pow(X[0],2) + par[3]*pow(X[0],3) ) + c1 * par[5] * ( par[0] + par[1]*X[0] + par[2]*pow(X[0],2) + par[3]*pow(X[0],3) ) ;
+
+  //val =  c0 * par[4] * poly3(X,par) + c1 * par[5] * poly3(X,par) ;
+  
+  return val;
+}
+
+Double_t poly3_norm1(Double_t *X, Int_t Dataset, Double_t *par)
+{
+  Double_t val = 0.;
+
+  val = par[4] * poly3(X,par);
+  
+  //cout<<"par[4] = "<<par[4]<<"    par[2] = "<<par[2]<<endl;
+
+  return val;
+}
+
+Double_t poly3_norm2(Double_t *X, Int_t Dataset, Double_t *par)
+{
+  Double_t val = 0.;
+
+  val = par[5] * poly3(X,par);
+
+  //cout<<"par[5] = "<<par[5]<<"    par[2] = "<<par[2]<<endl;
+
   return val;
 }
 
@@ -99,7 +132,17 @@ void FCN(Int_t&npar, Double_t*gin, Double_t&f, Double_t*par, Int_t iflag)
     Double_t count;
     for (Int_t i=0; i<n7; i++)
       {
-	P[i]= poly3_norm(&Q[i],Dataset[i],par);//Finds dataset normalizations.
+	P[i]= poly3_norm(&Q[i],Dataset[i],par);//Attempts to find dataset normalizations.
+	/*
+	if(Dataset[i]==1)
+	  {
+	    P[i]= poly3_norm1(&Q[i],Dataset[i],par);
+	  }
+	else if(Dataset[i]==2)
+	  {
+	    P[i]= poly3_norm2(&Q[i],Dataset[i],par);
+	  }
+	*/
 	A[i]= P[i]- F[i];
 	A1[i]= pow(A[i],2);
 	B[i]= pow(eF[i],2);
@@ -108,7 +151,8 @@ void FCN(Int_t&npar, Double_t*gin, Double_t&f, Double_t*par, Int_t iflag)
 	totcount= totcount+count;  
       }
     
-    f = count;
+    f = totcount;
+    //cout<<"fcn = "<<f<<endl;
 }
    
 void Fit_Data_Norm()
@@ -123,23 +167,24 @@ void Fit_Data_Norm()
   // Set starting values and step sizes for parameters
   //static Double_t vstart[nvar] = {1, -4.21077e-01 , 0.0713488  , -0.00447744, 1, 1};
   //static Double_t vstart[nvar] = {1, -0.4, 0.07, -0.005, 1.0, 1.0};
-  static Double_t vstart[nvar] = {0.0, 0.0, 1., 0.0, 1., 1.};
+  static Double_t vstart[nvar] = {0.0, 0.0, 1., 0.0, 1.3, 0.8};
+  //static Double_t vstart[nvar] = {0.0, 0.0, 1.05056, 0.0, 1.20472, 0.856687};
   //static Double_t vstart[nvar] = {-0.89894, -0.150002, 0.974971, -0.00416685, 1, 1};
   //static Double_t vstart[nvar] = {0.966523, -0.400214, 0.0697626, -0.00526376, 1.0, 1.0};
   //static Double_t vstart[nvar] = {1, -0.400214, 0.0697626, -0.00526376, 1.0, 1.0};
   //static Double_t vstart[nvar] = {1, 1, 1, 1};
   static Double_t step[4] = {0.001 , 0.01 , 0.1 , 1.0};
-  gMinuit->mnparm(0, "a1", vstart[0], step[0], -10,10,ierflg);
-  gMinuit->mnparm(1, "a2", vstart[1], step[0], -10,10,ierflg);
-  gMinuit->mnparm(2, "a3", vstart[2], step[0], -10,10,ierflg);
-  gMinuit->mnparm(3, "a4", vstart[3], step[0], -10,10,ierflg);
-  gMinuit->mnparm(4, "a5", vstart[4], step[0], 0.0,2.0,ierflg);
-  gMinuit->mnparm(5, "a6", vstart[5], step[0], 0.0,2.0,ierflg);
+  gMinuit->mnparm(0, "a1", vstart[0], step[1], -10,10,ierflg);
+  gMinuit->mnparm(1, "a2", vstart[1], step[1], -10,10,ierflg);
+  gMinuit->mnparm(2, "a3", vstart[2], step[1], 0.7,1.3,ierflg);
+  gMinuit->mnparm(3, "a4", vstart[3], step[1], -10,10,ierflg);
+  gMinuit->mnparm(4, "a5", vstart[4], step[1], 1.,1.4,ierflg);
+  gMinuit->mnparm(5, "a6", vstart[5], step[1], 0.7,1.,ierflg);
   
-  gMinuit->FixParameter(0);
-  gMinuit->FixParameter(1);
-  gMinuit->FixParameter(2);
-  gMinuit->FixParameter(3);
+  //gMinuit->FixParameter(0);
+  //gMinuit->FixParameter(1);
+  //gMinuit->FixParameter(2);
+  //gMinuit->FixParameter(3);
   //gMinuit->FixParameter(4);
   //gMinuit->FixParameter(5);
 
@@ -217,6 +262,8 @@ void Fit_Data_Norm()
     }
 
   //Plot the overall fit and the data points with the floating normalizations applied.
+  TCanvas* c_fit=new TCanvas("c_fit");
+
   TGraph *gr7= new TGraphErrors(n7,Q,F_norm,eQ,eF_norm); //with error
   gr7->SetTitle("3H Charge Form Factor ");
   gr7->GetXaxis()->SetTitle("Q^{2}(fm^{-2})");
@@ -225,8 +272,8 @@ void Fit_Data_Norm()
   gr7->SetMarkerSize(1);
   gr7->SetLineColor(1);
   gr7->SetLineWidth(1);
-  gr7->GetYaxis()->SetRangeUser(0.01,40);
-  gr7->GetXaxis()->SetRangeUser(0,6);
+  gr7->GetYaxis()->SetRangeUser(0.01,200);
+  gr7->GetXaxis()->SetRangeUser(0,12.5);
   gr7->GetXaxis()->SetTitleSize(0.04);
   gr7->GetYaxis()->SetTitleSize(0.04);
   gr7->GetXaxis()->CenterTitle(true);
@@ -235,7 +282,7 @@ void Fit_Data_Norm()
   
   //Plot Polynomial fit.
   gStyle->SetOptFit(11111);
-  TF1 * fpoly3 = new TF1("fpoly3", poly3,0,6,4);
+  TF1 * fpoly3 = new TF1("fpoly3", poly3,0,12,4);
   fpoly3->SetParameter(0,Fit_Pars[0]);
   fpoly3->SetParameter(1,Fit_Pars[1]);
   fpoly3->SetParameter(2,Fit_Pars[2]);

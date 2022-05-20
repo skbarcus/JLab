@@ -13,10 +13,10 @@ from scipy.integrate import quad
 from scipy.stats import norm
 
 show_theory = 0             #Show Marcucci's theory curves.
-show_amroun = 1             #Show Amroun's fits. 
-show_rep = 1                #Show the representative fit from my thesis.
+show_amroun = 0             #Show Amroun's fits. 
+show_rep = 0                #Show the representative fit from my thesis.
 show_ensemble_uncert = 1    #Show the 1-sigma uncertainty bands for the ensemble.
-show_ensemble = 0           #Show all the individual fits in the ensemble of fits.
+show_ensemble = 1           #Show all the individual fits in the ensemble of fits.
 calc_avgs_3He = 0           #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
 calc_avgs_3H = 0            #Create a lookup table for the ensemble average of 3H form factors. Also find fit closest to this average.
 sum_qi_1 = 0                #Did the fits being plotted force the sum of the Qi parameters to equal 1.
@@ -396,7 +396,7 @@ def Fch(Q2eff,Qich,R):
 def Fch_deriv(Q2eff):
     sumFch_ff = 0
     Fch_ff = 0
-    norm = 1.0        #Thesis 3He sum Qch=1.008, 3H sum Qich=1.089.
+    norm = 1        #Thesis 3He sum Qch=1/1.008, 3H sum Qich=1/1.089.
     for i in range(ngaus):
         sumFch_ff = (Qich[i]/(1.0+2.0*np.power(Ri[i],2.0)/np.power(gamma,2.0))) * ( np.cos(np.power(Q2eff,0.5)*Ri[i]) + (2.0*np.power(Ri[i],2.0)/np.power(gamma,2.0)) * (np.sin(np.power(Q2eff,0.5)*Ri[i])/(np.power(Q2eff,0.5)*Ri[i])) )
         Fch_ff = Fch_ff + sumFch_ff
@@ -646,12 +646,18 @@ if calc_avgs_3He==1:
 
     print('New representative 3He fit: Ri=',R_He3_New_Rep,' Qich =',Qich_He3_New_Rep,' Qim =',Qim_He3_New_Rep)
 
-#Plot the 3He charge FF Fits.
+##############################
+#Plot the 3He charge FF Fits.#
+##############################
+
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Charge Form Factor',fontsize=20)
 ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=18)
 ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
+
+plt.ylim([1e-6,1.5])
+plt.xlim([0,60])
 
 min = 0
 max = 60
@@ -678,11 +684,16 @@ if show_ensemble==1:
             radius = rms_radius(d)
             radii_3He.append(radius)
             #print ('Fch_deriv =',d,'radius =',radius)
+    
+    #Dummy plot just to add a label for the ensemble fits.
+    plt.plot(0, 0, color='red',label='SOG Fits Ensemble')
 
 radii_3He = np.array(radii_3He)
 
-#Dummy plot just to add a label for the ensemble fits.
-plt.plot(0, 0, color='red',label='Ensemble Fits')
+if show_ensemble_uncert==1:
+    x = np.append(He3_Fch_Uncert_Lower_x,np.flip(He3_Fch_Uncert_Upper_x))
+    y = np.append(He3_Fch_Uncert_Lower_y,np.flip(He3_Fch_Uncert_Upper_y))
+    plt.fill(x,y,color='red',alpha=0.5,label='SOG Fits Ensemble Uncertainty')
 
 #Plot Amroun charge FF representative fit.
 if show_amroun==1:
@@ -690,16 +701,11 @@ if show_amroun==1:
     #This works to fill the error bands. Need to flip one error band array so the fill works correctly.
     x = np.append(He3_Fch_Amroun_Error_Band_Down_x,np.flip(He3_Fch_Amroun_Error_Band_Up_x))
     y = np.append(He3_Fch_Amroun_Error_Band_Down_y,np.flip(He3_Fch_Amroun_Error_Band_Up_y))
-    plt.fill(x,y)
+    plt.fill(x,y,label='Amroun Fit Uncertainty',alpha=0.5)
 
 #Plot new 3He charge FF representative fit.
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qich_He3_thesis,R_He3_thesis)), color='black',label='New Representative Fit') #Plot 3He representative fit.
-
-if show_ensemble_uncert==1:
-    x = np.append(He3_Fch_Uncert_Lower_x,np.flip(He3_Fch_Uncert_Upper_x))
-    y = np.append(He3_Fch_Uncert_Lower_y,np.flip(He3_Fch_Uncert_Upper_y))
-    plt.fill(x,y,color='red',alpha=0.5)
 
 #Plot theory curves.
 #Make curves smoother with spline. Doesn't help much. Leave for possible future use.
@@ -738,6 +744,7 @@ fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Charge Density',fontsize=20)
 ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=18)
 ax.set_xlabel('Radius (fm)',fontsize=18)
+plt.xlim([0,5])
 #ax.set_yscale('log')
 
 #Define radii range to plot.
@@ -752,13 +759,16 @@ if show_ensemble==1:
             #print('3He Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_He3[fit],R_He3[fit],2)))
 
 #Dummy plot just to add a label for the ensemble fits.
-plt.plot(0, 0, color='red',label='Ensemble Fits')
+plt.plot(0, 0, color='red',label='SOG Fits Ensemble')
 
 #Plot Amroun charge FF representative fit.
 if show_amroun==1:
     plt.plot(r, rho_ch(r,Qich_He3_Amroun,R_He3_Amroun,2), color='blue',label='Amroun Fit')
     print('Amroun 3He Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_He3_Amroun,R_He3_Amroun,2)))
 
+#handles, labels = plt.gca().get_legend_handles_labels()
+
+#ax.legend([handles[idx] for idx in order],[labels[idx] for idx in order],loc='upper right')
 ax.legend(loc='upper right')
 plt.show()
 
@@ -774,8 +784,8 @@ if sum_qi_1 == 1:
     xmax = 1.875 #thesis -> 1.915.sum q1 = 1 -> 1.875
     nbins = 50
 else:
-    xmin = 1.8 #thesis -> 1.89. sum q1 = 1 -> 1.85
-    xmax = 2. #thesis -> 1.915.sum q1 = 1 -> 1.875
+    xmin = 1.89#1.89 #thesis -> 1.89. sum q1 = 1 -> 1.85
+    xmax = 1.91#1.91 #thesis -> 1.915.sum q1 = 1 -> 1.875
     nbins = 50
 
 #Define range and number of bins.
@@ -788,7 +798,7 @@ data_entries_1, bins_1 = np.histogram(radii_3He, bins=bins)
 binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
 
 #Fit the histogram with the Gaussian fit and some starting parameters.
-popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[1, 1.9, 0.1])
+popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[160, 1.9, 0.001])
 print('3He popt =',popt)
 #print('pcov =',pcov)
 
@@ -807,12 +817,18 @@ plt.plot(xspace, gaus_fit(xspace, *popt), color='darkorange', linewidth=2.5, lab
 #Display both the histogram and the Gaussian fit.
 plt.show()
 
-#Plot the 3He magnetic FF Fits.
+################################
+#Plot the 3He magnetic FF Fits.#
+################################
+
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$He Magnetic Form Factor',fontsize=20)
 ax.set_ylabel('$F_{m}(Q^2)$',fontsize=18)
 ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
+
+plt.ylim([1e-7,1.5])
+plt.xlim([0,60])
 
 min = 0
 max = 60
@@ -827,8 +843,8 @@ if show_ensemble==1:
         if stats_He3[fit][0]<He3_x2_cut:
             plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qim_He3[fit],R_He3[fit])), color='red', alpha=0.2)
 
-#Dummy plot just to add a label for the ensemble fits.
-plt.plot(0, 0, color='red',label='Ensemble Fits')
+    #Dummy plot just to add a label for the ensemble fits.
+    plt.plot(0, 0, color='red',label='SOG Fits Ensemble')
 
 #Plot Amroun magnetic FF representative fit.
 if show_amroun==1:
@@ -836,17 +852,17 @@ if show_amroun==1:
     #This works to fill the error bands. Need to flip one error band array so the fill works correctly.
     x = np.append(He3_Fm_Amroun_Error_Band_Down_x,np.flip(He3_Fm_Amroun_Error_Band_Up_x))
     y = np.append(He3_Fm_Amroun_Error_Band_Down_y,np.flip(He3_Fm_Amroun_Error_Band_Up_y))
-    plt.fill(x,y)
-
+    plt.fill(x,y,label='Amroun Fit Uncertainty',alpha=0.5)
 
 #Plot new 3He magnetic FF representative fit.
+
 if show_rep==1:
     plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qim_He3_thesis,R_He3_thesis)), color='black',label='New Representative Fit') #Plot 3He representative fit.
 
 if show_ensemble_uncert==1:
     x = np.append(He3_Fm_Uncert_Lower_x,np.flip(He3_Fm_Uncert_Upper_x))
     y = np.append(He3_Fm_Uncert_Lower_y,np.flip(He3_Fm_Uncert_Upper_y))
-    plt.fill(x,y,color='red',alpha=0.5)
+    plt.fill(x,y,color='red',label='SOG Fits Ensemble Uncertainty',alpha=0.5)
 
 #Plot theory curves.
 if show_theory==1:
@@ -864,7 +880,7 @@ ax.legend(loc='upper right')
 plt.show()
 
 ############################
-#3H Plots 
+#3H Plots                  #
 ############################
 
 ngaus = 8 #Switch to 8 Gaussians for 3H.
@@ -965,13 +981,18 @@ if calc_avgs_3H==1:
 
     print('New representative 3H fit: Ri=',R_H3_New_Rep,' Qich =',Qich_H3_New_Rep,' Qim =',Qim_H3_New_Rep)
 
+#############################
+#Plot the 3H charge FF Fits.#
+#############################
 
-#Plot the 3H charge FF Fits.
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Charge Form Factor',fontsize=20)
 ax.set_ylabel('$F_{ch}(Q^2)$',fontsize=18)
 ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
+
+plt.ylim([1e-7,1.5])
+plt.xlim([0,60])
 
 min = 0
 max = 60
@@ -992,10 +1013,10 @@ if show_ensemble==1:
             radii_3H.append(radius)
             #print ('Fch_deriv =',d,'radius =',radius)
 
-radii_3H = np.array(radii_3H)
+    #Dummy plot just to add a label for the ensemble fits.
+    plt.plot(0, 0, color='red',label='SOG Fits Ensemble')
 
-#Dummy plot just to add a label for the ensemble fits.
-plt.plot(0, 0, color='red',label='Ensemble Fits')
+radii_3H = np.array(radii_3H)
 
 #Plot Amroun charge FF representative fit.
 if show_amroun==1:
@@ -1003,7 +1024,7 @@ if show_amroun==1:
     #This works to fill the error bands. Need to flip one error band array so the fill works correctly.
     x = np.append(H3_Fch_Amroun_Error_Band_Down_x,np.flip(H3_Fch_Amroun_Error_Band_Up_x))
     y = np.append(H3_Fch_Amroun_Error_Band_Down_y,np.flip(H3_Fch_Amroun_Error_Band_Up_y))
-    plt.fill(x,y)
+    plt.fill(x,y,label='Amroun Fit Uncertainty',alpha=0.5)
 
 #Plot new 3H charge FF representative fit.
 if show_rep==1:
@@ -1012,7 +1033,7 @@ if show_rep==1:
 if show_ensemble_uncert==1:
     x = np.append(H3_Fch_Uncert_Lower_x,np.flip(H3_Fch_Uncert_Upper_x))
     y = np.append(H3_Fch_Uncert_Lower_y,np.flip(H3_Fch_Uncert_Upper_y))
-    plt.fill(x,y,color='red',alpha=0.5)
+    plt.fill(x,y,color='red',alpha=0.5,label='SOG Fits Ensemble Uncertainty')
 
 #Plot theory curves.
 if show_theory==1:
@@ -1034,6 +1055,7 @@ fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Charge Density',fontsize=20)
 ax.set_ylabel(r'$\rho(r)$ (e/fm$^3$)',fontsize=18)
 ax.set_xlabel('Radius (fm)',fontsize=18)
+plt.xlim([0,5])
 #ax.set_yscale('log')
 
 #Define radii range to plot.
@@ -1048,7 +1070,7 @@ if show_ensemble==1:
             #print('3H Charge Distribution Integral(0,10) =',quad(rho_ch_int, 0, 5, args=(Qich_H3[fit],R_H3[fit],1)))
 
 #Dummy plot just to add a label for the ensemble fits.
-plt.plot(0, 0, color='red',label='Ensemble Fits')
+plt.plot(0, 0, color='red',label='SOG Fits Ensemble')
 
 #Plot Amroun charge FF representative fit.
 if show_amroun==1:
@@ -1069,8 +1091,8 @@ if sum_qi_1==1:
     xmax = 1.75 #thesis -> 2.06. sum q1 = 1 -> 1.75
     nbins = 50
 else:
-    xmin = 1.5 #thesis -> 1.97. sum q1 = 1 -> 1.65
-    xmax = 2.5 #thesis -> 2.06. sum q1 = 1 -> 1.75
+    xmin = 1.95 #thesis -> 1.97. sum q1 = 1 -> 1.65
+    xmax = 2.075 #thesis -> 2.06. sum q1 = 1 -> 1.75
     nbins = 50
 
 #Define range and number of bins.
@@ -1083,7 +1105,7 @@ data_entries_1, bins_1 = np.histogram(radii_3H, bins=bins)
 binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
 
 #Fit the histogram with the Gaussian fit and some starting parameters.
-popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[1, 1.9, 0.1])
+popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[130, 2.02, 0.001])
 print('3H popt =',popt)
 #print('pcov =',pcov)
 
@@ -1102,12 +1124,18 @@ plt.plot(xspace, gaus_fit(xspace, *popt), color='darkorange', linewidth=2.5, lab
 #Display both the histogram and the Gaussian fit.
 plt.show()
 
-#Plot the 3H magnetic FF Fits.
+###############################
+#Plot the 3H magnetic FF Fits.#
+###############################
+
 fig, ax = plt.subplots(figsize=(12,6))
 ax.set_title('$^3$H Magnetic Form Factor',fontsize=20)
 ax.set_ylabel('$F_{m}(Q^2)$',fontsize=18)
 ax.set_xlabel('$Q^2$ (fm$^{-2}$)',fontsize=18)
 ax.set_yscale('log')
+
+plt.ylim([1e-7,1.5])
+plt.xlim([0,60])
 
 min = 0
 max = 60
@@ -1122,8 +1150,8 @@ if show_ensemble==1:
         if stats_H3[fit][0]<H3_x2_cut:
             plt.plot(Q2eff, np.absolute(Fch(Q2eff,Qim_H3[fit],R_H3[fit])), color='red', alpha=0.2)
 
-#Dummy plot just to add a label for the ensemble fits.
-plt.plot(0, 0, color='red',label='Ensemble Fits')
+    #Dummy plot just to add a label for the ensemble fits.
+    plt.plot(0, 0, color='red',label='SOG Fits Ensemble')
 
 #Plot Amroun magnetic FF representative fit.
 if show_amroun==1:
@@ -1131,7 +1159,7 @@ if show_amroun==1:
     #This works to fill the error bands. Need to flip one error band array so the fill works correctly.
     x = np.append(H3_Fm_Amroun_Error_Band_Down_x,np.flip(H3_Fm_Amroun_Error_Band_Up_x))
     y = np.append(H3_Fm_Amroun_Error_Band_Down_y,np.flip(H3_Fm_Amroun_Error_Band_Up_y))
-    plt.fill(x,y)
+    plt.fill(x,y,label='Amroun Fit Uncertainty',alpha=0.5)
 
 #Plot new 3H magnetic FF representative fit.
 if show_rep==1:
@@ -1140,7 +1168,7 @@ if show_rep==1:
 if show_ensemble_uncert==1:
     x = np.append(H3_Fm_Uncert_Lower_x,np.flip(H3_Fm_Uncert_Upper_x))
     y = np.append(H3_Fm_Uncert_Lower_y,np.flip(H3_Fm_Uncert_Upper_y))
-    plt.fill(x,y,color='red',alpha=0.5)
+    plt.fill(x,y,color='red',label='SOG Fits Ensemble Uncertainty',alpha=0.5)
 
 #Plot theory curves.
 if show_theory==1:
