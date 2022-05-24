@@ -27,6 +27,17 @@ A = 3                               #Number of nucleons.
 gamma = 0.8*np.power(2.0/3.0,0.5);  #Gaussian width [fm] from Amroun gamma*sqrt(3/2) = 0.8 fm.
 ngaus = 12
 
+#Test fits for when you want to examine one particular fit.
+#3He test fit parameters.
+R_He3_test = {}
+Qich_He3_test = {}
+Qim_He3_test = {}
+
+#3He test fit parameters.
+R_H3_test = {}
+Qich_H3_test = {}
+Qim_H3_test = {}
+
 #My 3He thesis values.
 R_He3_thesis = (0.3, 0.7, 0.9, 1.1, 1.5, 1.6, 2.2, 2.7, 3.3, 4.2, 4.3, 4.8)
 Qich_He3_thesis = (0.0996392,0.214304,0.0199385,0.195676,0.0785533,0.167223,0.126926,0.0549379,0.0401401,0.0100803,0.0007217,4.98962e-12)

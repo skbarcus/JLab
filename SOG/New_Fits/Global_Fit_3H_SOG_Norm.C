@@ -62,6 +62,7 @@ Int_t npar = 48;                         //Number of parameters in fit.
 Int_t ngaus = 8;                        //Number of Gaussians used to fit data.
 Int_t ngaus_Amroun = 10;
 Int_t nFB = 12;                          //Number of Fourrier-Bessel sums to use.
+const Int_t ndatasets = 3;
 //Double_t Z = 2.;                         //Atomic number He3.
 Double_t Z = 1.;                         //Atomic number H3.
 Double_t A = 3.;                        //Mass number He3.
@@ -103,6 +104,12 @@ Double_t R_Amroun[12] = {0.1,0.5,0.9,1.3,1.6,2.0,2.4,2.9,3.4,4.}; //Amroun Fit 3
 Double_t R_init[12] = {};
 Double_t R_best[12] = {};
 Double_t R_best_chi2 = 0;
+
+Double_t norm_best[ndatasets] = {};
+Double_t dataset_norm[ndatasets] = {};
+Double_t normerr[ndatasets] = {};
+Double_t norm_max = 1.5;
+Double_t norm_min = 0.5;
 
 //Double_t Qich_Amroun[12] = {0.027614,0.170847,0.219805,0.170486,0.134453,0.100953,0.074310,0.053970,0.023689,0.017502,0.002034,0.004338};//3He
 //Double_t Qim_Amroun[12] = {0.059785,0.138368,0.281326,0.000037,0.289808,0.019056,0.114825,0.042296,0.028345,0.018312,0.007843,0.};//3He
@@ -242,6 +249,76 @@ Double_t XS(float E0, float theta, Double_t *par)
   return val;
 }
 
+//Define SOG FFs and XS.
+Double_t XS_Norm(float E0, float theta, float dataset, Double_t *par)
+{
+  Double_t val = 0.;
+  Double_t mottxs = 0.;
+  Double_t fitch = 0.;
+  Double_t sumchtemp = 0.;
+  Double_t fitm = 0.;
+  Double_t summtemp = 0.;
+  
+  Ef = E0/(1.0+2.0*E0*pow(sin(theta*deg2rad/2.0),2.0)/Mt3H);
+  Double_t Q2 = 4.0*E0*Ef*pow(sin(theta*deg2rad/2.0),2.0) * GeV2fm;
+  Double_t Q2eff = pow( pow(Q2,0.5) * (1.0+(1.5*Z*alpha)/(E0*pow(GeV2fm,0.5)*1.12*pow(A,1.0/3.0))) ,2.0);   //Z=2 A=3
+  
+  Double_t W = E0 - Ef;
+  //wHe3 = (Q2*1.0/GeV2fm)/(2.0*Mt3H);
+  Double_t q2_3 = fabs(  pow(W,2.0)*GeV2fm - Q2eff  );        //Convert w^2 from GeV^2 to fm^-2 to match Q2. [fm^-2]
+  Double_t eta = 1.0 + Q2eff/(4.0*pow(Mt3H,2.0)*GeV2fm);       //Make sure Mt^2 is converted from GeV^2 to fm^-2 to match Q^2.
+  
+  Double_t Qtot = 1.0;
+  Double_t Qtemp = 0.;
+
+  //Calculate Mott XS.
+  mottxs = (  (pow(Z,2.)*(Ef/E0)) * (pow(alpha,2.0)/(4.0*pow(E0,2.0)*pow(sin(theta*deg2rad/2.0),4.0)))*pow(cos(theta*deg2rad/2.0),2.0)  ) * 1.0/25.7;    //Convert GeV^-2 to fm^2 by multiplying by 1/25.7.
+  //cout<<"mottxs = "<<mottxs<<endl;
+
+  //Define SOG for charge FF.
+  for(Int_t i=0; i<ngaus; i++)
+    { 
+      //Fit just the Qi values using predetermined R[i] values.
+      sumchtemp = (par[i]/(1.0+2.0*pow(R[i],2.0)/pow(Gamma,2.0))) * ( cos(pow(Q2eff,0.5)*R[i]) + (2.0*pow(R[i],2.0)/pow(Gamma,2.0)) * (sin(pow(Q2eff,0.5)*R[i])/(pow(Q2eff,0.5)*R[i])) );
+	
+      fitch =  fitch + sumchtemp;
+      //cout<<"fitch["<<i<<"] = "<<fitch<<endl;
+    }
+
+  fitch =  fitch * exp(-0.25*Q2eff*pow(Gamma,2.0));
+  
+  //Define SOG for magnetic FF.
+  for(Int_t i=0; i<ngaus; i++)
+    {
+      //Fit just the Qi values using predetermined R[i] values.
+      summtemp = (par[ngaus+i]/(1.0+2.0*pow(R[i],2.0)/pow(Gamma,2.0))) * ( cos(pow(Q2eff,0.5)*R[i]) + (2.0*pow(R[i],2.0)/pow(Gamma,2.0)) * (sin(pow(Q2eff,0.5)*R[i])/(pow(Q2eff,0.5)*R[i])) );	
+      
+      fitm = fitm + summtemp;
+      //cout<<"fitm["<<i<<"] = "<<fitm<<endl;
+    }
+
+  fitm = fitm * exp(-0.25*Q2eff*pow(Gamma,2.0));   //For some reason had fabs(fitm).
+
+  val = mottxs * (1./eta) * ( (Q2eff/q2_3)*pow(fitch,2.) + (pow(mu3H,2.0)*Q2eff/(2*pow(Mt3H,2)*GeV2fm))*(0.5*Q2eff/q2_3 + pow(tan(theta*deg2rad/2),2))*pow(fitm,2.) ); 
+  //cout<<"XS = "<<val<<endl;
+
+  //Add the normalizations for the individual datasets. 
+  if(dataset==1)
+    {
+      val = par[2*ngaus] * val;
+    }
+  else if(dataset==2)
+    {
+      val = par[2*ngaus+1] * val;
+    }
+  else if(dataset==3)
+    {
+      val = par[2*ngaus+2] * val;
+    }
+
+  return val;
+}
+
 //Create a Chi^2 function to minimize. 
 void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 {
@@ -255,13 +332,13 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 
       for(Int_t i=0;i<chisq_data;i++) 
 	{
-	  delta  = (sigexp[i]-XS(E0[i],theta[i],par))/uncertainty[i];
+	  delta  = (sigexp[i]-XS_Norm(E0[i],theta[i],dataset[i],par))/uncertainty[i];
 	  chisq += delta*delta;
 	  Chi2[i] = delta*delta;
 	  //residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/sigexp[i]; 
-	  residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par);
+	  residual[i] = (sigexp[i] - XS_Norm(E0[i],theta[i],dataset[i],par))/XS_Norm(E0[i],theta[i],dataset[i],par);
 	  //residual[i] = fabs(sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par); 
-	  xsfit[i] = XS(E0[i],theta[i],par);
+	  xsfit[i] = XS_Norm(E0[i],theta[i],dataset[i],par);
 	  //cout<<"xsfit["<<i<<"] = "<<xsfit[i]<<endl;
 	}
       
@@ -387,7 +464,7 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
       //fp = fopen("/home/skbarcus/Tritium/Analysis/SOG/Tritium_Data.txt","r");
       //fp = fopen("/home/skbarcus/New_SOG/SOG/New_Fits/Tritium_Data_Amroun.txt","r");
       //fp = fopen("/home/skbarcus/New_SOG/SOG/New_Fits/H3_Bootstrapped_Data1.txt","r");
-      fp = fopen("/home/skbarcus/JLab/SOG/New_Fits/Tritium_Data_Amroun.txt","r");
+      fp = fopen("/home/skbarcus/JLab/SOG/New_Fits/H3_Data+Datasets.txt","r");
       //FILE *fp = fopen("/home/skbarcus/Tritium/Analysis/SOG/Amroun_3He_Data_No_New.txt","r");
       //FILE *fp = fopen("/home/skbarcus/Tritium/Analysis/SOG/Amroun_3He_Data_Removed_Bad_Chi2.txt","r");
       //FILE *fp = fopen("/home/skbarcus/Tritium/Analysis/SOG/Amroun_3He_Data_Low_Chi2_Only.txt","r");
@@ -406,7 +483,7 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
     else
       {
 	//Read in the number of columns of data in your data file. 
-	ncols = fscanf(fp,"%f %f %f %f",&E0temp, &thetatemp, &sigexptemp, &uncertaintytemp, &datasettemp);
+	ncols = fscanf(fp,"%f %f %f %f %f",&E0temp, &thetatemp, &sigexptemp, &uncertaintytemp, &datasettemp);
 	if (ncols < 0) break;   
 	//cout<<"ncols = "<<ncols<<endl;
 	//cout<<thetatemp<<"   "<<qefftemp<<"   "<<sigexptemp<<"   "<<uncertaintytemp<<endl;
@@ -425,8 +502,8 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
   fclose(fp);
 
   //Create an output file to store fit results.
-  std::ofstream output (Form("/home/skbarcus/JLab/SOG/New_Fits/Output/H3_Norm_Test.txt",nout), std::ofstream::out);
-  output<<"Chi2   rChi2   BIC   AIC    Qichtot    Qimtot  R[0]  R[1]  R[2]  R[3]  R[4]  R[5]  R[6]  R[7]  R[8]  R[9]  R[10]  R[11]  Q0ch    Q1ch    Q2ch    Q3ch    Q4ch    Q5ch    Q6ch    Q7ch    Q8ch    Q9ch    Q10ch    Q11ch    Q0m    Q1m    Q2m    Q3m    Q4m    Q5m    Q6m    Q7m    Q8m    Q9m    Q10m    Q11m"<<endl;
+  std::ofstream output (Form("/home/skbarcus/JLab/SOG/New_Fits/Output/H3_Norm_Test.txt"), std::ofstream::out);
+  output<<"Chi2   rChi2   BIC   AIC    Qichtot    Qimtot  R[0]  R[1]  R[2]  R[3]  R[4]  R[5]  R[6]  R[7]  R[8]  R[9]  R[10]  R[11]  Q0ch    Q1ch    Q2ch    Q3ch    Q4ch    Q5ch    Q6ch    Q7ch    Q8ch    Q9ch    Q10ch    Q11ch    Q0m    Q1m    Q2m    Q3m    Q4m    Q5m    Q6m    Q7m    Q8m    Q9m    Q10m    Q11m    norm1    norm2    norm3    norm4    norm5    norm6    norm7    norm8"<<endl;
 
   //Begin loop over fit with different Ri values each time.
   for(Int_t q=0;q<loops;q++)
@@ -535,7 +612,7 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 	}
 
       //Initiate Minuit for minimization.
-      TMinuit *gMinuit = new TMinuit(24);  //initialize TMinuit with a maximum of 24 params
+      TMinuit *gMinuit = new TMinuit(27);  //initialize TMinuit with a maximum of 24 params for SOG + 3 dataset normalization pars.
       gMinuit->SetFCN(fcn);
 
       Double_t arglist[10];
@@ -563,6 +640,11 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 	  //gMinuit->mnparm(ngaus+i, Form("Qim%d",i+1), Qim[i], stepsize[0], Qim[i]-0.001,Qim[i]+0.001,ierflg);
 	  //gMinuit->mnparm(ngaus+i, Form("Qim%d",i+1), Qim[i], stepsize[0], Qim[i]-0.000000000001,Qim[i]+0.000000000001,ierflg);
 	  //gMinuit->mnparm(ngaus+i, Form("Qim%d",i+1), Qim[i], stepsize[0], Qim[i]-0.05,Qim[i]+0.05,ierflg);
+	}
+      //Start the dataset normalizations at 1.
+      for(Int_t i=0;i<ndatasets;i++)
+	{
+	  gMinuit->mnparm(2*ngaus+i, Form("Norm%d",i+1), 1.0, stepsize[0], norm_min, norm_max, ierflg);
 	}
   
       // Now ready for minimization step
@@ -603,11 +685,16 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 	      gMinuit->GetParameter(i,Qich[i],Qicherr[i]);
 	      gMinuit->GetParameter(ngaus+i,Qim[i],Qimerr[i]);
 	    }
+	  for(Int_t i=0;i<ndatasets;i++)
+	    {
+	      gMinuit->GetParameter(2*ngaus+i,dataset_norm[i],normerr[i]);
+	    }
 	  for(Int_t i=0;i<ngaus;i++)
 	    {
 	      R_best[i] = R[i];
 	      Qich_best[i] = Qich[i];
 	      Qim_best[i] = Qim[i];
+	      norm_best[i] = dataset_norm[i];
 	    }
 
 	  for(Int_t i=0;i<ngaus;i++)
@@ -650,6 +737,10 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 		      //gMinuit->mnparm(ngaus+j, Form("Qim%d",j+1), Qim[j], stepsize[0], 0.,1.,ierflg); //Starting guesses are Amroun's Qi.
 		      gMinuit->mnparm(ngaus+j, Form("Qim%d",j+1), Qim_best[j], stepsize[0], 0.,1.,ierflg); //Starting guesses are best fit Qi values so far.
 		    }
+		  for(Int_t j=0;j<ndatasets;j++)
+		    {
+		      gMinuit->mnparm(2*ngaus+j, Form("Norm%d",j+1), norm_best[i], stepsize[0], norm_min, norm_max, ierflg);
+		    }
 	      
 		  arglist[0] = 10000.;//Max calls. 50000.
 		  arglist[1] = 0.1;//Tolerance for convergance. 1 seems to give the same results as 0.1.
@@ -667,12 +758,21 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 		      gMinuit->GetParameter(ngaus+j,Qim[j],Qimerr[j]);
 		      cout<<"R["<<j<<"] = "<<R[j]<<"   Qich["<<j<<"] = "<<Qich[j]<<"   Qim["<<j<<"] = "<<Qim[j]<<endl;
 		    }
+		  for(Int_t j=0;j<ndatasets;j++)
+		    {
+		      gMinuit->GetParameter(2*ngaus+j,dataset_norm[j],normerr[j]);
+		      cout<<"Dataset "<<j+1<<" normalization constant = "<<dataset_norm[j]<<endl;
+		    }
 		  if(amin<R_best_chi2)
 		    {
 		      for(Int_t j=0;j<ngaus;j++)
 			{
 			  Qich_best[j] = Qich[j];
 			  Qim_best[j] = Qim[j];
+			}
+		      for(Int_t j=0;j<ndatasets;j++)
+			{
+			  norm_best[j] = dataset_norm[j];
 			}
 		      R_best[i] = R[i]; //Store best Ri value thus far.
 		      R_best_chi2 = amin; //Store the best updated chi2 so far.
@@ -704,6 +804,10 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 		      //gMinuit->mnparm(ngaus+j, Form("Qim%d",j+1), Qim[j], stepsize[0], 0.,1.,ierflg); //Starting guesses are Amroun's Qi.
 		      gMinuit->mnparm(ngaus+j, Form("Qim%d",j+1), Qim_best[j], stepsize[0], 0.,1.,ierflg); //Starting guesses are best fit Qi values so far.
 		    }
+		  for(Int_t j=0;j<ndatasets;j++)
+		    {
+		      gMinuit->mnparm(2*ngaus+j, Form("Norm%d",j+1), norm_best[i], stepsize[0], norm_min, norm_max, ierflg);
+		    }
 
 		  arglist[0] = 10000.;//Max calls. 50000.
 		  arglist[1] = 0.1;//Tolerance for convergance. 1 seems to give the same results as 0.1.
@@ -721,12 +825,21 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 		      gMinuit->GetParameter(ngaus+j,Qim[j],Qimerr[j]);
 		      cout<<"R["<<j<<"] = "<<R[j]<<"   Qich["<<j<<"] = "<<Qich[j]<<"   Qim["<<j<<"] = "<<Qim[j]<<endl;
 		    }
+		  for(Int_t j=0;j<ndatasets;j++)
+		    {
+		      gMinuit->GetParameter(2*ngaus+j,dataset_norm[j],normerr[j]);
+		      cout<<"Dataset "<<j+1<<" normalization constant = "<<dataset_norm[j]<<endl;
+		    }
 		  if(amin<R_best_chi2)
 		    {
 		      for(Int_t j=0;j<ngaus;j++)
 			{
 			  Qich_best[j] = Qich[j];
 			  Qim_best[j] = Qim[j];
+			}
+		      for(Int_t j=0;j<ndatasets;j++)
+			{
+			  norm_best[j] = dataset_norm[j];
 			}
 		      R_best[i] = R[i]; //Store best Ri value thus far.
 		      R_best_chi2 = amin; //Store the best updated chi2 so far.
@@ -769,8 +882,13 @@ void Global_Fit_3H_SOG_Norm(Int_t nout = 1)
 	  //cout<<"Qim["<<i<<"] = "<<Qim[i]<<"   Qimerr["<<i<<"] = "<<Qimerr[i]<<endl;
 	}
 
+      for(Int_t i=0;i<ndatasets;i++)
+	{
+	  gMinuit->GetParameter(2*ngaus+i,dataset_norm[i],normerr[i]);
+	}
+
       //Fill text file with fcn (chi2), Qichtot, Qimtot, Ri, Qich, Qim.
-      output<<amin<<" "<<amin/(datapts-2*ngaus-1)<<" "<<datapts*TMath::Log(amin/datapts)+TMath::Log(datapts)*ngaus<<" "<<datapts*TMath::Log(amin/datapts)+2*ngaus<<" "<<Qichtot<<" "<<Qimtot<<" "<<R[0]<<" "<<R[1]<<" "<<R[2]<<" "<<R[3]<<" "<<R[4]<<" "<<R[5]<<" "<<R[6]<<" "<<R[7]<<" "<<R[8]<<" "<<R[9]<<" "<<R[10]<<" "<<R[11]<<" "<<Qich[0]<<" "<<Qich[1]<<" "<<Qich[2]<<" "<<Qich[3]<<" "<<Qich[4]<<" "<<Qich[5]<<" "<<Qich[6]<<" "<<Qich[7]<<" "<<Qich[8]<<" "<<Qich[9]<<" "<<Qich[10]<<" "<<Qich[11]<<" "<<Qim[0]<<" "<<Qim[1]<<" "<<Qim[2]<<" "<<Qim[3]<<" "<<Qim[4]<<" "<<Qim[5]<<" "<<Qim[6]<<" "<<Qim[7]<<" "<<Qim[8]<<" "<<Qim[9]<<" "<<Qim[10]<<" "<<Qim[11]<<endl;
+      output<<amin<<" "<<amin/(datapts-2*ngaus-1)<<" "<<datapts*TMath::Log(amin/datapts)+TMath::Log(datapts)*ngaus<<" "<<datapts*TMath::Log(amin/datapts)+2*ngaus<<" "<<Qichtot<<" "<<Qimtot<<" "<<R[0]<<" "<<R[1]<<" "<<R[2]<<" "<<R[3]<<" "<<R[4]<<" "<<R[5]<<" "<<R[6]<<" "<<R[7]<<" "<<R[8]<<" "<<R[9]<<" "<<R[10]<<" "<<R[11]<<" "<<Qich[0]<<" "<<Qich[1]<<" "<<Qich[2]<<" "<<Qich[3]<<" "<<Qich[4]<<" "<<Qich[5]<<" "<<Qich[6]<<" "<<Qich[7]<<" "<<Qich[8]<<" "<<Qich[9]<<" "<<Qich[10]<<" "<<Qich[11]<<" "<<Qim[0]<<" "<<Qim[1]<<" "<<Qim[2]<<" "<<Qim[3]<<" "<<Qim[4]<<" "<<Qim[5]<<" "<<Qim[6]<<" "<<Qim[7]<<" "<<Qim[8]<<" "<<Qim[9]<<" "<<Qim[10]<<" "<<Qim[11]<<" "<<dataset_norm[0]<<" "<<dataset_norm[1]<<" "<<dataset_norm[2]<<endl;
 
 
     }//End loop over minimization for different Ri values or bootstrapping.

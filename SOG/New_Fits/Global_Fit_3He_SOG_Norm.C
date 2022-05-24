@@ -117,8 +117,8 @@ Double_t R_best_chi2 = 0;
 Double_t norm_best[ndatasets] = {};
 Double_t dataset_norm[ndatasets] = {};
 Double_t normerr[ndatasets] = {};
-Double_t norm_max = 1.2;
-Double_t norm_min = 0.8;
+Double_t norm_max = 1.3;
+Double_t norm_min = 0.7;
 
 //3He
 Double_t Qich[12] = {0.0996392,0.214304,0.0199385,0.195676,0.0785533,0.167223,0.126926,0.0549379,0.0401401,0.0100803,0.0007217,4.98962e-12};//3He final #30.
@@ -368,8 +368,8 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 	  //cout<<"XS["<<i<<"] = "<<XS(E0[i],theta[i],par)<<endl;
 	  //residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/sigexp[i]; 
 	  //residual[i] = fabs(sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par);
-	  residual[i] = (sigexp[i] - XS(E0[i],theta[i],par))/XS(E0[i],theta[i],par); 
-	  xsfit[i] = XS(E0[i],theta[i],par);
+	  residual[i] = (sigexp[i] - XS_Norm(E0[i],theta[i],dataset[i],par))/XS_Norm(E0[i],theta[i],dataset[i],par); 
+	  xsfit[i] = XS_Norm(E0[i],theta[i],dataset[i],par);
 	  //cout<<"xsfit["<<i<<"] = "<<xsfit[i]<<endl;
 	}
 
@@ -524,12 +524,6 @@ fp = fopen("/home/skbarcus/JLab/SOG/New_Fits/He3_Data+Datasets.txt","r");
 	dataset[nlines-skip] = datasettemp;
 
 	Q2[nlines-skip] = 4 * E0[nlines-skip] * (E0[nlines-skip]/(1.0+2.0*E0[nlines-skip]*pow(sin(theta[nlines-skip]*deg2rad/2.0),2.0)/MtHe3)) * pow(sin(theta[nlines-skip]*deg2rad/2.0),2.) * GeV2fm;
-
-	//cout<<"Test["<<nlines-skip<<"] = "<<pow(sin(theta[nlines-skip]*deg2rad/2.0),2.)<<endl;
-	//cout<<"Test["<<nlines-skip<<"] = "<<theta[nlines-skip]<<endl;
-	//cout<<"Test["<<nlines-skip<<"] = "<<deg2rad<<endl;
-	//cout<<"Test["<<nlines-skip<<"] = "<<theta[nlines-skip]*deg2rad<<endl;
-	//cout<<"Q2["<<nlines-skip<<"] = "<<Q2[nlines-skip]<<endl;
 
 	nlines++;
       }

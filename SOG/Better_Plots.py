@@ -13,8 +13,8 @@ from scipy.integrate import quad
 from scipy.stats import norm
 
 show_theory = 0             #Show Marcucci's theory curves.
-show_amroun = 0             #Show Amroun's fits. 
-show_rep = 0                #Show the representative fit from my thesis.
+show_amroun = 1             #Show Amroun's fits. 
+show_rep = 1                #Show the representative fit from my thesis.
 show_ensemble_uncert = 1    #Show the 1-sigma uncertainty bands for the ensemble.
 show_ensemble = 1           #Show all the individual fits in the ensemble of fits.
 calc_avgs_3He = 0           #Create a lookup table for the ensemble average of 3He form factors. Also find fit closest to this average.
@@ -78,7 +78,8 @@ Qich_H3_Amroun = (0.054706, 0.172505, 0.313852, 0.072056, 0.225333, 0.020849, 0.
 Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.098445, 0.040160, 0.016696, 0.015077)#Amroun 3H
 
 #Read in the 3He data line by line.
-with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
+with open('/home/skbarcus/JLab/SOG/New_Fits/Output/He3_Norm_Test.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_4-22-2022.txt') as f:
@@ -135,7 +136,8 @@ print('Qim_He3.shape',Qim_He3.shape)
 print('Qim_He3[0]',Qim_He3[0])
 
 #Read in the 3H data line by line. Remember last 4 entries for R, Qich, and Qim are meaningless and can just be ignored.
-with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
+#with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
+with open('/home/skbarcus/JLab/SOG/New_Fits/Output/H3_Norm_Test.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_4-22-2022.txt') as f:

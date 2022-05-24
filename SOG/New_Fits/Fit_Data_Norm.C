@@ -279,6 +279,10 @@ void Fit_Data_Norm()
   gr7->GetXaxis()->CenterTitle(true);
   gr7->GetYaxis()->CenterTitle(true);
   gr7->Draw("a*");
+
+  //TGraph *gr8= new TGraphErrors(n7,Q,F,eQ,eF);
+  //gr8->SetMarkerColor(4);
+  //gr8->Draw("* same");
   
   //Plot Polynomial fit.
   gStyle->SetOptFit(11111);
