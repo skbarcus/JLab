@@ -1,0 +1,547 @@
+#include <TH2F.h>
+#include <TChain.h>
+#include <TCanvas.h>
+#include <vector>
+#include <iostream>
+#include <TSystem.h>
+#include "hcal.h"
+#include <vector>
+#include <TStopwatch.h>
+#include <TMath.h>
+#include <TF1.h>
+#include<TStyle.h>
+#include<TList.h>
+#include<TChain.h>
+using namespace std;
+
+Int_t timing_method = 3; //0 = TDC timing using trigger copy as ref ch. 1 = fADC timing using a Landau to find the peak location for each hit (require a TDC hit too). 2 = TDC timing with fADC cuts above and below target PMT requiring an fADC peak and the 6 surrounding tubes requiring no fADC peak. Ref ch is avg of above and below TDC times. 3 = fADC integrals. Takes integral of each fADC hit (requiring TDC hit too) and makes a histo for each PMT. 4 = Plot just one module fADC integral, TDC time spectrum with channel below as ref time, and same fADC integral with optional cut on TDC time. 5 = TDC time with reference time subtracted when ref is avg of above and below tubes vs. fadc integral. 6 = Top PMT of three vertically - bottom PMT's TDC times vs. fADC integrals. 7 = Calculate time over threshold using only fADCs and a Landau fit of the signal.
+Double_t entry;
+Int_t gCurrentEntry = 0;
+Int_t DISP_MIN_SAMPLE = 0;
+Int_t DISP_MAX_SAMPLE = 30;
+const Int_t DISP_FADC_SAMPLES = (DISP_MAX_SAMPLE-DISP_MIN_SAMPLE);
+Int_t min_time = -300;
+Int_t max_time = 50;
+Int_t bins = 100;
+Double_t fadc_int_max_cut = 1000;
+Double_t fadc_int_min_cut = 500;
+Int_t r,c,n,idx,ledbit;
+Int_t nevt;
+Int_t refrow = 1000;     //Counting from 1. 
+Int_t refcol = 1000;     //Counting from 1.
+Int_t timerow = 1;    //Counting from 1.
+Int_t timecol = 9;    //Counting from 1.
+const Int_t nleds = 5;      //Number of LEDs used in voltage scan.
+const Int_t kNrows = 12;
+const Int_t kNcols = 12;
+const Int_t channels = kNrows * kNcols;
+Int_t limit_evts = 0;                     //0-> analyze all events. 1-> only analyze events up until max_evts.
+Int_t loop_max = 0;                       //Dummy variable set equal to max_evts or nevt for the loop.
+Int_t max_evts = 6000;                   //Maximum number of events to analyze if limit_evts = 1.
+//const Int_t maxevts = 10000;
+Double_t ind_res[144];
+//vector<double> temp(0,0);
+//vector<vector<double>> timing(144,temp);
+//Double_t times[1000000][144] = {};
+Double_t f1_res = 0.112;//0.112
+Double_t fadc_res = 4.;
+TChain *T = 0;
+std::string user_input;
+Int_t skip = 3;                            //Gives number of lines to skip at top of data file. 
+Int_t nlines = 0;                          //Counts number of lines in the data file. 
+Int_t ncols;                               //Set how many columns of data we have in the data file.
+char str[1000];                           //Variable to read lines of the data file.
+Float_t mod[channels], pedestal[channels], threshold[channels], ped_std_dev[channels];
+Float_t led_means[channels][nleds],led_std_dev[channels][nleds],npe[channels][nleds];
+Float_t mod_temp, pedestal_temp, threshold_temp;
+
+//Create Gaussian for fitting.
+Double_t fit_gaus(Double_t *X,Double_t *par) 
+{
+  Double_t fitval = par[0]*TMath::Exp(-0.5*pow(((X[0]-par[1])/par[2]),2));
+  return fitval;
+}
+
+TH1F *histos[kNrows][kNcols];
+
+TH1F* MakeHisto(Int_t row, Int_t col, Int_t bins)
+{
+  TH1F *h = new TH1F(TString::Format("h%02d%02d",row,col),
+		     TString::Format("%d-%d",row+1,col+1),bins,DISP_MIN_SAMPLE,DISP_MAX_SAMPLE);
+  h->SetStats(0);
+  h->SetLineWidth(2);
+  return h;
+}
+
+//Create Landau to fit the fADC pulses.
+Double_t fit_landau(Double_t *X, Double_t *par) 
+{
+  Double_t landau = par[0]*TMath::Landau(X[0],par[1],par[2])+par[3];
+  return landau;
+}
+
+void LED_Voltage_Scans(Int_t run = 501)
+//Int_t Test_Display(Int_t run = 290)
+{
+  //Define a new stopwatch.
+  TStopwatch *st=new TStopwatch();
+  st->Start(kTRUE);
+
+  FILE *fp;
+  fp = fopen("/home/daq/test_fadc/Pedestals.txt","r");
+ //Read in data.
+  while (1) 
+    {
+      //Skips the first skip lines of the file. 
+      if (nlines < skip)
+	{
+	  fgets(str,1000,fp);
+	  nlines++;
+	}
+      //Reads the two columns of data into x and y.
+      else
+	{
+	  //Read in the number of columns of data in your data file. 
+	  ncols = fscanf(fp,"%f %f %f", &mod_temp, &pedestal_temp, &threshold_temp);
+	  
+	  if (ncols < 0) break;    
+	  
+	  mod[nlines-skip] = mod_temp;
+	  pedestal[nlines-skip] = pedestal_temp;
+	  //Threshold is defined as 1/4 of the average peak height minus the pedestal during a real event. Then add back in the pedestal value since the Landau fit I use doesn't subtract the pedestal.
+	  threshold[nlines-skip] = (threshold_temp-pedestal[nlines-skip])/4.0+pedestal[nlines-skip];
+
+	  nlines++;
+	}
+    }
+
+  if(!T) 
+    { 
+      T = new TChain("T");
+      
+      //============  Reading the Rootfile =======================//
+      
+      const TString rootfilePath = "/home/daq/test_fadc/rootfiles/";
+      std::ostringstream str;
+      str << rootfilePath<<"fadc_f1tdc_"<<run;
+      TString basename = str.str().c_str();
+      TString rootfile = basename + ".root";
+      cout<<basename<<endl;
+      
+      Long_t split=0;
+      char* file = 0;
+      
+      //====adding splits rootfiles =======================//
+      
+      Long_t u=0;
+      while ( !gSystem->AccessPathName(rootfile.Data()) ) 
+	{
+	  T->Add(rootfile.Data());
+	  cout << "ROOT file " << rootfile << " added to TChain." << endl;
+	  u++;
+	  rootfile = basename + "__" + u + ".root";
+	}
+      
+      if(!T->GetEntries())
+	{
+	  cerr<< "No root file was found" << endl;
+	  return;
+	}
+      //==finish adding splits rootfiles=====================//
+      
+      T->SetBranchStatus("*",0);
+      T->SetBranchStatus("sbs.hcal.*",1);
+      T->SetBranchAddress("sbs.hcal.nsamps",hcalt::nsamps);       //Number of samples for given row-col
+      T->SetBranchAddress("sbs.hcal.a",hcalt::a);                 //Raw ADC amplitudes
+      T->SetBranchAddress("sbs.hcal.tdc",hcalt::tdc);             //Raw TDC value
+      //T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);
+      //T->SetBranchAddress("sbs.hcal.ledcount",&hcalt::ledcount);
+      T->SetBranchAddress("sbs.hcal.samps",hcalt::samps);         //RAW ADC samples
+      T->SetBranchAddress("sbs.hcal.samps_idx",hcalt::samps_idx); //Index in samples vector for given row-col module 
+      T->SetBranchAddress("sbs.hcal.row",hcalt::row);             //Row for block in data vectors
+      T->SetBranchAddress("sbs.hcal.col",hcalt::col);             //Col for block in data vectors
+      T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);       //Stores the LED bit.
+      T->SetBranchStatus("Ndata.sbs.hcal.row",1);
+      T->SetBranchAddress("Ndata.sbs.hcal.row",&hcalt::ndata);    //Number of fADC samples per PMT per event.
+      std::cerr << "Opened up tree with nentries=" << T->GetEntries() << std::endl;
+    }
+  
+  for(Int_t r = 0; r < kNrows; r++) 
+    {
+      for(Int_t c = 0; c < kNcols; c++) 
+	{
+	  histos[r][c] = MakeHisto(r,c,DISP_FADC_SAMPLES);
+	}
+    }
+  
+  T->GetEntry(gCurrentEntry);
+  cout << "Displaying event " << gCurrentEntry << endl;
+  cout<<"ndata = "<<hcalt::ndata<<endl;                                  //Number of channels.
+  cout<<"row[] = "<<hcalt::row[16]<<"   col[] = "<<hcalt::col[16]<<endl;
+  cout<<"a[] = "<<hcalt::a[1]<<endl;
+  cout<<"tdc[] = "<<hcalt::tdc[1]<<endl;
+
+  n = hcalt::nsamps[0];
+  DISP_MAX_SAMPLE = hcalt::nsamps[0];
+  cout<<"n = "<<n<<endl;
+
+  idx = hcalt::samps_idx[0];
+  cout<<"idx = "<<idx<<endl;
+
+  ledbit = hcalt::ledbit;
+  cout<<"ledbit = "<<ledbit<<endl;
+
+  nevt = T->GetEntries();
+  cout<<"Number of events = "<<nevt<<endl;
+
+  Float_t peak[kNrows][kNcols];
+  Double_t adc[kNrows][kNcols];
+  Double_t tdc[kNrows][kNcols];
+
+  TF1 **func_landau = new TF1*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      func_landau[i] = new TF1("func_landau",fit_landau, DISP_MIN_SAMPLE, DISP_MAX_SAMPLE, 4);
+    }
+
+  //Create histograms to hold max Landau amplitude for each PMT in each event.
+  TH1F **hpeaks = new TH1F*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      hpeaks[i] = new TH1F(Form("hpeaks%d",i),Form("Peak fADC Values for Module %d",i),1000,0,10000);
+      hpeaks[i]->GetXaxis()->SetTitle("Peak fADC Value");
+      hpeaks[i]->GetXaxis()->CenterTitle();
+      hpeaks[i]->GetYaxis()->SetTitle("Occurrences");
+      hpeaks[i]->GetYaxis()->CenterTitle();
+    }
+
+  //Create histograms to hold the pedestal values.
+  TH1F **hped = new TH1F*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      hped[i] = new TH1F(Form("hped%d",i),Form("fADC Pedestal Values for Module %d",i),401,0,400);
+      hped[i]->GetXaxis()->SetTitle("fADC Pedestal Value");
+      hped[i]->GetXaxis()->CenterTitle();
+      hped[i]->GetYaxis()->SetTitle("Occurrences");
+      hped[i]->GetYaxis()->CenterTitle();
+    }
+
+  //Create a bunch of histograms to contain the LED information.
+  //TH1F **hpmt_led = new TH1F*[nleds][channels];
+  TH1F *hpmt_led[channels][nleds];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      for(Int_t j = 0; j<nleds; j++)
+	{
+	  hpmt_led[i][j] = new TH1F(Form("hpmt%d_led%d",i,j+1),Form("Peak fADC Values for Module %d and LED %d",i,j+1),8201,0,8200);
+	  hpmt_led[i][j]->GetXaxis()->SetTitle("Peak fADC Value");
+	  hpmt_led[i][j]->GetXaxis()->CenterTitle();
+	  hpmt_led[i][j]->GetYaxis()->SetTitle("Occurrences");
+	  hpmt_led[i][j]->GetYaxis()->CenterTitle();
+	}
+    }
+
+  /*
+  TH1F **hintegrals = new TH1F*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      hintegrals[i] = new TH1F(Form("hintegrals%d",i),Form("Integral of fADC Values for Module %d",i),1000,0,30000);
+      hintegrals[i]->GetXaxis()->SetTitle("Integral of Landau Fit of fADC Value");
+      hintegrals[i]->GetXaxis()->CenterTitle();
+      hintegrals[i]->GetYaxis()->SetTitle("Occurrences");
+      hintegrals[i]->GetYaxis()->CenterTitle();
+    }
+
+  TH2F **hintvpeak = new TH2F*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      hintvpeak[i] = new TH2F(Form("hintvpeak%d",i),Form("Integral of fADC Values Versus Peak fADC Value for Module %d",i),1000,0,30000,1000,0,10000);
+      hintvpeak[i]->GetXaxis()->SetTitle("Integral of Landau Fit of fADC Value");
+      hintvpeak[i]->GetXaxis()->CenterTitle();
+      hintvpeak[i]->GetYaxis()->SetTitle("Peak fADC Value");
+      hintvpeak[i]->GetYaxis()->CenterTitle();
+    }
+  */
+  Int_t hits[channels] = {};
+  Double_t pedestals[channels] = {};
+  Int_t no_tdc[channels] = {};
+
+  //Loop over all events.
+  if(limit_evts==1)
+    {
+      loop_max = max_evts;
+    }
+  else
+    {
+      loop_max = nevt;
+    }
+
+  for(Int_t i=0; i<loop_max ;i++)
+    {
+      T->GetEntry(gCurrentEntry);
+
+      //Set arrays to zero;
+      for(r  = 0; r < kNrows; r++) 
+	{
+	  for(c  = 0; c < kNcols; c++) 
+	    {
+	      peak[r][c] = 0.0;
+	      adc[r][c] = 0.0;
+	      tdc[r][c] = 0.0;
+	    }
+	}
+
+      Double_t fadc_int[channels] = {};
+      //Loop over all channels and fill the arrays. Do this seperately so reference time is set for all channels.
+      for(Int_t j=0; j<hcalt::ndata; j++)
+	{
+	  r = hcalt::row[j]-1;
+	  c = hcalt::col[j]-1;
+	  idx = hcalt::samps_idx[j];
+	  n = hcalt::nsamps[j];
+	  adc[r][c] = hcalt::a[j];
+	  tdc[r][c] = hcalt::tdc[j];
+	  for(Int_t s = DISP_MIN_SAMPLE; s < DISP_MAX_SAMPLE && s < n; s++) 
+	    {
+	      histos[r][c]->SetBinContent(s+1-DISP_MIN_SAMPLE,hcalt::samps[idx+s]);
+	      fadc_int[j] = fadc_int[j] + histos[r][c]->GetBinContent(s+1-DISP_MIN_SAMPLE);
+	    }
+	  //Subtract off avg pedestals.
+	  fadc_int[j] = fadc_int[j] - pedestal[j]*DISP_MAX_SAMPLE;
+
+	  func_landau[j]->SetParameter(0,histos[r][c]->GetMaximum()*3.0);//Parameter setting the height scale (not 1:1). ~4800
+	  func_landau[j]->SetParameter(1,8);//Parameter finding the location of the peak. ~15
+	  func_landau[j]->SetParameter(2,1);//Parameter setting the width. ~1
+	  func_landau[j]->SetParameter(3,pedestal[j]);//Parameter measuring the pedestal. ~250
+
+	  //cout<<"Landau fit parameters for row "<<r+1<<" col."<<c+1<<endl;
+	  histos[r][c]->Fit(func_landau[j],"q");//Don't use M or get some issues that make code take forever.
+	  //cout<<"Peak X = "<<func_landau[j]->GetMaximumX()<<". Peak Y = "<<func_landau[j]->Eval(func_landau[j]->GetMaximumX())<<"."<<endl;
+	  
+	  hpeaks[j]->Fill(func_landau[j]->Eval(func_landau[j]->GetMaximumX()));
+	  //hintegrals[j]->Fill(func_landau[j]->Integral(0,n));
+	  //hintvpeak[j]->Fill(func_landau[j]->Integral(0,n),func_landau[j]->Eval(func_landau[j]->GetMaximumX()));
+	  //cout<<"Event "<<gCurrentEntry<<": PMT Module row "<<r+1<<" col "<<c+1<<" has peak Y = "<<func_landau[j]->Eval(func_landau[j]->GetMaximumX())<<" and integral "<<func_landau[j]->Integral(0,n)<<"."<<endl;
+
+	  //Fill Pedestal histograms.
+	  if(hcalt::ledbit==0)
+	    {
+	      for(Int_t k=0;k<n;k++)
+		{
+		  hped[j]->Fill(histos[r][c]->GetBinContent(k+1));
+		}
+	    }
+
+	  //Fill the LED fadc fit histograms.
+	  for(Int_t k=0; k<nleds ;k++)
+	    {
+	      Int_t bit = 0; 
+	      bit = pow(2,k);
+
+	      if(hcalt::ledbit==bit)
+		{
+		  hpmt_led[j][k]->Fill(func_landau[j]->Eval(func_landau[j]->GetMaximumX()));
+		}
+	    }
+	}
+
+      if(i%500==0)
+	{
+	  cout<<i<<" events processed. "<<((double)i/(double)loop_max)*100.<<" % complete."<<endl;
+	}
+      gCurrentEntry++;
+    }
+
+  //Create output rootfile to store histos and arrays of results.
+  TFile* file = new TFile(Form("/home/daq/test_fadc/Voltage_Scans/LEDs/LED_Voltage_Scan_Run%d.root",run),"RECREATE");
+  TTree *T = new TTree("T","T");
+  unsigned int pointIn;	
+  unsigned int ledpointIn;	
+  T->Branch("pointIn",&pointIn,"pointIn/I");	
+  T->Branch("pedestal",pedestal, "pedestal[pointIn]/F");
+  T->Branch("ped_std_dev",ped_std_dev, "ped_std_dev[pointIn]/F");
+  T->Branch("led_means",led_means, "led_means[pointIn][5]/F");
+  T->Branch("led_std_dev",led_std_dev, "led_std_dev[pointIn][5]/F");
+  T->Branch("npe",npe, "npe[pointIn][5]/F");
+  pointIn = channels;		// Setting the array length
+  ledpointIn = nleds;		// Setting the array length
+  //T->Fill();
+  //T->Write();
+
+  //Fit Gaussians to all of the individual PMT pedestal histograms.
+  TF1 **func_gaus_ped_fit = new TF1*[channels];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      func_gaus_ped_fit[i] = new TF1("func_gaus_ped_fit",fit_gaus, 0, 400, 3);
+      func_gaus_ped_fit[i]->SetLineColor(2);
+      func_gaus_ped_fit[i]->SetNpx(4000);
+
+      func_gaus_ped_fit[i]->SetParameter(0,hped[i]->GetMaximum());
+      func_gaus_ped_fit[i]->SetParameter(1,hped[i]->GetMean());
+      func_gaus_ped_fit[i]->SetParameter(2,hped[i]->GetStdDev());
+
+      hped[i]->Fit(func_gaus_ped_fit[i],"qr");
+      hped[i]->Write();
+      //Update pedestals from LED run. Currently using all LED off for pedestals and not just the pedestal immediately before a single LED cycle.
+      //cout<<Form("Pedestal value from Pedestal.txt for Module %d = %f .",i,pedestal[i])<<endl;
+      pedestal[i] = func_gaus_ped_fit[i]->GetParameter(1);
+      ped_std_dev[i] = func_gaus_ped_fit[i]->GetParameter(2);
+      //cout<<Form("Updated pedestal value for Module %d = %f with a standard deviation of %f.",i,pedestal[i],func_gaus_ped_fit[i]->GetParameter(2))<<endl;
+    }
+  
+  //Fit Gaussians to all of the individual PMT LED histograms.
+  //TF1 **func_gaus_led_fit = new TF1*[channels];
+  TF1 *func_gaus_led_fit[channels][nleds];
+  for(Int_t i = 0; i<channels; i++)
+    {
+      for(Int_t j = 0; j<nleds; j++)
+	{
+	  func_gaus_led_fit[i][j] = new TF1("func_gaus_led_fit",fit_gaus, 0, 8200, 3);
+	  func_gaus_led_fit[i][j]->SetLineColor(2);
+	  func_gaus_led_fit[i][j]->SetNpx(4000);
+
+	  Double_t low = 0;
+	  Double_t high = 8200;
+	  Double_t min=0;
+	  Double_t max=0;
+
+	  func_gaus_led_fit[i][j]->SetParameter(0,hpmt_led[i][j]->GetMaximum());
+	  func_gaus_led_fit[i][j]->SetParameter(1,hpmt_led[i][j]->GetMean());
+
+	  low = hpmt_led[i][j]->GetMean()-200;
+	  high = hpmt_led[i][j]->GetMean()+200;
+
+	  if(low<(pedestal[i]+10))
+	    {
+	      low = pedestal[i]+10;
+	    }
+
+	  func_gaus_led_fit[i][j]->SetRange(low,high);
+	  func_gaus_led_fit[i][j]->SetParameter(2,20);
+	  
+	  //func_gaus_led_fit[i][j]->GetRange(min,max);
+	  //cout<<Form("low = %f. high = %f. Range for [%d][%d] = (%f,%f).",low,high,i,j,min,max)<<endl;
+
+	  hpmt_led[i][j]->Fit(func_gaus_led_fit[i][j],"qr");
+
+	  //Save the histos to a root file.
+	  hpmt_led[i][j]->Write();
+	  //cout<<Form("Wrote hpmt_led[%d][%d] to /home/daq/test_fadc/Voltage_Scans/LED_Voltage_Scan_Run%d.root.",i,j,run)<<endl;
+
+	  //Store mean LED values and standard deviations.
+	  led_means[i][j] = func_gaus_led_fit[i][j]->GetParameter(1);
+	  led_std_dev[i][j] = func_gaus_led_fit[i][j]->GetParameter(2);
+	  npe[i][j] = pow(led_means[i][j]/led_std_dev[i][j],2.0);
+	  cout<<Form("Mean for Module %d LED %d = %.1f with standard deviation of %.2f. %.2f photoelectrons were detected.",i,j+1,led_means[i][j],led_std_dev[i][j],npe[i][j])<<endl;
+	}
+    }
+  //Fill the braches holding the results data arrays.
+  T->Fill();
+  T->Write();
+
+  TCanvas* cSingle=new TCanvas("cSingle");
+  cSingle->SetGrid();
+  histos[5][6]->Draw();
+
+  TF1 **func_gaus_fit = new TF1*[channels];
+  for(Int_t i = 0; i<hcalt::ndata; i++)
+    {
+      func_gaus_fit[i] = new TF1("func_gaus_fit",fit_gaus, pedestal[i]+pedestal[i]*0.05, 8000, 3);
+      func_gaus_fit[i]->SetLineColor(2);
+      func_gaus_fit[i]->SetNpx(1000);
+    }
+
+  //TFile* file = new TFile(Form("/home/daq/test_fadc/Voltage_Scans/LEDs/LED_Voltage_Scan_Run%d.root",run),"RECREATE");
+  //TFile* file = new TFile(Form("LED_Voltage_Scan_Run%d.root",run),"RECREATE");
+
+  TCanvas* c2_1=new TCanvas("c2_1");
+  c2_1->SetGrid();
+  hpeaks[12]->Draw();
+
+  func_gaus_fit[12]->SetRange(750,1400);
+  func_gaus_fit[12]->SetParameter(0,hpeaks[12]->GetMaximum());;
+  //func_gaus_fit[12]->SetParLimits(0,0,10000);
+  func_gaus_fit[12]->SetParameter(1,hpeaks[12]->GetMean());
+  //func_gaus_fit[12]->SetParLimits(1,0,8000);
+  func_gaus_fit[12]->SetParameter(2,hpeaks[12]->GetStdDev());
+  hpeaks[12]->Fit(func_gaus_fit[12],"r");
+
+  hpeaks[12]->Write();
+
+  /*
+  for(Int_t i=0; i<channels ;i++)
+    {
+      for(Int_t j=0; j<nleds ;j++)
+	{
+	  hpmt_led[i][j]->Write();
+	  cout<<Form("Wrote hpmt_led[%d][%d] to /home/daq/test_fadc/Voltage_Scans/LED_Voltage_Scan_Run%d.root.",i,j,run)<<endl;
+	}
+    }
+  */
+
+  /*
+  TCanvas* c2_1_intvpeak=new TCanvas("c2_1_intvpeak");
+  c2_1_intvpeak->SetGrid();
+  hintvpeak[12]->Draw();
+  */
+
+  TCanvas* c2_7=new TCanvas("c2_7");
+  c2_7->SetGrid();
+  hpeaks[18]->Draw();
+
+  func_gaus_fit[18]->SetRange(275,500);
+  func_gaus_fit[18]->SetParameter(0,hpeaks[18]->GetMaximum());;
+  //func_gaus_fit[18]->SetParLimits(0,0,10000);
+  func_gaus_fit[18]->SetParameter(1,hpeaks[18]->GetMean());
+  //func_gaus_fit[18]->SetParLimits(1,0,8000);
+  func_gaus_fit[18]->SetParameter(2,hpeaks[18]->GetStdDev());
+  hpeaks[18]->Fit(func_gaus_fit[18],"r");
+
+  /*
+  TCanvas* c2_7_intvpeak=new TCanvas("c2_7_intvpeak");
+  c2_7_intvpeak->SetGrid();
+  hintvpeak[18]->Draw();
+  */
+
+  TCanvas* c6_1=new TCanvas("c6_1");
+  c6_1->SetGrid();
+  hpeaks[60]->Draw();
+
+  func_gaus_fit[60]->SetRange(550,900);
+  func_gaus_fit[60]->SetParameter(0,hpeaks[60]->GetMaximum());;
+  //func_gaus_fit[60]->SetParLimits(0,0,10000);
+  func_gaus_fit[60]->SetParameter(1,hpeaks[60]->GetMean());
+  //func_gaus_fit[60]->SetParLimits(1,0,8000);
+  func_gaus_fit[60]->SetParameter(2,hpeaks[60]->GetStdDev());
+  hpeaks[60]->Fit(func_gaus_fit[60],"r");
+
+  /*
+  TCanvas* c6_1_intvpeak=new TCanvas("c6_1_intvpeak");
+  c6_1_intvpeak->SetGrid();
+  hintvpeak[60]->Draw();
+  */
+
+  TCanvas* c6_7=new TCanvas("c6_7");
+  c6_7->SetGrid();
+  hpeaks[66]->Draw();
+
+  func_gaus_fit[66]->SetRange(375,500);
+  func_gaus_fit[66]->SetParameter(0,hpeaks[66]->GetMaximum());;
+  //func_gaus_fit[66]->SetParLimits(0,0,10000);
+  func_gaus_fit[66]->SetParameter(1,hpeaks[66]->GetMean());
+  //func_gaus_fit[66]->SetParLimits(1,0,8000);
+  func_gaus_fit[66]->SetParameter(2,hpeaks[66]->GetStdDev());
+  hpeaks[66]->Fit(func_gaus_fit[66],"r");
+
+  /*
+  TCanvas* c6_7_intvpeak=new TCanvas("c6_7_intvpeak");
+  c6_7_intvpeak->SetGrid();
+  hintvpeak[66]->Draw();
+  */
+
+  file->Close();
+
+  //Stop and print out stopwatch information.
+  st->Stop();
+  cout<<"CPU time = "<<st->CpuTime()<<" s = "<<st->CpuTime()/60.<<" min   Real time = "<<st->RealTime()<<" s = "<<st->RealTime()/60.<<" min"<<endl;
+}

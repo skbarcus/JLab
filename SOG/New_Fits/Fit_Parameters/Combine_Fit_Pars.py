@@ -10,7 +10,8 @@ os.system("pwd")
 
 #Find all files from the same group of fits.
 Fit_Files = []
-for file in glob.glob("*3H_Bootstrap24*.txt"):
+#for file in glob.glob("*3H_Bootstrap30*.txt"):
+for file in glob.glob("*_3H_New_Same_Thesis*_5-3-2022.txt"):
     Fit_Files.append(str(file))
 
 #print(He3_files)
@@ -18,7 +19,8 @@ for file in glob.glob("*3H_Bootstrap24*.txt"):
 #Loop over the files and print the contents to a new file. Only keep the header line info for the first file read in.
 
 #Create output file to write SOG fit parameters to.
-file_name = 'All_Fit_Pars_3H_Bootstrap24_6-23-2022.txt'
+#file_name = 'All_Fit_Pars_3H_Bootstrap30_6-30-2022.txt'
+file_name = 'All_Fit_Pars_3H_New_Same_Thesis_5-3-2022.txt'
 with open(file_name, 'w') as out:
 
     first_file=1

@@ -14,6 +14,8 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
 NavigationToolbar2Tk)
 import time
 
+drawn = 0 #Global variable to determine if the canvases and figures have been drawn once yet.
+
 def test():
     print('Test')
 
@@ -23,7 +25,8 @@ def test_command():
 #fig, ax = plt.subplots(figsize=(4,4))
 #canvas = FigureCanvasTkAgg(fig, master=display_frame)
 
-def display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+def display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+    global drawn
     t0 = time.time()
     #Get the event to display from the entry box.
     event = display_entry.get()
@@ -79,20 +82,23 @@ def display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_fr
 
         #ax_arr[pmt].clear()
         ax_arr[pmt].cla()
-        #ax_arr[pmt].set_axis_off()
-        #ax_arr[pmt].set_xticks([])
-        #ax_arr[pmt].set_yticks([])
+        #ax_arr[pmt].set_axis_off()#Looks bad. Don't use.
+        #Turn off x and y axes ticks. Speeds up plotting and looks better.
+        ax_arr[pmt].set_xticks([])
+        ax_arr[pmt].set_yticks([])
         #hist1 = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='black')
 
         #Change the color of PMTs that have a TDC hit (could use an ADC threshold instead).
         if tdc[pmt]!=0:
-            #hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',color='orangered',ec='darkorange',lw=1)
-            ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',color='orangered',ec='darkorange',lw=1.)#Plots over other plots without the clear statement ax.clear().
+            hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',color='orangered',ec='darkorange',lw=1)
+            #ax_arr[pmt].add_artist(hist_arr[pmt])
+            #ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',color='orangered',ec='darkorange',lw=1.)#Plots over other plots without the clear statement ax.clear().
             #ax_arr[pmt].hist(xaxis,weights=yaxis)
         else:
-            #hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='bar',ec='c',lw=1)
+            hist_arr[pmt] = ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',ec='c',lw=1)
+            #ax_arr[pmt].add_artist(hist_arr[pmt])
             #ax_arr[pmt].hist(xaxis,weights=yaxis)
-            ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',ec='c',lw=1.)#Plots over other plots without the clear statement ax.clear().
+            #ax_arr[pmt].hist(xaxis,bins=nsamps,weights=yaxis,histtype='stepfilled',ec='c',lw=1.)#Plots over other plots without the clear statement ax.clear().
         ax_arr[pmt].set_ylim(100,500)
         ax_arr[pmt].set_xlim(0,nsamps-1)
 
@@ -102,7 +108,9 @@ def display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_fr
             canvas_arr[pmt].draw()
         else:
             ax_arr[pmt].draw_artist(ax_arr[pmt].yaxis)
+            #ax_arr[pmt].draw_artist(hist_arr[pmt])
             canvas_arr[pmt].get_tk_widget().update()
+            #fig_arr[pmt].get_tk_widget().show()
         #canvas_arr[pmt].get_tk_widget().grid(row=row,column=col)#If here shorter start for GUI initially but display plot function does initial plotting slower.
 
         #fig_arr[pmt].canvas.flush_events()
@@ -111,10 +119,8 @@ def display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_fr
     t1 = time.time()
     t_tot = t1-t0
     print('Display event took '+str(t_tot)+' s.')
-    #global drawn
-    print('drawn =',drawn)
-    drawn = 1
-    print('drawn =',drawn)
+    drawn = 0
+
     #for pmt in range(0,npmt):#Worse speed.
     #    canvas_arr[pmt].draw()
 
@@ -128,7 +134,7 @@ def display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_fr
             #canvas_arr[row*ncol+col].draw()
             #canvas_arr[row*ncol+col].get_tk_widget().grid(row=row,column=col)
 
-def next_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+def next_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
     #Get the current value in the entry box.
     event = display_entry.get()
     #print('Event was '+str(event))
@@ -141,9 +147,9 @@ def next_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame
     display_entry.insert(0,str(int(event)+1))
     event = display_entry.get()
     #print('Event is currently '+str(event))
-    display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
+    display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
 
-def previous_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
+def previous_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry):
     #Get the current value in the entry box.
     event = display_entry.get()
     print('Event was '+str(event))
@@ -156,9 +162,9 @@ def previous_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_f
     display_entry.insert(0,str(int(event)-1))
     event = display_entry.get()
     print('Event is currently '+str(event))
-    display_event(drawn,canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
+    display_event(canvas_arr,canvas,hist_arr,ax_arr,fig_arr,ax,fig,info_frame,display_frame,tree,display_entry)
 
-def single_plot(event,fig_arr,canvas_arr):
+def single_plot(event,ax_arr,fig_arr,canvas_arr):
     single_plot_window = Tk()
     single_plot_window.wm_title("Single fADC Plot")
     #single_plot_label = Label(single_plot_window, text="Input")
@@ -187,6 +193,16 @@ def single_plot(event,fig_arr,canvas_arr):
     #print(canvas)
     #fig.figure(figsize=(8,8))
     #pmt=0
+
+    #For HCal ncol always = 12.
+    ncol = 12
+    row = int(pmt/ncol)
+    col = pmt%ncol
+
+    ax_arr[pmt].set_xticks([10,20,30,40,50])
+    ax_arr[pmt].set_yticks([100,200,300,400,500])
+    ax_arr[pmt].set_title('fADC Waveform for PMT '+str(pmt+1)+', row = '+str(row)+' col = '+str(col))
+
     fig_arr[pmt].set_figheight(6)
     fig_arr[pmt].set_figwidth(6)
 

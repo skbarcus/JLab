@@ -1,0 +1,330 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=phys,% 
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+\usepackage{amsmath}
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+\usepackage{amssymb}%Checkmarks.
+
+\usepackage{graphicx}
+\newcommand{\hcal}{HCal}
+
+\title{HCal Tasks List}
+\subtitle{}
+\date{March 15\textsuperscript{th} 2021}
+\author{HCal Working Group}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Detector Inventory}
+
+	\begin{center}
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Tasks_3_15_2021/Pictures/Detector_Inventory_and_Status_Updated.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Front-End Electronics Inventory}
+
+	\begin{center}
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Tasks_3_15_2021/Pictures/FE_Electronics_Inventory_and_Status_Updated.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{DAQ Inventory}
+
+	\begin{center}
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Tasks_3_15_2021/Pictures/DAQ_Inventory_and_Status_Updated.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Cable Inventory}
+
+	\begin{center}
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Tasks_3_15_2021/Pictures/Cable_Inventory_and_Status_Updated.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Old To-Do List}
+
+	\begin{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{DAQ operational and detector fully assembled.}
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Cosmics/calibrations will resume when test lab access is restored.}
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{To do:} \url{https://docs.google.com/document/d/1S--OKOlQLOgP-EP-2nf8LSBLx6Y6d6TAFrWK1UkRxBE/}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+
+			\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{279/288} Grease remaining PMTs.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Calibrate relative PMT QEs.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Voltage scans.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Calibrate PMTs with cosmics.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Soon} Simulation cosmics vs. real.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Completed} Finish CODA 3 upgrade.}
+			\end{itemize}
+				
+				\column{0.5\textwidth}
+			\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
+				\item[--] \footnotesize{Test summing module trigger.}	
+				\item[--] \footnotesize{Online monitoring/alarms.}
+				\item[--] \footnotesize{Analysis scripts.}
+				\item[--] \footnotesize{Assemble remaining pulser boxes.}
+				\item[--] \footnotesize{Fabricate shims.}
+				\item[--] \footnotesize{Move to Hall A.}
+				\item[--] \footnotesize{Install dry air supply.}
+			\end{itemize}
+			\end{columns}
+				
+	\begin{itemize}
+		\item \alert{Personnel:}
+			\begin{itemize}
+				\item[--] 2 postdocs: \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Scott Barcus} and \alert{Juan Carlos Cornejo}.
+				\item[--] 2 students: \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Vanessa Brio} and \alert{Sebastian Seeds}.
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Brian Quinn} and \alert{Bogdan Wojtsekhowski}.
+				\item[--] New collaborators: \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Jim Napolitano} and \alert{Donald Jones}.
+				% \item[--] Prospective collaborators please contact \setbeamercolor{alerted text}{fg=mLightBrown}\alert{skbarcus@jlab.org}.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Old To-Do List Updated}
+
+	\begin{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{DAQ operational and detector fully assembled.}
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Cosmics/calibrations will resume when test lab access is restored.}
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{To do:} \url{https://docs.google.com/document/d/1S--OKOlQLOgP-EP-2nf8LSBLx6Y6d6TAFrWK1UkRxBE/}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+
+			\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
+				\item[\checkmark] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{279/288} Grease remaining PMTs.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Calibrate relative PMT QEs.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Voltage scans.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Code Written} Calibrate PMTs with cosmics.}
+				\item[\checkmark] Simulation cosmics vs. real.
+				\item[\checkmark] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Completed} Finish CODA 3 upgrade.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Test summing module trigger.}	
+			\end{itemize}
+				
+				\column{0.5\textwidth}
+			\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
+				\item[--] \footnotesize{Online monitoring/alarms.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Analysis scripts.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Ongoing} Assemble remaining pulser boxes.}
+				\item[--] \footnotesize{Fabricate shims.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{April?} Move to Hall A.}
+				\item[--] \footnotesize{\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Distribution panel in Test Lab} Install dry air supply.}
+			\end{itemize}
+			\end{columns}
+				
+	\begin{itemize}
+		\item \alert{Personnel:}
+			\begin{itemize}
+				\item[--] 2 postdocs: \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Scott Barcus} and \alert{Juan Carlos Cornejo}.
+				\item[--] 2 students: \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Vanessa Brio} and \alert{Sebastian Seeds}.
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Brian Quinn} and \alert{Bogdan Wojtsekhowski}.
+				\item[--] New collaborators: \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Jim Napolitano} and \alert{Donald Jones}.
+				% \item[--] Prospective collaborators please contact \setbeamercolor{alerted text}{fg=mLightBrown}\alert{skbarcus@jlab.org}.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Other Completed Items}
+
+    \begin{itemize}
+        \item All DAQ electronics tested and working.
+        \begin{itemize}
+            \item[--] \alert{Summing module tests in progress.}
+        \end{itemize}
+        \item Operational decoder and readout lists (CODA 2$\rightarrow$CODA 3).
+        \item Full database implemented.
+        \item Flags file to configure ROC prescales.
+        \item Event display available.
+        \item Available Triggers:
+            \begin{itemize}
+                \item[--] \alert{Cosmic trigger.}
+                \item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{LED pulser trigger.}
+                \item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Summing module overlapping cluster trigger.}
+            \end{itemize}
+        \item Documentation in progress:
+        		\begin{itemize}
+        			\item[--] \alert{HCal user manual.}
+        			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Cable maps/interactive documentation.}
+        			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Software documentation.}
+        		\end{itemize}
+        	\item LED and cosmic HV calibration scripts (work ongoing).
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Hardware Remaining Tasks}
+
+	\begin{itemize}
+        \item Assemble 4 remaining pulser boxes (CMU). 
+        		\begin{itemize}
+        			\item[--] \alert{In progress.}
+        		\end{itemize}
+        \item Fabricate remaining 3 shims that go between subassemblies. 
+            \begin{itemize}
+        			\item[--] \alert{Will be produced by JLab.}
+        		\end{itemize}
+        	\item Move HCal to Hall A.
+        		\begin{itemize}
+        			\item[--] \alert{Coordinating between Jessie, BB, and HCal.}
+        				\begin{itemize}
+        					\item[*] HCal will move first.
+        				\end{itemize}
+        			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Decable and label HCal cables before moving.}
+        			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Swap cables with BB pre/shower.}
+        				\begin{itemize}
+        					\item[*] BB has 256 100 m cables. 
+        					\item[*] Make up $\approx$40-50 remaining from ECal cables in ESB.
+        				\end{itemize}
+        		\end{itemize}
+        \item Setup HCal in the hall ($\approx$ 1 month very limited access).
+            \begin{itemize}
+            	    \item[--] \alert{Recable detector and install long cables from FE to DAQ.}
+                \item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Reestablish DAQ.}
+                \item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Synchronize timings with BB.}
+            \end{itemize}
+        \item Install clean air supply for PMTs in the hall. 
+            \begin{itemize}
+        			\item[--] \alert{Albert Shahinyan has developed a plan. Air distribution panel in Test Lab.}
+        		\end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{DAQ/Software Remaining Tasks}
+    
+    \begin{itemize}
+    		\item Test summing module overlapping region trigger.
+    			\begin{itemize}
+    				\item[--] \alert{Integrate VME DAC.} 
+    				\begin{itemize}
+    					\item[*] Library written.
+    					\item[*] Build adapter cable (identifying parts).
+    					\item[*] Check channels individually and take cosmic data.
+    				\end{itemize}
+    			\end{itemize}
+    		\item Measure relative QE between PMTs.
+    			\begin{itemize}
+    				\item[--] \alert{Mostly done, but need to move PMT across subassemblies.}
+    			\end{itemize}
+    		\item Measure long cable attenuation.
+    			\begin{itemize}
+    				\item[--] \alert{In progress.}
+    			\end{itemize}
+        \item Implement online monitoring software.
+        		\begin{itemize}
+        			\item[--] \alert{Analysis plots under development.} 
+        				\begin{itemize}
+        					\item[*] SBS collaboration must select method to display monitor plots.
+					\end{itemize}        				 	
+        		\end{itemize}
+        \item Create alarms for HV etc.
+        		\begin{itemize}
+        			\item[--] \alert{Hall A alarm handler.}
+        		\end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{DAQ/Software Remaining Tasks Cont.}
+   
+   \begin{itemize}
+   		\item LED gain and online monitoring scripts.
+   			\begin{itemize}
+   				\item[--] \alert{Perform gain stability studies.}
+   				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Preliminary scripts written.}
+   			\end{itemize}
+   		\item Write scripts to verify HV as expected for hadrons.
+   			\begin{itemize}
+   				\item[--] \alert{Currently measuring gain curves for PMTs.}
+   				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Preliminary scripts written.}
+   			\end{itemize}
+   		\item Write scripts to measure proton and neutron efficiency.
+    			\begin{itemize}
+    				\item[--] \alert{Simulations and scripts coming soon.}
+    			\end{itemize}
+   \end{itemize}
+   
+   \LARGE{\setbeamercolor{alerted text}{fg=TolLightRed}\alert{No showstoppers foreseen.}}
+   
+\end{frame}  
+
+\end{document}

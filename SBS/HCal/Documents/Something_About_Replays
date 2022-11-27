@@ -1,0 +1,108 @@
+New
+
+Andrew Puckett  3:56 PM
+@William Henry to follow up on our discussion just now: (edited) 
+3:58
+There is a script in the ~/gmn directory where the standard 50k replays run on the aonl machines called replay_segments_gmn.sh (written by Sean) (edited) 
+
+
+
+
+
+3:59
+The script requires exactly four command-line arguments and the usage is:
+gosbs
+./replay_segments_gmn.sh <run number> <first segment> <last segment> <segments per job> (edited) 
+4:00
+The arguments are hopefully self-explanatory.
+4:01
+The aonlX machines, where X = 1,2,3,4 each can run up to 32 replay jobs simultaneously, but I typically don’t launch more than 15-20 jobs at a time on any single machine, both to avoid bogging them down but also to leave some slots open for both the standard shift-worker 50k replays and possibly other specialized expert analysis jobs
+
+Andrew Puckett  4:10 PM
+The basic economics of replaying our data on these machines are as follows:
+each file segment = 20 GB, or about 130k events under the conditions of the 2 uA LH2 running from yesterday. For the 10 uA running each segment may be a bit smaller in terms of events due to larger event size owing to higher GEM background/occupancy, but in the same range.
+4:12
+Run 13241 according to the run sheet has 2.2M events and 30 file segments, so about 75k events per segment.
+4:15
+Assuming a trigger rate of 3 kHz, a typical run of one-hour duration would produce 144 file segments, assuming something like 75% uptime while we are taking data. (edited) 
+4:19
+One file segment, or 75k events, won’t take that long to process. Current analysis rate on a 10 uA LH2 run is about 30 Hz
+4:20
+That is about 100k events/hour/job
+4:20
+so if we run one segment per job it takes a little under an hour per segment
+4:21
+If we run two segments per job it takes a little under two hours per segment.
+4:24
+So assuming we want our shift worker full replays to run no more than 100 jobs simultaneously (25 jobs on each of aonl1,2,3,4), you are talking somewhere in the neighborhood of two hours for the aonl machines running at almost full capacity to digest one hour’s worth of data (edited) 
+4:27
+So if the shift crews were constantly managing and monitoring these replay jobs and keeping the aonl machines humming at full capacity, you could keep up with full replays of about half the data taken in a shift with highly efficient data taking. You could be analyzing previous runs while taking next runs, etc.
+4:28
+However, to manage the launching and monitoring of these jobs is a lot of work requiring a lot of babysitting.
+4:29
+So what I’m thinking is that we maybe ask the crews to start one or two full replays of production runs per shift.
+4:31
+It is beyond my linux scripting ability to write a script that automates the process of waiting for each replay job to finish, and then either chaining or “hadd”-ing the files together and then launching a panguin instance to display the combined result a la the 50k, however @Sean Jeffas came up with a good starting point with his “500k” replay script
+
+Andrew Puckett  4:36 PM
+But what WOULD be simple is to have a terminal session for each of the aonl machines open on the shift leader console to manage the replays.
+4:40
+Assuming we want to launch 25 jobs at a time on each machine, and assuming 150-200 segments per run, a typical 1-hour run can be split on 25 jobs of 8 segments each. But since replay time is roughly 1 hour per segment, a job of 8 segments chained together basically takes the entire shift. But multiplied by 4 aonl machines that is four full replays of a one-hour run that could be launched once per shift.
+4:41
+My idea is, rather than ask the shift crews to worry about making and posting panguin plots for these full replays, which we sort of aren’t really set up to do at present, we can ask them to launch replays on four previously completed runs, once per shift, and make a log entry about it
+4:43
+And also add a column to the run log to indicate “full replay launched (Y/N)” so that experts can monitor which runs were launched.
+4:47
+The complications in terms of writing up a simple procedure and workflow for this are significant, because each run has a variable number of file segments, the shift workers need to manage checking the status of each machine for already running jobs, knowing and periodically checking how far along any previous replays were, etc, etc.
+4:47
+But the basic workflow would be:
+
+Andrew Puckett  5:07 PM
+At the beginning of each shift:
+If they are not already open, open four terminal windows, one each on aonl1,2,3,4. Normally this would be on the same workstation where we typically run the 50k replays and the DAQ VNC window.
+In each terminal window, run a “top” to check for currently running jobs.
+If the machine is idle, find the most recent production run(s) that have NOT been fully replayed.
+Find out how many segments are in that run using, e.g., “ls /adaqebX/data1/e1209019_runnum*” (where X = 1,2,3 depending on which data disk is currently being written).
+Launch the replay using the replay_segments_gmn.sh script with its four standard arguments. The segments per job should be roughly equal to the total number of segments divided by 25, but in order to keep things procedurally simple, we should probably Standardize the number of segments per job and the (maximum) number of jobs to launch at a time on a given machine. Since the analysis time is ~1 hour per segment, I propose 5 segments per job and a limit of (up to) the first 125 segments of the run, or about 10 Mevents. So this would impose a limit of 25 jobs simultaneously launched, and each job would finish within ~5 hours, comfortably before the next shift, so that the typical next shift crew would find the machines idle. And this could be a standard part of shift crew instructions and even made part of the checklist
+Mark the run as “full replay started” in the run sheet
+fill out the appropriate shift checklist entry and/or make a halog along the lines of “full replays started on runs A, B, C, D” (one run per aonl machine).
+(edited)
+5:10
+Although this workflow would still only utilize about half of the computing capacity of the aonl machines on average, it would be a vast improvement over the present utilization of roughly 0%
+5:10
+And a relatively simple procedure could be written that is done once per shift
+5:11
+Someone much more clever than I am at system administration and shell scripting could probably automate all of that, but it feels reasonable to me.
+5:14
+So does that all make sense to our esteemed Run Coordinator? Anybody want to write up a simple set of instructions and update the wiki? Perhaps I should do that and then the RC can communicate that to shift crews and experts. This won’t become relevant of course until we actually start taking production data
+
+Sean Jeffas  5:15 PM
+I can write the instructions. I'm not sure if anyone but the two of us have been using the repaly_segments_gmn.sh code.
+
+Andrew Puckett  5:16 PM
+yeah
+5:16
+thanks, that would be good
+5:16
+we could discuss it at tomorrow’s RC meeting to make sure it gets clearly communicated and is simple and manageable for the shift crews
+5:20
+and we might need to tweak the “standard” segments per job and max number of segments depending on what we decide for final beam currents
+5:21
+and what kind of trigger rate we have at those currents.
+5:21
+But that’s the basic outline of a simple procedure/workflow that would be simple enough for the shift crews to carry out
+5:22
+Then we can have a separate script that takes care of “hadd”-ing the root files together and generating and autologging a standard set of “full replay” plots (edited) 
+5:24
+part of the procedure for each shift crew could be to make and post “full replay” plots for the replays started by the previous shift crew before (or after) launching new replays. Since our procedure will More or Less guarantee that the replays started by the previous shift crew would be completed in time for the shift changeover.
+5:24
+Then experts could monitor “10M” replay plots instead of “50k”
+5:24
+shift crews too
+5:25
+of course we would keep the standard 50k’s for every run as we do them now (edited) 
+5:26
+and we would not pop up and require the shift crews to click through all the GUIs like we do for the 50k’s.
+
+William Henry  6:16 PM
+@Andrew Puckett Wow Andrew, all this information is great! I'll have to read it over again but I will try the scripts for myself first. Thanks for all the details.

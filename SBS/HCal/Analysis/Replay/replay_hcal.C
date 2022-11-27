@@ -1,0 +1,122 @@
+#include "TSystem.h"
+#include "TList.h"
+#include "THaRun.h"
+#include "THaEvent.h"
+#include "THaAnalyzer.h"
+#include "THaApparatus.h"
+
+//#include "SBSGEMStand.h"
+//#include "SBSBigBite.h"
+// Tell ROOT where to find our header files and libraries
+R__ADD_INCLUDE_PATH($SBSOFFLINE/include)
+R__ADD_LIBRARY_PATH($SBSOFFLINE/lib64)
+R__ADD_LIBRARY_PATH($SBSOFFLINE/lib)
+// Load the SBS-offline library
+R__LOAD_LIBRARY(libsbs)
+
+//R__ADD_INCLUDE_PATH(../sbsoffline)
+//R__LOAD_LIBRARY(../sbsoffline/build_a17/libsbs)
+#include "SBSEArm.h"
+#include "SBSHCal.h"
+
+void replay_hcal(Int_t runnum = 495, Int_t lastEvent = -1){
+
+  //gSystem->Load("../sbsoffline/build_a17/libsbs.so");
+  SBSHCal *hcal = new SBSHCal("hcal","HCAL");
+  SBSTestDetector *test_detector = new SBSTestDetector("testdetector","TestDetector");
+  //SBSCalorimeter *hcal = new SBSCalorimeter("hcal","HCAL");
+  //hcal->SetWithTDC(true);
+  //SBSCalorimeter *hcal = new SBSCalorimeter("hcal","HCAL");
+  //hcal->SetWithADC(true);
+  //hcal->SetWithADCSamples(true);
+  //hcal->SetWithADCAndSamples(true);
+
+  SBSEArm *harm = new SBSEArm("sbs","Hadron Arm with HCal");
+  harm->AddDetector(hcal);
+  harm->AddDetector(test_detector);
+
+  //
+  //  Steering script for Hall A analyzer demo
+  //
+
+  // Set up the equipment to be analyzed.
+
+  // add the two spectrometers with the "standard" configuration
+  // (VDC planes, S1, and S2)
+  // Collect information about a easily modified random set of channels
+  // (see DB_DIR/*/db_D.dat)
+  /*
+     THaApparatus* DECDAT = new THaDecData("D","Misc. Decoder Data");
+     gHaApps->Add( DECDAT );
+     */
+
+
+  // Set up the analyzer - we use the standard one,
+  // but this could be an experiment-specific one as well.
+  // The Analyzer controls the reading of the data, executes
+  // tests/cuts, loops over Apparatus's and PhysicsModules,
+  // and executes the output routines.
+  THaAnalyzer* analyzer = new THaAnalyzer;
+
+  gHaApps->Add(harm);
+
+  // A simple event class to be output to the resulting tree.
+  // Creating your own descendant of THaEvent is one way of
+  // defining and controlling the output.
+  THaEvent* event = new THaEvent;
+
+  // Define the run(s) that we want to analyze.
+  // We just set up one, but this could be many.
+  //  THaRun* run = new THaRun( "prod12_4100V_TrigRate25_4.dat" );
+  //THaRun* run = new THaRun(TString::Format("/home/daq/data/fadcAERO_%d.dat.0",runnum) );
+  //THaRun* run = new THaRun(TString::Format("%s/fadcAERO_%d.dat.0",getenv("HCAL_DATA"),runnum));
+  //THaRun* run = new THaRun(TString::Format("%s/fadc_f1tdc_%d.dat",getenv("HCAL_DATA"),runnum));
+  THaRun* run = 0;
+  int seg = 0;
+  bool seg_ok = true;
+  while(seg_ok) {
+    TString data_fname;
+    if(runnum<861) {
+      //run = new THaRun(TString::Format("%s/hcal_adc_tdc_%d.dat",getenv("HCAL_DATA"),runnum));
+      data_fname = TString::Format("%s/hcal_adc_tdc_%d.dat",getenv("HCAL_DATA"),runnum);
+    } else { // Starting with CODA3 they now have .0 appended
+      //run = new THaRun(TString::Format("%s/hcal_adc_tdc_%d.dat.%d",getenv("HCAL_DATA"),runnum,seg));
+      data_fname = TString::Format("%s/hcal_adc_tdc_%d.dat.%d",getenv("HCAL_DATA"),runnum,seg);
+    }
+    std::cout << "Looking for segment " << seg << " file " << data_fname.Data() << std::endl;
+    
+    // Check if segment exits
+    if( gSystem->AccessPathName(data_fname)) {
+      seg_ok = false;
+      std::cout << "Segment " << seg << " not found. Exiting" << std::endl;
+      continue;
+    }
+
+    // With the raw data found, create a run and analyze this segment
+    run = new THaRun(data_fname);
+    run->SetLastEvent(lastEvent);
+
+    run->SetDataRequired(0);
+    run->SetDate(TDatime());
+
+    analyzer->SetVerbosity(2);
+    analyzer->SetOdefFile("output_chcal.def");
+    analyzer->SetMarkInterval(500);
+
+    // Define the analysis parameters
+    analyzer->SetEvent( event );
+    //analyzer->SetOutFile( TString::Format("rootfiles/fadcAERO_%d.root",runnum));
+    analyzer->SetOutFile( TString::Format("%s/fadc_f1tdc_%d.root",
+      getenv("HCAL_ROOTFILES"),runnum));
+    // File to record cuts accounting information
+    analyzer->SetSummaryFile(TString::Format("fadc_f1tdc_%d.log",runnum)); // optional
+
+    //analyzer->SetCompressionLevel(0); // turn off compression
+    analyzer->Process(run);     // start the actual analysis
+
+    // Cleanup this run segment
+    delete run;
+    
+    seg++; // Increment for next search
+  }
+}

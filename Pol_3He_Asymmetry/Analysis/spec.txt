@@ -1,0 +1,30 @@
+[108467] [spec] [info] Spectrometer  P 
+[108467] [spec] [info] Spectrometer  P 
+[108467] [spec] [info] fPartMass = 0.00051099 
+[108467] [spec] [info] fPcentral = 3.5 -0.25
+[108467] [spec] [info] fThetalab = 25.0 0.0
+[108467] [spec] [info] Read 215 matrix element terms
+[109619] [spec] [info] Spectrometer  P 
+[109619] [spec] [info] Spectrometer  P 
+[109619] [spec] [info] fPartMass = 0.00051099 
+[109619] [spec] [info] fPcentral = 3.5 -0.25
+[109619] [spec] [info] fThetalab = 25.0 0.0
+[109619] [spec] [info] Read 215 matrix element terms
+[117398] [spec] [info] Spectrometer  P 
+[117398] [spec] [info] Spectrometer  P 
+[117398] [spec] [info] fPartMass = 0.00051099 
+[117398] [spec] [info] fPcentral = 3.5 -0.25
+[117398] [spec] [info] fThetalab = 25.0 0.0
+[117398] [spec] [info] Read 215 matrix element terms
+[118688] [spec] [info] Spectrometer  P 
+[118688] [spec] [info] Spectrometer  P 
+[118688] [spec] [info] fPartMass = 0.00051099 
+[118688] [spec] [info] fPcentral = 3.5 -0.25
+[118688] [spec] [info] fThetalab = 25.0 0.0
+[118688] [spec] [info] Read 215 matrix element terms
+[85223] [spec] [info] Spectrometer  P 
+[85223] [spec] [info] Spectrometer  P 
+[85223] [spec] [info] fPartMass = 0.00051099 
+[85223] [spec] [info] fPcentral = 3.5 -0.25
+[85223] [spec] [info] fThetalab = 25.0 0.0
+[85223] [spec] [info] Read 215 matrix element terms

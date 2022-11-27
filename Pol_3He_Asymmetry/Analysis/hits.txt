@@ -1,0 +1,75 @@
+[108467] [hits] [info] Defining pngcer_tdcref_miss and pngcer_adcref_miss
+[108467] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[108467] [hits] [info] InitHitList: THcRawDCHit RefTimeCuts: -14000 0
+[108467] [hits] [info] Defining pdc_tdcref_miss and pdc_adcref_miss
+[108467] [hits] [info] InitHitList: THcRawHodoHit RefTimeCuts: -3600 -4400
+[108467] [hits] [info] Defining pscin_tdcref_miss and pscin_adcref_miss
+[108467] [hits] [info] Defining phgcer_tdcref_miss and phgcer_adcref_miss
+[108467] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[108467] [hits] [info] Defining paero_tdcref_miss and paero_adcref_miss
+[108467] [hits] [info] InitHitList: THcAerogelHit RefTimeCuts: 0 -4400
+[108467] [hits] [info] InitHitList: THcRawShowerHit RefTimeCuts: 0 -4400
+[108467] [hits] [info] Defining pcal_tdcref_miss and pcal_adcref_miss
+[108467] [hits] [info] InitHitList: THcRasterRawHit RefTimeCuts: 0 0
+[108467] [hits] [info] InitHitList: THcTrigRawHit RefTimeCuts: -3600 -4500
+[108467] [hits] [info] Defining t_shms_tdcref_miss and t_shms_adcref_miss
+[109619] [hits] [info] Defining pngcer_tdcref_miss and pngcer_adcref_miss
+[109619] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[109619] [hits] [info] InitHitList: THcRawDCHit RefTimeCuts: -14000 0
+[109619] [hits] [info] Defining pdc_tdcref_miss and pdc_adcref_miss
+[109619] [hits] [info] InitHitList: THcRawHodoHit RefTimeCuts: -3600 -4400
+[109619] [hits] [info] Defining pscin_tdcref_miss and pscin_adcref_miss
+[109619] [hits] [info] Defining phgcer_tdcref_miss and phgcer_adcref_miss
+[109619] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[109619] [hits] [info] Defining paero_tdcref_miss and paero_adcref_miss
+[109619] [hits] [info] InitHitList: THcAerogelHit RefTimeCuts: 0 -4400
+[109619] [hits] [info] InitHitList: THcRawShowerHit RefTimeCuts: 0 -4400
+[109619] [hits] [info] Defining pcal_tdcref_miss and pcal_adcref_miss
+[109619] [hits] [info] InitHitList: THcRasterRawHit RefTimeCuts: 0 0
+[109619] [hits] [info] InitHitList: THcTrigRawHit RefTimeCuts: -3600 -4500
+[109619] [hits] [info] Defining t_shms_tdcref_miss and t_shms_adcref_miss
+[117398] [hits] [info] Defining pngcer_tdcref_miss and pngcer_adcref_miss
+[117398] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[117398] [hits] [info] InitHitList: THcRawDCHit RefTimeCuts: -14000 0
+[117398] [hits] [info] Defining pdc_tdcref_miss and pdc_adcref_miss
+[117398] [hits] [info] InitHitList: THcRawHodoHit RefTimeCuts: -3600 -4400
+[117398] [hits] [info] Defining pscin_tdcref_miss and pscin_adcref_miss
+[117398] [hits] [info] Defining phgcer_tdcref_miss and phgcer_adcref_miss
+[117398] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[117398] [hits] [info] Defining paero_tdcref_miss and paero_adcref_miss
+[117398] [hits] [info] InitHitList: THcAerogelHit RefTimeCuts: 0 -4400
+[117398] [hits] [info] InitHitList: THcRawShowerHit RefTimeCuts: 0 -4400
+[117398] [hits] [info] Defining pcal_tdcref_miss and pcal_adcref_miss
+[117398] [hits] [info] InitHitList: THcRasterRawHit RefTimeCuts: 0 0
+[117398] [hits] [info] InitHitList: THcTrigRawHit RefTimeCuts: -3600 -4500
+[117398] [hits] [info] Defining t_shms_tdcref_miss and t_shms_adcref_miss
+[118688] [hits] [info] Defining pngcer_tdcref_miss and pngcer_adcref_miss
+[118688] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[118688] [hits] [info] InitHitList: THcRawDCHit RefTimeCuts: -14000 0
+[118688] [hits] [info] Defining pdc_tdcref_miss and pdc_adcref_miss
+[118688] [hits] [info] InitHitList: THcRawHodoHit RefTimeCuts: -3600 -4400
+[118688] [hits] [info] Defining pscin_tdcref_miss and pscin_adcref_miss
+[118688] [hits] [info] Defining phgcer_tdcref_miss and phgcer_adcref_miss
+[118688] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[118688] [hits] [info] Defining paero_tdcref_miss and paero_adcref_miss
+[118688] [hits] [info] InitHitList: THcAerogelHit RefTimeCuts: 0 -4400
+[118688] [hits] [info] InitHitList: THcRawShowerHit RefTimeCuts: 0 -4400
+[118688] [hits] [info] Defining pcal_tdcref_miss and pcal_adcref_miss
+[118688] [hits] [info] InitHitList: THcRasterRawHit RefTimeCuts: 0 0
+[118688] [hits] [info] InitHitList: THcTrigRawHit RefTimeCuts: -3600 -4500
+[118688] [hits] [info] Defining t_shms_tdcref_miss and t_shms_adcref_miss
+[85223] [hits] [info] Defining pngcer_tdcref_miss and pngcer_adcref_miss
+[85223] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[85223] [hits] [info] InitHitList: THcRawDCHit RefTimeCuts: -14000 0
+[85223] [hits] [info] Defining pdc_tdcref_miss and pdc_adcref_miss
+[85223] [hits] [info] InitHitList: THcRawHodoHit RefTimeCuts: -3600 -4400
+[85223] [hits] [info] Defining pscin_tdcref_miss and pscin_adcref_miss
+[85223] [hits] [info] Defining phgcer_tdcref_miss and phgcer_adcref_miss
+[85223] [hits] [info] InitHitList: THcCherenkovHit RefTimeCuts: 0 -4400
+[85223] [hits] [info] Defining paero_tdcref_miss and paero_adcref_miss
+[85223] [hits] [info] InitHitList: THcAerogelHit RefTimeCuts: 0 -4400
+[85223] [hits] [info] InitHitList: THcRawShowerHit RefTimeCuts: 0 -4400
+[85223] [hits] [info] Defining pcal_tdcref_miss and pcal_adcref_miss
+[85223] [hits] [info] InitHitList: THcRasterRawHit RefTimeCuts: 0 0
+[85223] [hits] [info] InitHitList: THcTrigRawHit RefTimeCuts: -3600 -4500
+[85223] [hits] [info] Defining t_shms_tdcref_miss and t_shms_adcref_miss

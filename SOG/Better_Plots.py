@@ -22,8 +22,29 @@ calc_avgs_3H = 0            #Create a lookup table for the ensemble average of 3
 sum_qi_1 = 0                #Did the fits being plotted force the sum of the Qi parameters to equal 1.
 chi2_plots = 1              #Display a plot of the chi2 values for the fits.
 
-He3_x2_cut = 500            #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
-H3_x2_cut = 603             #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+He3_x2_cut = 444.15       #500 removes nonphysical fits (thesis). 437.312 = 1 sigma (582 out of 852 fits). Sum Qi=1 fits ~500. Boot1 425.
+H3_x2_cut = 652.932             #603 removes nonphysical fits (thesis). 602.045 = 1 sigma (620 out of 908 fits). Sum Qi=1 fits ~750.
+
+#he3_fit_pars_file = '/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Bootstrap30_6-30-2022.txt'
+#e3_fit_pars_file = '/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt'
+he3_fit_pars_file = '/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_New_Same_Thesis_5-3-2022.txt'
+
+#h3_fit_pars_file = '/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Bootstrap30_6-30-2022.txt'
+#3_fit_pars_file = '/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt'
+h3_fit_pars_file = '/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_New_Same_Thesis_5-3-2022.txt'
+
+xmin_he3 = 1.8         #Minimum of plot range (fit range) for the 3He charge radii.#1.89 #thesis -> 1.89. sum q1 = 1 -> 1.85
+xmax_he3 = 2.0         #1.91 #thesis -> 1.915.sum q1 = 1 -> 1.875
+xmin_h3 = 1.6          #thesis -> 1.97. sum q1 = 1 -> 1.65
+xmax_h3 = 2.3          #thesis -> 2.06. sum q1 = 1 -> 1.75
+
+#Starting guesses for Guassian fit of charge radii.
+start_amp_he3 = 400
+start_avg_he3 = 1.9
+start_std_dev_he3 = 0.003
+start_amp_h3 = 300
+start_avg_h3 = 2.0
+start_std_dev_h3 = 0.04
 
 pi = 3.141592654
 deg2rad = pi/180.0
@@ -79,7 +100,8 @@ Qim_H3_Amroun = (0.075234, 0.164700, 0.273033, 0.037591, 0.252089, 0.027036, 0.0
 
 #Read in the 3He data line by line.
 #with open('/home/skbarcus/JLab/SOG/Ri_Fits_Final_n=12_1352_12_22_2018.txt') as f:
-with open('/home/skbarcus/JLab/SOG/New_Fits/Output/He3_Norm_Test.txt') as f:
+with open(he3_fit_pars_file) as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Output/He3_Norm_Test.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3He_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3He_4-13-2022.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3He_Fch1_4-22-2022.txt') as f:
@@ -137,7 +159,8 @@ print('Qim_He3[0]',Qim_He3[0])
 
 #Read in the 3H data line by line. Remember last 4 entries for R, Qich, and Qim are meaningless and can just be ignored.
 #with open('/home/skbarcus/JLab/SOG/Ri_Fits_3H_Final_n=8_2600_12_22_2018.txt') as f:
-with open('/home/skbarcus/JLab/SOG/New_Fits/Output/H3_Norm_Test.txt') as f:
+with open(h3_fit_pars_file) as f:
+#with open('/home/skbarcus/JLab/SOG/New_Fits/Output/H3_Norm_Test.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/Fits_3H_Sum1.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/All_Fit_Pars_3H_4-13-2022.txt') as f:
 #with open('/home/skbarcus/JLab/SOG/New_Fits/Fit_Parameters/All_Fit_Pars_3H_Fch1_4-22-2022.txt') as f:
@@ -786,12 +809,12 @@ if sum_qi_1 == 1:
     xmax = 1.875 #thesis -> 1.915.sum q1 = 1 -> 1.875
     nbins = 50
 else:
-    xmin = 1.89#1.89 #thesis -> 1.89. sum q1 = 1 -> 1.85
-    xmax = 1.91#1.91 #thesis -> 1.915.sum q1 = 1 -> 1.875
+    xmin = 1.80#1.89 #thesis -> 1.89. sum q1 = 1 -> 1.85
+    xmax = 2.0#1.91 #thesis -> 1.915.sum q1 = 1 -> 1.875
     nbins = 50
 
 #Define range and number of bins.
-bins = np.linspace(xmin, xmax, nbins)
+bins = np.linspace(xmin_he3, xmax_he3, nbins)
 
 #Create a histogram and fill the bins with the radii data.
 data_entries_1, bins_1 = np.histogram(radii_3He, bins=bins)
@@ -800,7 +823,8 @@ data_entries_1, bins_1 = np.histogram(radii_3He, bins=bins)
 binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
 
 #Fit the histogram with the Gaussian fit and some starting parameters.
-popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[160, 1.9, 0.001])
+#popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[160, 1.9, 0.001])
+popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[start_amp_he3, start_avg_he3, start_std_dev_he3])
 print('3He popt =',popt)
 #print('pcov =',pcov)
 
@@ -808,7 +832,7 @@ print('3He popt =',popt)
 ax.set_title('$^3$He Charge Radii: Average={:.3f} Standard Deviation={:.4f}'.format(popt[1], popt[2]),fontsize=20)
 
 #Define enough points to make a smooth curve.
-xspace = np.linspace(xmin, xmax, 100000)
+xspace = np.linspace(xmin_he3, xmax_he3, 100000)
 
 #Plot the histogram.
 plt.bar(binscenters, data_entries_1, width=bins[1] - bins[0], color='navy', label=r'Histogram entries')
@@ -1098,7 +1122,7 @@ else:
     nbins = 50
 
 #Define range and number of bins.
-bins = np.linspace(xmin, xmax, nbins)
+bins = np.linspace(xmin_h3, xmax_h3, nbins)
 
 #Create a histogram and fill the bins with the radii data.
 data_entries_1, bins_1 = np.histogram(radii_3H, bins=bins)
@@ -1107,7 +1131,7 @@ data_entries_1, bins_1 = np.histogram(radii_3H, bins=bins)
 binscenters = np.array([0.5 * (bins[i] + bins[i+1]) for i in range(len(bins)-1)])
 
 #Fit the histogram with the Gaussian fit and some starting parameters.
-popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[130, 2.02, 0.001])
+popt, pcov = curve_fit(gaus_fit, xdata=binscenters, ydata=data_entries_1, p0=[start_amp_h3, start_avg_h3, start_std_dev_h3])
 print('3H popt =',popt)
 #print('pcov =',pcov)
 
@@ -1115,7 +1139,7 @@ print('3H popt =',popt)
 ax.set_title('$^3$H Charge Radii: Average={:.3f} Standard Deviation={:.4f}'.format(popt[1], popt[2]),fontsize=20)
 
 #Define enough points to make a smooth curve.
-xspace = np.linspace(xmin, xmax, 100000)
+xspace = np.linspace(xmin_h3, xmax_h3, 100000)
 
 #Plot the histogram.
 plt.bar(binscenters, data_entries_1, width=bins[1] - bins[0], color='navy', label=r'Histogram entries')

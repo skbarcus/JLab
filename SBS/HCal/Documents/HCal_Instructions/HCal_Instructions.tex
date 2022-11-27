@@ -9,6 +9,7 @@
 \usepackage{multirow,bigstrut}
 \usepackage{caption}
 \usepackage{cleveref} %Load this package last.
+\usepackage{textcomp} %use tilde.
  
 \hypersetup{
     colorlinks=true,
@@ -26,6 +27,8 @@
 \usepackage{xspace}    %Guesses if a space is needed after the custom command.
 \usepackage{amsmath}   %Use \text in math mode.
 \usepackage{makecell}  %Allows for the making of cells in tables.
+\usepackage{geometry}
+\usepackage{pdflscape} %Make PDF landscape.
 
 \newcommand{\hcal}{HCAL-J\xspace}
 \newcommand{\jlab}{Jefferson Lab\xspace}
@@ -172,17 +175,17 @@ The Hadron Calorimeter (HCal or HCAL-J) is a sampling calorimeter designed to me
 \section{Overview}
 \label{sec:computers_overview}
 
-Numerous computers are employed to operate the HCal. Currently they are enpcamsonne and intelsbshcal1 on the daq account and intelsbshcal2 on the adaq account. The main PC used to run CODA and analysis scripts is enpcamsonne. The readout controllers (ROCs) that control each of the two crates containing the F1TDCs and fADCs are intelsbshal1 and intelsbshcal2. These contain the readout lists (ROLs) that CODA downloads to control the F1TDCs and fADCs. The lower VXS crate is ROC21 and is controlled by intelsbshcal1 and the upper VME64x crate is ROC22 and is controlled by intelsbshcal2.\\
+Numerous computers are employed to operate HCal. Currently they are enpcamsonne and intelsbshcal1 and intelsbshcal2 on the sbs-onl account. The main PC used to run CODA and analysis scripts is enpcamsonne. The readout controllers (ROCs) that control each of the two VXS crates containing the F1TDCs and fADCs are intelsbshal1 and intelsbshcal2. These contain the readout lists (ROLs) that CODA downloads to control the F1TDCs and fADC250s. The lower VXS crate is ROC16 and is controlled by intelsbshcal1. The upper VXS crate is ROC17 and is controlled by intelsbshcal2.\\
 
 \textbf{\large{Note:}} 
-Passwords may not be written down or transmitted electronically so they are not listed in this document. To learn them please contact someone who knows such as Scott Barcus, Alexandre Camsonne, or Bob Michaels.
+Passwords may not be written down or transmitted electronically so they are not listed in this document. To learn them please contact someone who knows such as Scott Barcus, Juan Carlos Cornejo, Alexandre Camsonne, or Bob Michaels.
 
 \section{Logging On}
 \label{sec:logging_on}
 
 \textbf{\large{enpcamsonne:}}
 \begin{enumerate}
-	\item This PC is located in RR5 which is a rack containing only this PC and two monitors.
+	\item This PC is located in RR5 which is a rack containing only this PC and two monitors located in the SBS DAQ bunker next to the HCal DAQ racks.
 	\item Wake the PC and select the daq account.
 	\item Input the password for the daq account then you will have access to this PC.
 \end{enumerate}
@@ -190,30 +193,74 @@ Passwords may not be written down or transmitted electronically so they are not 
 \textbf{\large{intelsbshcal1 \& intelsbshcal2:}}
 \begin{enumerate}
 	\item First log on to enpcamsonne as described above.
-	\item On enpcamsonne open a terminal and type ``ssh -Y daq@intelsbshcal1" for intelsbshcal1 (ROC21/lower VXS crate) or ``ssh -Y adaq@intelsbshcal2" for intelsbshcal2 (ROC22/upper VXS crate).
-	\item Input the password for either the daq or adaq account accordingly then you will have access to the ROC containing the ROLs.
+	\item In a new terminal type ``ssh intelsbshcal1'' or ``ssh intelsbshcal2'' to login to either the bottom or top crate respectively.
+	\item[--] [OLD Instructions] On enpcamsonne open a terminal and type ``ssh -Y daq@intelsbshcal1" for intelsbshcal1 (ROC16/lower VXS crate) or ``ssh -Y adaq@intelsbshcal2" for intelsbshcal2 (ROC17/upper VXS crate).
+	\item[--] [OLD Instructions] Input the password for either the daq or adaq account accordingly then you will have access to the ROC containing the ROLs.
 \end{enumerate}
 
-\textbf{\large{Remote Access:}}
-Sometimes you will not physically be at the HCal to access these computers. In this case if one wishes to use the computers one must log onto them remotely.
+\section{Remote Access}
+\label{sec:remote}
 
+%\textbf{\large{Remote Access:}}
+Sometimes you will not physically be at HCal to access these computers. In this case if one wishes to use the computers one must log onto them remotely.\\
+
+\subsection{Remote Access via SSH}
+\label{sec:remote_ssh}
 \begin{enumerate}
 	\item To access these computers one must be on the JLab network. This can be logged into by typing ``ssh -Y your-JLab-user-name@login.jlab.org" and then entering your personal JLab password. 
 	\item Once on the JLab network these computers can be accessed by typing ``ssh -Y daq@encamsonne", ``ssh -Y  daq@intelsbshcal1", or ``ssh -Y  adaq@intelsbshcal2" depending on the computer one wishes to access. Enter the appropriate password when prompted and access to the computer will be granted.
 \end{enumerate}
 
+\subsection{Remote Access via VNC (enpcamsonne)}
+\label{sec:remote_vnc}
+\begin{enumerate}
+	\item Set up local port forwarding on your local machine by opening a terminal and typing ``ssh -L 50022:enpcamsonne:22 your-JLab-user-name@login.jlab.org''. The first number is your local port and can be any number above 1024. Between the two numbers separated by colons is the host name of the destination. In this case it is the enpcamsonne computer. The second number is the port of the destination computer. Here it is 22 since that port is reserved for SSH. The final part is the remote SSH server, in this case @login.jlab.org, and the user name for that server. After entering the command you will be prompted to give your JLab CUE password. The enpcamsonne machine is now connected to port 50022 on your machine.
+	\item Now set up local port forwarding for the VNC. Without closing the previous terminal open a separate terminal and enter the command ``ssh -L 55902:localhost:5902 -p 50022 daq@localhost''. The first number is again the local port you want to use for your VNC (choose any open port above 1024). The name localhost refers to enpcamsonne from before. The second number after the colon is the port you wish to use on enpcamsonne to connect to the VNC. The VNC port is reserved as 5900 by default but we have several on enpcamsonne so we picked a nearby open port in this example. The -p option is needed because we wish to listen to a port other than the default of 22. In this case we wish to listen to port 50022 which we set up to be enpcamsonne previously. Finally we want to login to the daq account on enpcamsonne which is the localhost. Once this command is entered you will be prompted to enter the password for the the daq account on enpcamsonne. 
+	\item Finally you need to connect your VNC to enpcamsonne. This step may be slightly different based on the VNC your computer uses but it should be similar (this example used Remote Desktop Viewer on Ubuntu which you can see in Fig. \ref{fig:remote_desktop_viewer}). Open your computer's VNC software and select the VNC protocol. Enter the host as `localhost:55902'. You would enter whatever local port you used in step two. Then hit the connect button and you should see the login screen for enpcamsonne. Make sure you're on the daq account and enter it's password. You will now see a remote desktop of enpcamsonne that you can use as if you were physically at the computer.
+\end{enumerate}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Instructions/Pictures/Remote_Desktop_Viewer.png}
+	\end{center}
+	\caption{
+	{\bf{Remote Desktop Viewer}} }
+	\label{fig:remote_desktop_viewer}
+	\end{figure}	
+
+\subsection{Remote Power Cycling of VXS Crates}
+\label{sec:remote_cycling}
+
+If the VXS crates need to be restarted this can be done remotely. 
+
+\begin{enumerate}
+	\item On the enpcamsonne computer open a web browser.
+	\item In the web browser address bar type either `hcalvxs1.jlab.org' for the bottom VXS crate (ROC16) or `hcalvxs2.jlab.org' for the top VXS crate (ROC17).
+	\item You will be prompted for a user name and password to login. Both of these are the same and can be obtained from Scott Barcus, Juan Carlos Cornejo, or Alexandre Camsonne.
+	\item Once you have logged in you will see the remote control options (Fig. \ref{fig:remote_power_Cycling}). From this screen you can use the Main Power button to turn the crate on and off. You can also adjust fan settings and see the temperature of the crate from various sensors.
+\end{enumerate}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Instructions/Pictures/Remote_Power_Cycling.png}
+	\end{center}
+	\caption{
+	{\bf{Remote VXS controls for intelsbshcal1.}} }
+	\label{fig:remote_power_Cycling}
+	\end{figure}	
+
 \chapter{High Voltage}
 \label{hv}
 
-\subsection{Overview}
+\section{Overview}
 \label{ssec:hv_overview}
 
-The high voltage (HV) system for the HCal uses LeCroy 1461 N high voltage cards run off of a Raspberry Pi running the HV server located inside the HV crates themselves. There are two HV crates for the HCal and each provides voltage for 144 of the 288 PMTs. The HV cards have 12 channels each with the top crate containing 12 HV cards and the lower crate containing 13. The lower crate's extra card contains two HV channels for the paddle scintillators located above both halves of the detector. The upper crate runs server rpi20, and the lower crate rpi21. 
+The high voltage (HV) system for the HCal uses LeCroy 1461 N high voltage cards run off of a Raspberry Pi running the HV server located inside the HV crates themselves. There are two HV crates for the HCal and each provides voltage for 144 of the 288 PMTs. The HV cards have 12 channels each with the top crate containing 12 HV cards and the lower crate containing 13. The lower crate's extra card contains four HV channels for the paddle scintillators located above both halves of the detector. Each of these cosmic paddles has two PMTs (one at each end). The upper crate runs server rpi20, and the lower crate rpi21. 
 
 \section{High Voltage System}
 \label{hv_layout}
 
-A high voltage (HV) distribution system provides the PMTs with the voltages required to operate and is shown diagrammatically in Figure \ref{fig:hv}. This system is comprised of two LeCroy 1458 high voltage crates containing type 1461N high voltage modules, a cable distributions system, and a software control system. The HV crates are located in the shielded electronics hut shown in Figure \ref{fig:hall_layout}. One crate contains 12 12-output 1461N high voltage modules for half of the PMTs (144), and the other crate contains 13 of these modules for the other half plus HV for the cosmic scintillator paddle atop \hcal. \\
+A high voltage (HV) distribution system provides the PMTs with the voltages required to operate and is shown diagrammatically in Figure \ref{fig:hv}. This system is comprised of two LeCroy 1458 high voltage crates containing type 1461N high voltage modules, a cable distributions system, and a software control system. The HV crates are located in the shielded electronics hut shown in Figure \ref{fig:hall_layout}(***Need pic from Robin's 11/30/2020 presentation still). One crate contains 12 12-output 1461N high voltage modules for half of the PMTs (144), and the other crate contains 13 of these modules for the other half plus HV for the cosmic scintillator paddles. \\
 
  	\begin{figure}[!ht]
 	\begin{center}
@@ -224,23 +271,32 @@ A high voltage (HV) distribution system provides the PMTs with the voltages requ
 	\label{fig:hv}
 	\end{figure}
 
-The 288 cables carrying the PMT HV emerge from the two LeCroy 1458 crates and enter 12 high voltage boxes each with 24-input channels. These 12 HV boxes each bundle their 24 input cables into a single larger HV cable. These 12 75 m***(check) 24-channel HV cables then run from the electronics hut to 12 HV boxes attached six to each side of \hcal. The HV boxes at \hcal then split the 24-channel HV cable back into 24 single channel HV cables which are then sent to the individual PMTs.  
+The 288 cables carrying the PMT HV emerge from the two LeCroy 1458 crates and enter 12 high voltage boxes each with 24-input channels. These 12 HV boxes each bundle their 24 input cables into a single larger HV cable. These 12 75 m 24-channel HV cables then run from the electronics hut to 12 HV boxes attached six to each half of \hcal (There is a spare 13th cable and distribution boxes on the side of \hcal). The HV boxes at \hcal then split the 24-channel HV cable back into 24 single channel HV cables which are then sent to the individual PMTs.  
 
 The HV system is controlled via software which allows the user to set each channel's HV supply along with various trip safeties, monitor a channel's voltage and current, and save/load HV settings. These features are accessed via a Graphical User Interface (GUI) on a Linux workstation. A visual and audio alarm system alerts the user to HV channels whose behavior has deviated from their safety parameters. The HV crates communicate with the Linux workstation via Ethernet network using TCP/IP protocol.
 
-\section{HV GUI}
-\label{hv_gui}
+\subsection{HV Server}
+\label{hv_server}
 
-The HV crates and their individual channels are controlled via a graphical user interface (GUI) that can be run from a terminal. This GUI loads its configuration from a server run on the Raspberry Pi inside the crate. Before the GUI can be used the server must be running. To activate the server:
+The HV crates and their individual channels are controlled via a graphical user interface (GUI) that can be run from a terminal. This GUI loads its configuration from a server run on the Raspberry Pi inside the crate. Before the GUI can be used the server must be running. If the server is already running, and it usually is, you can skip to \ref{hv_gui} section. To activate the server:
 
 \begin{enumerate}
-	\item Open a terminal on a computer that is on the same network as the HV server.
-	\item Log into the Raspberry Pi by typing ``ssh ***" in the terminal.
-	\item You will be prompted for the password. If you do not know the password ask someone who does as passwords cannot be shared electronically. 
-	\item Once logged in to the Raspberry Pi the server is started by going to the *** directory by typing ``cd ***" in the terminal. Then type ``./***" which will start the server running in that terminal.
-	\item To activate the GUI return to the computer on the same network as the crate that you plan to control the HV with and go to the slowc directory by typing ``cd /slowc***". Then activate the GUI by typing either ``./hvs ***" or if you wish to run only a single crate ``./hvs UPPER" or ``./hvs LOWER".
+	\item Open a terminal on a computer that is on the same network as the HV server (i.e. enpcamsonne).
+	\item Log into the Raspberry Pi by typing ``ssh rpi20 -X -l pi" in the terminal.
+	\item You will be prompted for the password. If you do not know the password ask Scott Barcus, Juan Carlos Cornejo, Bob Michaels, or Alexandre Camsonne. 
+	\item Once logged in to the Raspberry Pi the server is started by going to the /home/pi/scripts/ directory by typing ``cd /home/pi/scripts/" in the terminal. Then type ``./start\_hv" which will start the server running in that terminal.
+	
+\end{enumerate}
+
+\subsection{HV GUI}
+\label{hv_gui}
+
+After the HV server of the desired crate is running the HV control GUI can be opened as follows:
+
+\begin{enumerate}
+	\item To activate the GUI go to the ~/slowc directory on enpcamsonne. Activate the GUI by typing either ``./hvs UPPER" or ``./hvs LOWER" depending on which crates you wish to control.
 	\item The GUI will then load each of the HV cards each with 12 individual channels. To turn on the HV so that individual channels can be powered click "HV ON" on the left side and the button will turn yellow.
-	\item To set an individual channel's HV enter the desired voltage for the channel in its "target voltage" column. Then to activate the channel click the check box in the "***" column. A check mark will appear and the voltage will begin ramping up. You can see the current voltage in the "current voltage" column.
+	\item To set an individual channel's HV enter the desired voltage for the channel in its "target voltage" column. Then to activate the channel click the check box in the ``Ch\_En" column. A check mark will appear, and the voltage will begin ramping up. You can see the current voltage in the ``current voltage" column.
 	\item Note: You can leave the channels checked as on and turn off the voltage with the button on the left hand side to deactivate all channels. The button will change from yellow to grey and all voltages will read zero after a few seconds. Then if the voltage is turned back on with the same button all channels with checked boxes will begin supplying voltages again. 
 \end{enumerate}
 
@@ -254,24 +310,46 @@ The HV crates and their individual channels are controlled via a graphical user 
 \subsection{Overview}
 \label{ssec:coda_overview}
 
-The DAQ system is controlled by the Cebaf Online Data Acquisition (CODA) system. CODA is used to start and stop data collection runs. Data generated from the fADCs and F1TDCs is collected by CODA in the CODA data format and stored in the *** directory. This raw data file can later be decoded using the Hall A Analyzer which converts the raw data into ROOT files for analysis. The current version of CODA being used is CODA 2.7.2*** and it will be necessary to upgrade to CODA 3 before the SBS program begins.
+The DAQ system is controlled by the Cebaf Online Data Acquisition (CODA) system. CODA is used to start and stop data collection runs. Data generated from the fADC250s and F1TDCs is collected by CODA in the CODA data format and stored in the /home/daq/data directory of the enpcamsonne computer. This raw data file can later be decoded using the Hall A Analyzer which converts the raw data into ROOT files for analysis. Currently CODA 3.10 is being used to run the DAQ system.
 
 \subsection{Starting and Running CODA}
 \label{ssec:running_coda}
 
 \begin{enumerate}
-	\item Log into the DAQ PC, currently the daq account on enpcamsonne, as described in ***, and open a terminal in the /home/daq/ directory and type ``msqld" to start the database holding the CODA configurations? 
-	\item In two separate terminals log into ROCs 21 and 22 (CPUs on the crates holding the fADCs and F1TDCs) as described in \cref{sec:logging_on}. Then on ROC 22 in directory /home/adaq/ type ``.\textbackslash startroc22" and on ROC 21 directory /home/daq/ type ".\textbackslash startroc21" to start both ROCs. %In both terminals set the environment variables from the home directory *** by typing ``source setup\_enpcamsonne".  
-	\item Back on the DAQ PC in the /home/daq/ directory start CODA by typing ``.\textbackslash startcoda". After a few seconds four small colored windows will pop up followed by the main CODA GUI.
-	\item In the top left of the CODA GUI click ``Platform" then select ``Connect". 
-	\item Then push the button in the top left that looks like a wrench and screwdriver crossed that says ``Configure" when you hover it. In the center left of the CODA GUI there should be four rows that say ``ER21", ``EB21", ``ROC21", and ``ROC22". In their status columns the state should say ``configured" after a few seconds. At the bottom of the CODA GUI under the ``Message" column it should say ``Configure is started." and then ``"Configure succeeded". 
-	\item Next click on the floppy disk icon in the top left of the CODA GUI that says ``Download" when hovered. This button downloads the read-out lists (ROLs) for the fADCs and F1TDCs. After a few seconds the status column's rows should all read ``downloaded" and the message column should say ``Download is started." followed by``Download succeeded." perhaps with a few waiting messages in between.
-	\item To then start a run click button that looks like two right facing arrows (or triangles) that says ``Start" when hovered at the top of the CODA GUI. This will begin a data run.
+	\item Log into the DAQ PC, currently the daq account on enpcamsonne, as described in ~\ref{sec:logging_on}, and open a terminal in the /home/daq/ directory.% and type ``msqld" to start the database holding the CODA configurations? 
+	%\item In two separate terminals log into ROCs 21 and 22 (CPUs on the crates holding the fADCs and F1TDCs) as described in \cref{sec:logging_on}. Then on ROC 22 in directory /home/adaq/ type ``.\textbackslash startroc22" and on ROC 21 directory /home/daq/ type ".\textbackslash startroc21" to start both ROCs. %In both terminals set the environment variables from the home directory *** by typing ``source setup\_enpcamsonne".  
+	%\item Back on the DAQ PC in the /home/daq/ directory start CODA by typing ``.\textbackslash startcoda". After a few seconds four small colored windows will pop up followed by the main CODA GUI.
+	\item Start the platform by typing ``platform'' in a terminal if it is not already running (it usually is).
+	\item In a separate terminal in the /home/daq/ directory of enpcamsonne type ``startCoda'' to bring up the CODA3 control GUI.
+	\item Once loaded, in the top left of the CODA GUI click the ``Control'' drop down-menu and select ``Connect". 
+	\item Then push the button in the top left that looks like a wrench and screwdriver crossed that says ``Configure" when you hover it. In the center left of the CODA GUI there should be three rows that say ``PEB1", ``ROC17", and ``ROC16". In their state columns the state should say ``configured" after a few seconds. At the bottom of the CODA GUI under the ``Message" column it should say ``Configure is started." and then ``"Configure succeeded". 
+	\item Next click on the floppy disk icon in the top left of the CODA GUI that says ``Download" when hovered. This button downloads the read-out lists (ROLs) for the fADC250s and F1TDCs. After a few seconds the state column should all read ``downloaded" and the message column should say ``Download is started." followed by``Download succeeded." perhaps with a few waiting messages in between.
+	\item To then start a run click the button that looks like two green right facing arrows (or triangles) that says ``Start" when hovered at the top of the CODA GUI. This will begin a data run.
 	\item A run can be stopped by clicking the square button at the top that says ``Stop" when hovered.\\
 	\\
 	Notes:
 	\item If changes are made to the ROLs they must be re-downloaded. Once a run is stopped click the button at the top that looks like two left facing arrows (or triangles) that says ``Reset" when hovered. After the system has reset then hit the ``Download" button again and resume running as usual.
 \end{enumerate}
+
+\subsection{fADC250s and F1TDCs}
+\label{ssec:fadc250s_f1tdcs}
+
+The current HCal DAQ is composed of 19 fADC250 modules and 5 F1TDC modules. The fADC250s measure the amount of energy from a PMT per unit time by integrating the signal voltage in a given time bin. The 250 refers to them having a 250 MHz sampling rate giving 4 ns time bins. The fADCs have a timing window in which they measure energy which is opened sometime after a trigger is received. The latency of the fADCs determines how long the fADCs wait to open the timing window after a trigger is received. During $G_M^n$ HCal's timing window was generally 160 ns (40 time bins) and the latency was generally 1246 ns for production running and 1296 ns for cosmic running. 18 of the fADCs contain the 288 PMT signals. \\
+
+The 19th fADC contains the 10 supercluster sums starting from the top left of HCal when facing the PMTs as well as a copy of the trigger signal. This leaves 5 extra channels for other purposes. The 19th fADC has slightly different timing from the PMT signals due to path length differences and generally has a latency of around 1234 ns and a timing window of 160-200 ns, but these may need to be adjusted slightly to find the signal. The F1TDCs operate in a similar manner with a timing window and a latency. During $G_M^n$ these were 300 ns and 1350 ns respectively. Note that the F1TDCs have rolling timing in that they are always counting and simply roll over to zero when the reach the maximum. Thus the raw time reported is NOT relative to the trigger and a common reference time must be chosen to make these timing values meaningful. \\
+
+\subsection{Configuring fADC250s and F1TDCs}
+\label{ssec:fadc_cfg}
+
+Setting the window widths and latencies for the fADC250s and F1TDCs can be done on the sbs-onl account on one of the adaq computers (ssh sbs-onl@adaq1). Navigate to /adaqfs/home/sbs-onl/hcal/cfg. The configuration files for the fADCs in the combined DAQ are in /adaqfs/home/sbs-onl/hcal/cfg/fadc250/hcal$\_$ts.cnf (hcal.cnf for HCal standalone configuration). The top portion of this file is commented out and is used as an example for how to set the fADC configuration options. This structure repeats twice below with each block of code representing the top and bottom VXS crates. To set the window width add the line ``FADC250$\_$W$\_$WIDTH 160" where the number is the width of the window in ns. Remember this must be added to both the intelsbshcal1 and intelsbshcal2 crate's block of settings for it to configure the fADCs in both crates. The latency is set similarly by adding the line ``FADC250$\_$W$\_$OFFSET 1296" where the number is the latency in ns. \\
+
+The 19th fADC with the supercluster sums is set individually in intelsbshcal2 due to it's different timings. This is done by specifying the slot of the fADC you wish to configure. In the configuration settings previously described the window and latency were set below the line ``FADC250$\_$SLOTS all" which indicates all slots are being configured at once. To configure a single slot add the line ``FADC250$\_$SLOT 18" below the previous configurations where the number is the slot of the single fADC you wish to configure. Then below this new line the fADC can be configured with the same lines as before (e.g. ``FADC250$\_$W$\_$OFFSET 1234" and ``FADC250$\_$W$\_$WIDTH 200"). \\  
+
+\subsection{Configuring F1TDCs}
+\label{ssec:f1tdc_cfg}
+
+Configuring the F1TDCs is slightly different than the fADCs. First navigate to /adaqfs/home/sbs-onl/hcal/linuxvme/f1tdc-v1/external$\_$3125 and locate the executable ``config.make". Execute this file with ``./config.make" and the terminal will prompt you for a series of settings. The first question is what mode to operate the F1s in. Normally the HCal F1s are operated in mode 2 = normal resolution, synchronous. Next you will be prompted to enter a name for the output configuration file. The file name used currently should be ``hcal$\_$f1tdc$\_$3125.cfg". You will then be asked for the bin size for the F1s and this should be entered as 0.1120  which is the bin size in ns. Next you will be prompted to enter a latency value in ns. Enter the desired latency  within the bounds specified in the terminal prompt. Finally, the terminal will ask for the window size in ns. Enter the desired value for the window width (which must be less than the latency value). The terminal will then print some information of the chosen configuration and produce the output file requested in the current directory. Lastly, copy the output configuration file produced (which you'll generally call ``hcal$\_$f1tdc$\_$3125.cfg") to the /adaqfs/home/sbs-onl/hcal/cfg/f1tdc directory. The new configuration should then be picked up by the DAQ. \\ 
+
 
 \chapter{Important Scripts}
 \label{ch:scripts}
@@ -279,7 +357,7 @@ The DAQ system is controlled by the Cebaf Online Data Acquisition (CODA) system.
 \section{Overview}
 \label{sec:scripts_overview}
 
-There are several important scripts used for creating analysis data files and analyzing the resultant data files. The most important of these are located on daq@enpcamsonne (see Section \cref{sec:logging_on}).
+There are several important scripts used for creating analysis data files and analyzing the resultant data files. The most important of these are located on daq@enpcamsonne (see Section \cref{sec:logging_on}) in the /home/daq/test\_fadc directory.
 
 \section{Replaying a Run}
 \label{sec:replay}
@@ -288,8 +366,29 @@ After a CODA run is completed it creates a .dat datafile in the /home/daq/data/ 
 
 \begin{enumerate}
 	\item On daq@enpcamsonne go to the /home/daq/test\_fadc/ directory. 
-	\item The script that replays a CODA data file and produces a ROOT file is called. 
+	\item Set up the environment variables for the Analyzer and Root by typing ``source env.csh''. You'll then see a message informing you of the various versions of software being used. 
+	\item The script that replays a CODA data file and produces a ROOT file is called replay\_hcal.C. You can replay a run by typing ``analyzer replay\_hcal.C\textbackslash(run\#\textbackslash)'', where run\# is the run number of the raw datafile. This will replay all events by default. If you wish to only replay a certain number of events in the run you can use the command ``analyzer replay\_hcal.C\textbackslash(run\#,\#events\textbackslash)'' where \#events is however many events you want to replay starting at event zero.
+	\item When the script is done decoding the raw datafile, which can take a while for large runs, a rootfile with the same number will be produced and stored in the /home/daq/test\_fadc/rootfiles/ directory.
 \end{enumerate}
+
+\section{Event Display}
+\label{sec:event_display}
+
+The display.C script acts as an event display for HCal. The GUI has four tabs, one for each subassembly of 72 PMT modules. Each plot shows the individual fADC250 pulse for every PMT as well as whether or not the F1TDC fired. If the F1TDC for a channel fired the plot will be green instead of blue. If the fADC is saturated the value will be printed at an overflow value of 8092 creating a plateau. The lower left corner of the GUI displays which LED bit was on for an event if the LEDs were being used. Only one LED bit is displayed, so even if different LEDs are on for different PMTs only one will be shown. The script is used as follows:
+
+\begin{enumerate}
+	\item In the /home/daq/test\_fadc/ directory on enpcamosonne type ``root -l display.C\textbackslash(run\#\textbackslash)'', where run\# is the run number of a rootfile. Note you must replay the raw datafile to produce a rootfile as described in ~\ref{sec:replay} before using this script.
+	\item Using the GUI you can step through each individual event taken during a run.
+\end{enumerate}
+
+ 	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Reestablished_Cosmics.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Event Display.}} The script, display.C, produces this GUI which can be used to step through each individual event taken during a run.}
+	\label{fig:event_display}
+	\end{figure}
 
 \chapter{Schematics and Cable Maps}
 \label{ch:schematics}
@@ -297,12 +396,30 @@ After a CODA run is completed it creates a .dat datafile in the /home/daq/data/ 
 \section{Overview}
 \label{sec:schematics_overview}
 
-This section aggregates numerous schematics and cable maps for HCal. The actual cabling of the detector should closely mirror these maps, but please be aware that minor changes are occasionally implemented based on physical limitations or convenience. 
+This section aggregates numerous schematics and cable maps for HCal. The actual cabling of the detector should closely mirror these maps, but please be aware that minor changes are occasionally implemented based on physical limitations or convenience.
 
-\section{Cable Maps}
-\label{sec:cable_maps}
+\section{Cable Layout}
+\label{sec:cable_layout}
 
 The cabling scheme for the \hcal is designed such that all detector channels can be accessed at numerous points between the detector PMTs and where the final signals enter the DAQ electronics. The \hcal cable system can be broken into three groups based on whether the physics signals flow to the fADC250s, the F1TDCs, or the UVA-120 summing modules. This section describes how the signal from the \hcal detector flows through the front-end and DAQ side electronics on each of these three paths before being recorded by the individual DAQ modules. The red arrows in Figures \ref{fig:fe} and \ref{fig:daq} show the direction of these signal flows.\\ %Five racks hold the front-end and DAQ cabling and electronics and a diagrammatic layout of these racks is show in Figures \ref{fig:fe} and \ref{fig:daq}. The front-end racks are labelled RR1, RR2, and RR3. The electronics and cables in RR1 and RR3 are mirrored as each of these racks contains half of the \hcal channels. The DAQ side racks are RR4 and RR5. The DAQ side is connected to the front-end via 100 m*** long BNC cables running from RR2 to RR4. \\ 
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_FE.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Front-End Electronics and Signal Map.}} The front-end electronics consist of three racks: RR1, RR2, and RR3. RR1 and RR3 are mirrored with half of the HCal channels each and contain the amplifiers, splitters, and summing modules. RR2 contains F1TDC discriminators and connects to rack RR4 on the DAQ side via patch panels and long BNC cables. Signals enter the front-end through the amplifiers on the bottom of RR1 and RR3 and ultimately flow to RR2.}
+	\label{fig:fe}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_DAQ.png}
+	\end{center}
+	\caption{
+	{\bf{HCal DAQ Electronics and Signal Map.}} The DAQ electronics side is made up of racks RR4 and RR5. RR4 connects to RR2 via long BNC cables and contains discriminators for the F1TDCs. RR5 contains the computer electronics for CODA as well as the fADCs and F1TDCs and their associated electronics.}
+	\label{fig:daq}
+	\end{figure}		
 
 Beginning at the detector PMTs the physics signal can be traced to the fADC250s which make both energy and timing measurements. The analog signal exits the detector PMTs and enters the PS776 amplifiers at the base of RR1 and RR3 depending on from which half of the detector the signal originated. The PS776 amplifiers have dual outputs which each produce a 10$\times$ amplified analog signal. From one of these outputs the amplified physics signal flows to patch panels in the bottom of RR2 which connect to DAQ side patch panels at the base of RR4 via 100 m*** long BNC cables. Once emerging from RR4 on the DAQ side the signals flow into the fADC250s in RR5 and are recorded for analysis. The following list gives each component dedicated to processing the fADC signals in the order in which the signal passes through them:\\
 
@@ -361,6 +478,58 @@ The third set of signals leading to the summing modules takes the following path
 	\item 288 2 m BNC-LEMO RG58 A/U cables.
 	\item 18 summing modules***(better name? UVA?) in RR1 and RR3.
 \end{itemize}
+
+\section{Timing Diagram}
+\label{sec:timing_diagram}
+
+Figure \ref{fig:timing_diagram} shows the timing diagram for the HCal front-end and DAQ cables. Times in red represent the time it takes to traverse a certain cable. Times in blue represent the total amount of time it takes to travel from one point to another including cables and NIM modules.
+
+	\newgeometry{margin=1.1cm}
+	\begin{landscape}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.95\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_Timing_Diagram_Clean.png}
+	\end{center}
+	\vspace{-5mm}
+	\caption{
+	{\bf{HCal Timing Diagram.}} Times in red represent the time it takes to traverse a certain cable. Times in blue represent the total amount of time it takes to travel from one point to another including cables and NIM modules.}
+	\label{fig:timing_diagram}
+	\end{figure}	
+	
+	\end{landscape}
+	\restoregeometry
+
+\section{Detailed Cable Maps}
+\label{sec:detailed_cable_maps}
+
+The previous section, \ref{sec:cable_layout}, shows the general layout and order of the cables in the front-end and DAQ. This section contains the detailed cable maps behind that layout. Figures \ref{fig:right_half} and \ref{fig:left_half} each represent one half of HCal with 12$\times$12 rows and columns of 144 PMT modules. Black font represents the HCal module (PMT) number beginning at one in the top left of the back side of HCal (side with the PMTs downstream). Red font represents the HCal amplifier channel to which the signal first goes after leaving the PMT. Green represents the fADC channel where the signal ultimately enters (note these are labelled on the fADC250 front panel as zero to fifteen). Blue represents the high voltage channel in the HV GUI that controls the HV to a particular PMT module.
+
+	\newgeometry{margin=1.1cm}
+	\begin{landscape}
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_Layout_Right_0-15_9_23_2020.pdf}
+	\end{center}
+	\vspace{-25mm}
+	\caption{
+	{\bf{Right Half of HCal Cable Map.}} Black font represents the HCal module (PMT) number beginning at one in the top left of the back side of HCal (side with the PMTs downstream). Red font represents the HCal amplifier channel to which the signal first goes after leaving the PMT. Green represents the fADC channel where the signal ultimately enters (note these are labelled on the fADC250 front panel as zero to fifteen). Blue represents the high voltage channel in the HV GUI that controls the HV to a particular PMT module.}
+	\label{fig:right_half}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_Layout_Left_0-15_9_23_2020.pdf}
+	\end{center}
+	\vspace{-25mm}
+	\caption{
+	{\bf{Left Half of HCal Cable Map.}} Black font represents the HCal module (PMT) number beginning at one in the top left of the back side of HCal (side with the PMTs downstream). Red font represents the HCal amplifier channel to which the signal first goes after leaving the PMT. Green represents the fADC channel where the signal ultimately enters (note these are labelled on the fADC250 front panel as zero to fifteen). Blue represents the high voltage channel in the HV GUI that controls the HV to a particular PMT module.}
+	\label{fig:left_half}
+	\end{figure}	
+	
+	\end{landscape}
+	\restoregeometry
 
 %The cabling scheme for HCal is designed such that all detector channels can be accessed at numerous points between the detector PMTs and where the final signals enter the DAQ electronics. The HCal cable system can be broken into three groups based on whether the physics signals flow to the fADC250s or the F1TDCs discussed in Section \ref{daq} or the summing modules discussed in Section \ref{electronics}. Five racks hold the front-end and DAQ cabling and electronics and a diagrammatic layout of these racks is show in Figures \ref{fig:fe} and \ref{fig:daq}. The front-end racks are labelled RR1, RR2, and RR3. The electronics and cables in RR1 and RR3 are mirrored as each of these racks contains half of the HCal channels. The DAQ side racks are RR4 and RR5. The DAQ side is connected to the front-end via 100 m*** long BNC cables running from RR2 to RR4. \\ 
 %
@@ -439,6 +608,60 @@ The third set of signals leading to the summing modules takes the following path
 %	\item 288 2 m BNC-LEMO cables.
 %	\item 18 summing modules***(better name? UVA?) in RR1 and RR3.
 %\end{itemize}
+
+\section{HCal Cable Connections GUI}
+\label{sec:gui}
+
+In addition to the above maps and schematics an interactive GUI has been created with the Python package tkinter to mirror the geometry of the HCal detector, it's front-end electronics racks, and its DAQ electronics racks. This consists of three different GUIs that can be found in the /home/daq/test$\_$fadc directory of enpcamsonne. They are: HCal$\_$GUI.py, for the detector itself, HCal$\_$GUI$\_$FE.py, for the front-end electronics racks (RR1, RR2, and RR3), and HCal$\_$GUI$\_$DAQ.py, for the DAQ electronics racks (RR4 and RR5). These GUIs can be interacted with by running ``python3 HCal$\_$GUI$\_$X.py". \\
+
+HCal$\_$GUI.py has one button for each of the 288 PMTs on HCal in their geometric configuration (see Figure \ref{fig:hcal_gui}). Clicking one of these buttons will list all of the cable connections associated with that PMT (see Figure \ref{fig:output}), all the way up to the signal's collection at the DAQ. These connections are contained in a python dictionary stored in a json file. This dictionary is produced by Connections$\_$Dictionary.py, which can be modified to change the connections or executed to rebuild and print out the connections dictionary. The dictionary is organized with the PMT numbers (1-288) as the keys and the cable connection points are stored as values in a list. The dictionary structure is $\{$``PMT \#": [``amplifier", ``front-end fADC patch panel", ``DAQ fADC patch panel", ``fADC", ``splitter panel", ``front-end TDC discriminator", ``front-end TDC patch panel", ``DAQ TDC patch panel", ``DAQ TDC discriminator", ``F1TDC", ``summing module", ``high voltage channel", ``PMT row-column"],...$\}$.\\
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=.6\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Connection_GUI/HCal_Detector_GUI.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Detector GUI.}} HCal Detector GUI displays all 288 PMTs as buttons in their geometric distribution. Clicking a button will display the cable connection information for the corresponding PMT.}
+	\label{fig:hcal_gui}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Connection_GUI/HCal_GUI_Terminal_Output.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Detector GUI Terminal Output.}} Clicking a button prints its relevant information like high voltage channel that powers it and how the signal moves through the electronics cables. This figure shows the output after pressing PMT button 88.}
+	\label{fig:output}
+	\end{figure}	
+	
+HCal$\_$GUI$\_$FE.py and HCal$\_$GUI$\_$DAQ.py can be seen in Figures \ref{fig:hcal_gui_fe} and \ref{fig:hcal_gui_daq} respectively. These GUIs display the geometry of the electronics racks with buttons describing the contents of the various power crates and rack panels. Clicking these buttons creates a new window that will show the components in the rack and their inputs and outputs. Figure \ref{fig:hcal_fe_amplifier} shows the window that is created by clicking the `Amplifiers' button in RR1 of the front-end GUI. Clicking the individual channels in this new window will print out the cable connection information for that channel, as was done for the HCal detector GUI.\\
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Connection_GUI/HCal_GUI_FE.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Front-End Electronics GUI.}} The front-end GUI displays the layout of the electronics in each of the three front-end electronics racks (RR1, RR2, and RR3). Clicking these buttons creates a new window that will show the components in the rack and their inputs and outputs. Clicking those individual channels will print out the cable connection information for that channel.}
+	\label{fig:hcal_gui_fe}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Connection_GUI/HCal_GUI_DAQ.png}
+	\end{center}
+	\caption{
+	{\bf{HCal DAQ Electronics GUI.}} The DAQ GUI displays the layout of the electronics in each of the DAQ electronics racks (RR4 and RR5). Clicking these buttons creates a new window that will show the components in the rack and their inputs and outputs. Clicking those individual channels will print out the cable connection information for that channel.}
+	\label{fig:hcal_gui_daq}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Connection_GUI/HCal_GUI_FE_RR1_Amplifiers.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Front-End Electronics RR1 Amplifier.}} This window shows the PS776 amplifier geometry for electronics rack RR1. Clicking the individual channels will print out the cable connection information for that channel.}
+	\label{fig:hcal_fe_amplifier}
+	\end{figure}	
 
 \bibliographystyle{plain}
 \bibliography{mybibfile}

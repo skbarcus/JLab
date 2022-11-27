@@ -1,0 +1,1140 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=authoryear,% Author , Date style citations.
+  %style=phys,% APS Style citations.
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+\addbibresource{references.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for drawing an oval on an image.
+\usepackage{tikz}
+\usetikzlibrary{positioning,shapes}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{SBS Hadron Calorimeter Commissioning Results}
+\subtitle{}
+\date{February 11\textsuperscript{th} 2022}
+\author{Scott Barcus on behalf of the HCal Working Group}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\titlegraphic{\vspace{44mm}\hfill\includegraphics[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HallA_Collab_Feb_2022/SBS_Hall_HCal_Side_View.png}}
+
+\setbeamertemplate{footline}[text line]{%
+  \parbox{\linewidth}{\vspace*{-8pt}Scott Barcus\hfill Jefferson Lab \hfill \insertpagenumber}}
+\setbeamertemplate{navigation symbols}{}
+
+\begin{document}
+
+\maketitle
+
+%\begin{frame}{Table of contents}
+%  	\begin{columns}[T,onlytextwidth]
+%  	\column{0.5\textwidth}
+%
+%	\vspace{10mm}
+%  	\setbeamertemplate{section in toc}[sections numbered]
+%  	\tableofcontents[hideallsubsections]
+%  
+%  	\column{0.5\textwidth}
+%%		\vspace{0mm}
+%%		\begin{center}
+%%		\includegraphics[width=.5\linewidth]{wm_cypher_gold.png}
+%%		\end{center}
+%		
+%		\vspace{11mm}
+%		\begin{center}
+%		\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/DNP_2019/Presentation/JLab_logo_text_white1.jpg}
+%		\end{center}
+%		
+%		\vspace{12mm}
+%		\begin{center}
+%		\includegraphics[width=.6\linewidth]{/home/skbarcus/Documents/DNP_2019/Presentation/DOE_Logo.jpg}
+%		\end{center}
+%	
+%\end{columns}
+%\end{frame}
+
+\begin{frame}{HCal Overview}
+	\vspace{-4mm}
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+  	
+  	\begin{center}
+  	
+	\begin{itemize}
+		\item Design based on COMPASS HCAL1 \parencite{hcal1}.
+		\item Segmented calorimeter designed to detect multiple GeV protons and neutrons.
+		\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
+			\item[--] 288 PMT modules (24$\times$12).
+			%\item[--] Four craneable subassemblies.
+			%\item[--] Weighs $\approx$40 tons.
+			%\item[--] Wavelength shifter.
+			%\item[--] Custom light guides.
+			\item[--] LED fiber optics system.
+		\end{itemize}
+		\item SBS dipole magnet separates scattered hadrons by charge.
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{High time resolution (0.5 ns).} 
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{High position resolution (3-4 cm at 8 GeV).}
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Neutron to proton detection efficiency ratio 0.985 at 8 GeV.}
+		\item Energy resolution $\approx$30\%.
+	\end{itemize}
+	
+	\end{center}
+	
+	\vspace{-4mm}
+	\column{0.5\textwidth}
+	 \begin{center}
+  		\includegraphics[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HallA_Collab_Feb_2022/SBS_Magnet.jpg}
+  		\includegraphics[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HallA_Collab_Feb_2022/HCal_Front.jpg}
+  	\end{center}
+  	
+  	\begin{center}
+  	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170610.jpg}
+  	\end{center}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{HCal Interior (288 Individual PMT Modules)}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.52\textwidth}
+  	
+  	\begin{itemize}
+  		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{40 layers of iron absorbers} alternate with \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{40 layers of scintillator.}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Iron causes hadrons to shower.} 
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Scintillator layers sample energy.}
+		\item Photons pass through a wavelength shifter increasing detection efficiency.
+		\item Custom light guides transport photons to PMTs.
+			\begin{itemize}
+				\item[--] 192 12 stage 2'' Photonis XP2262 PMTs.
+				\item[--] 96 8 stage 2'' Photonis XP2282 PMTs.
+			\end{itemize}
+  	\end{itemize}
+
+  	\column{0.48\textwidth}
+  	
+  	\vspace{-5mm}
+  	\begin{center}
+  		\vspace{5mm}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_Interior_Clean.png}
+		\vspace{10mm}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Single_Module_Clean.png}
+  	\end{center}
+  	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}{$G_M^n$ Experiment}
+
+	\begin{itemize}
+		\item \alert{$G_M^n$ experiment to extract neutron magnetic form factor.}
+		\begin{itemize}
+			\item[--] Quasielastic deuterium cross section ratios d(e,e'n)p/d(e,e'p)n. \tiny{\parencite{gmn_slides,gmn}}
+		\end{itemize}		 
+		\item HCal detected scattered hadrons.
+		\item BigBite spectrometer detected scattered electrons.
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/GMn_Layout_Clean_Labels.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{$G_M^n$ Experiment: Science Results}
+
+	\begin{itemize}
+		\item Flavor decomposition of $G_M^n$ and $G_M^p$ $\rightarrow$ flavor form factors.
+		%\item GPD constraining sum rules ($H$ and $E$).
+		\item Nucleon form factors constrain GPDs (first moments of $H$ and $E$).
+		\item High $Q^2$ $G_M^n$ measurements test lattice QCD, pQCD, VMD models, and effective field theories. \tiny{\parencite{gmn_slides,gmn}}
+	\end{itemize}
+
+	\vspace{-4mm}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HallA_Collab_Feb_2022/GMn_Collected_Points.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Data Acquisition System}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.55\textwidth}
+  	
+  	\begin{itemize}
+  		\item Two VXS crates.
+  		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{18 16-channel fADC250 flash ADCs measure energy.}
+  			\begin{itemize}
+  				\item[--] Takes numerous samples (250 MHz, 4ns).
+  				\item[--] Time over threshold measurements extract timing.% (CFD removes time walk).
+  			\end{itemize}
+  		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{5 64-channel F1TDCs for timing.}
+  		\item VXS Trigger Processors (VTPs) contain FPGAs to form triggers (future use).
+  		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Triggers:}
+  			\begin{itemize}
+  				\item[--] Scintillator paddle (cosmics).
+  				\item[--] Summing module trigger.
+  				\item[--] LED pulser trigger.
+  				\item[--] BigBite coincidence trigger.
+  			\end{itemize}
+  	\end{itemize}
+  	
+  	\column{0.5\textwidth}
+  	\vspace{-2mm}
+	\centerline{\includegraphics[width=0.65\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Landau_Fit_706_Evt1_2-10_Clean.png}}
+	
+	\vspace{1mm}	
+	
+	\centerline{\includegraphics[width=0.85\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Cosmic_Hit_run820_evt16_Arrow.png}}
+	
+	\vspace{1mm}
+	
+	\centerline{\includegraphics[width=0.4\textwidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/Summing_Module_Triggers.png}}
+
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Proton Sweep}
+
+	\begin{itemize}
+		\item Using a LH$_2$ target sweep the magnetic field to illuminate all of HCal with elastic protons.
+		\item These elastics are well understood and can be used for calibrations and detector characterization.
+	\end{itemize}
+	
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Elastic_Proton_SBS_Scan_Clean.png}
+
+\end{frame}
+
+\begin{frame}{Geant4 Simulations Position Resolution}
+	
+	\vspace{-2mm}
+	\begin{itemize}
+		\item Geant4 simulations model all detectors, the target, and magnets.
+			\begin{itemize}
+				\item[--] Full optical photon processes (light yields and backgrounds).
+			\end{itemize}
+		\item Require excellent spatial resolution for high $Q^2$ SBS experiments. 
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$P_N$ = 8 GeV: X (horizontal) resolution = 3.2 cm, Y (vertical) resolution = 3.8 cm.}
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{$P_N$ = 2.5 GeV: X and Y resolution = 6-7 cm.}
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-2mm}
+	\begin{center}
+  		\includegraphics[width=0.65\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/hcal_efficiency_resolution.png}
+  	\end{center}
+  	\vspace{-5mm}
+	\tiny{Image from Juan Carlos Cornejo.}
+	
+\end{frame}
+
+\begin{frame}{Elastic Hadrons on HCal}
+
+	\begin{itemize}
+		\begin{overprint}
+	
+		\onslide<1,2>{\item Using track reconstruction from GEMs and BB project the hadron path onto HCal.
+					   %\item Project hadron onto HCal using track reconstruction from GEMs and BB.
+			\begin{itemize}
+				\item[--] \alert{Assume no SBS field $\rightarrow$ proton measured position is higher than expected.}
+				\item[--] Find cluster X,Y position and subtract off the expected position.
+				\item[--] See elastic proton spots from hydrogen.
+			\end{itemize}}
+		\vspace{-4mm}
+		\onslide<2>\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{May have replayed SBS8 before optics were well calibrated.}
+		
+		\end{overprint}
+	\end{itemize}
+	
+	\begin{overprint}
+
+  		\onslide<1>\centerline{\includegraphics[width=0.7\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Elastic_Proton_Spot_SBS4.png}}
+
+  		\onslide<2>\centerline{\includegraphics[width=0.83\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Elastic_Proton_Spot_SBS8.png}}
+		
+	\end{overprint}
+	\tiny{Image from Sebastian Seeds.}
+
+\end{frame}
+
+\begin{frame}{Measured Position Resolution}
+
+	\begin{itemize}
+		\begin{overprint}
+	
+		\onslide<1>\item SBS4 X-direction (vertical) position resolution $\approx$ 8.2 cm.
+			\begin{itemize}
+				\item[--] $E_{beam}\approx3.7GeV$ and $Q^2\approx3GeV^2$.
+			\end{itemize}
+		\onslide<2>\item SBS4 Y-direction (horizontal) position resolution $\approx$ 7.1 cm.
+			\begin{itemize}
+				\item[--] $E_{beam}\approx6GeV$ and $Q^2\approx4.5GeV^2$.
+			\end{itemize}
+		%\onslide<3>\item SBS8 X-direction (vertical) position resolution $\approx$  cm.
+		%\onslide<4>\item SBS8 Y-direction (vertical) position resolution $\approx$  cm.
+		
+		\end{overprint}
+	\end{itemize}
+	
+	\begin{overprint}
+  		\onslide<1>\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Proton_XPosition_SBS4_Fit.png}
+
+  		\onslide<2>\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Proton_YPosition_SBS4_Fit.png}
+  		
+  		%\onslide<3>\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Proton_XPosition_SBS8_Fit.png}
+
+  		%\onslide<4>\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Proton_YPosition_SBS8_Fit.png}
+	
+	\end{overprint}
+
+\end{frame}
+
+
+\begin{frame}{Hadron X-Position LD$_2$}
+
+	\begin{itemize}
+		\item SBS4 HCal X-position expected vs. measured with zero SBS field.
+			\begin{itemize}
+				\item[--] Proton peak deflected upwards $\approx$110 cm on HCal.
+				\item[--] See clear neutron peak below the proton peak.
+			\end{itemize}
+	\end{itemize}
+
+	\begin{overprint}
+  		\onslide<1>\centerline{\includegraphics[width=0.8\linewidth]{/home/skbarcus/Documents/JLab_SS1/Nov_2021/pictures/Proton_Neutron_Separation_SBS4_2D.png}}
+
+  		\onslide<2>\centerline{\includegraphics[width=0.95\linewidth]{/home/skbarcus/Documents/JLab_SS1/Nov_2021/pictures/Proton_Neutron_Separation_SBS4.png}}
+	
+	\end{overprint}
+
+\end{frame}
+
+\begin{frame}{Geant4 Simulations Detection Efficiency}
+
+	\begin{itemize}
+		\item \alert{HCal requires comparable detection efficiency for protons and neutrons.} 
+			\begin{itemize}
+				\item[--] Ratio of simulated neutron detection efficiency to proton efficiency. 
+				\item[--] Ratio = 0.985 at 7-8 GeV. Drops to $\approx$0.966 between 2.5-4 GeV.
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-5mm}
+	\begin{center}
+  		\includegraphics[width=0.65\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/hcal_efficiency_ratio.png}
+  	\end{center}
+  	\vspace{-4mm}
+  	\tiny{Image from Juan Carlos Cornejo.}
+
+\end{frame}
+
+\begin{frame}{Detection Efficiency Uniformity}
+
+	\begin{itemize}
+		\item Important to detect protons and neutrons with the same efficiency.
+		\begin{itemize}
+			\item[--] \alert{If detection efficiency differs the p/n cross section ratio becomes less accurate.}
+		\end{itemize}
+		\item Proton elastic spot separated from neutrons by SBS magnet.
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Need the detection efficiency at the proton spot and neutron spots to be the same.}
+		\end{itemize}
+		\item Using elastic electron information from BB and GEMs calculate expected hadron energy.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Measured HCal cluster energy for elastic hadrons represents the sampling fraction of the expected energy detected.}
+				\item[--] This sampling fraction should be uniform across the surface of HCal.
+				\item[--] Predicted by Geant4 to be on the order of $\approx$7.5\%.
+			\end{itemize}			 
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Detection Efficiency Uniformity SBS4 \& SBS8}
+
+	\begin{itemize}
+	\begin{overprint}
+	
+		\onslide<1>\item SBS4: $E_{beam}\approx3.7GeV$ and $Q^2\approx3GeV^2$. Sampling fraction $\approx$4.76\%.
+		\onslide<2>\item SBS8: $E_{beam}\approx6GeV$ and $Q^2\approx4.5GeV^2$. Sampling fraction $\approx$3.63\%.
+	
+	\end{overprint}
+	\end{itemize}
+
+	\begin{overprint}
+  		\onslide<1>\centerline{\includegraphics[width=0.96\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/EHCal_vs_EExpected_SBS4_Fit.png}}
+
+  		\onslide<2>\centerline{\includegraphics[width=1.1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/EHCal_vs_EExpected_SBS8_Fit.png}}
+	
+	\end{overprint}
+	\tiny{Image from Sebastian Seeds.}
+
+\end{frame}
+
+\begin{frame}{Detection Efficiency Uniformity SBS4 \& SBS8}
+
+	\vspace{-10mm}
+	\begin{itemize}
+	\begin{overprint}
+	
+		\onslide<1>\item SBS4: $E_{beam}\approx3.7GeV$ and $Q^2\approx3GeV^2$. Sampling fraction by row.
+		\onslide<2>\item SBS4: $E_{beam}\approx3.7GeV$ and $Q^2\approx3GeV^2$. Sampling fraction by column.
+		\onslide<3>\item SBS8: $E_{beam}\approx6GeV$ and $Q^2\approx4.5GeV^2$. Sampling fraction by row.
+		\onslide<4>\item SBS8: $E_{beam}\approx6GeV$ and $Q^2\approx4.5GeV^2$. Sampling fraction by column.
+	
+	\end{overprint}
+	\end{itemize}
+
+	\begin{overprint}
+  		\onslide<1>\centerline{\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/SBS4_Uniformity_X.png}}
+
+  		\onslide<2>\centerline{\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/SBS4_Uniformity_Y.png}}
+	
+	  	\onslide<3>\centerline{\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/SBS8_Uniformity_X.png}}
+
+  		\onslide<4>\centerline{\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/SBS8_Uniformity_Y.png}}
+	\end{overprint}
+	\tiny{Image from Sebastian Seeds.}
+
+\end{frame}
+
+\begin{frame}{Detection Efficiency Uniformity SBS4 \& SBS8}
+
+	\vspace{-10mm}
+	\begin{itemize}
+		\begin{overprint}
+	
+		\onslide<1>\item Project individual rows and columns and fit sampling fractions for SBS4/8.
+		\onslide<2>\item X-direction (vertical) uniformity. Sampling fraction fit by row.
+		\onslide<3>\item Y-direction (horizontal) uniformity. Sampling fraction fit by column.
+	
+		\end{overprint}
+	\end{itemize}
+
+	\begin{overprint}
+  		\onslide<1>\centerline{\includegraphics[width=0.95\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/SBS4_XSlice_Row_18.png}}
+
+  		\onslide<2>\centerline{\includegraphics[width=0.95\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/HCal_Uniformity_X.png}}
+	
+	  	\onslide<3>\centerline{\includegraphics[width=0.95\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/HCal_Uniformity_Y.png}}
+
+	\end{overprint}
+
+\end{frame}
+
+\begin{frame}{Preliminary Timing Resolution}
+
+	\begin{itemize}
+		\begin{overprint}
+		\onslide<1,2>{\item Isolate elastic proton events and find the \alert{HCal TDC time of the highest energy PMT in the largest energy cluster for each event.}
+		\item This time has significant jitter and requires a \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{reference time which is taken as the hodoscope time} for these events.
+		\item Plot these times for every channel.
+			\begin{itemize}
+				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Needs time walk correction} (work in progress).
+				\item[--] Secondary peaks thought to be light reflected to back of PMT module before entering PMT (can remove with time cut).}
+			\end{itemize}
+		\end{overprint}
+	\end{itemize}
+
+	\vspace{-5mm}
+	\begin{overprint}
+  		\onslide<1>\centerline{\includegraphics[width=0.75\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/HCal_Hodo_Time_SBS4_No_Cut.png}}
+
+  		\onslide<2>\centerline{\includegraphics[width=0.75\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/HCal_Hodo_Time_SBS4.png}}
+
+	\end{overprint}
+	\vspace{-2mm}
+	\tiny{Image from Sebastian Seeds.}
+
+\end{frame}
+
+\begin{frame}{Preliminary Timing Resolution}
+
+	\begin{itemize}
+		\item Project out timing of a single PMT with more statistics to find individual timing resolution.
+		\item Apply time walk correction.
+		\item \alert{Timing resolutions} for individual PMTs \alert{$\approx$1 ns} (with better time walk correction as low as 0.6 ns).
+		\item Need more statistics replayed.
+	\end{itemize}
+
+	%\vspace{-3mm}
+	\centerline{\includegraphics[width=0.85\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Documents/Hall_A_Collaboration_Feb_2022/Pictures/Timing_Resolution_Single_Ch_SBS4.png}
+}
+\end{frame}
+
+\begin{frame}{HCAL-J Summary}
+
+\begin{itemize}
+	\item \alert{The SBS HCal has successfully been commissioned collecting elastic hadrons during the $G_M^n$ run!}
+	\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Preliminary analyses indicate detector is performing as expected.}
+		\begin{itemize}
+			\item[--] Position resolution at low hadron energy $\approx$7-8 cm.
+			\item[--] Detection efficiency uniformity looks constant over HCal's surface.
+			\item[--] Timing resolutions for individual PMTs $\approx$1 ns (can likely improve).
+		\end{itemize}
+	\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Upcoming Work:}
+		\begin{itemize}
+			\item[--] Finalize calibrations and DB geometry then mass replay data.
+			\item[--] High statistics analyses and extraction of the p/n cross section ratio.
+			\item[--] Integrate VTP software trigger for upcoming experiments.
+			\item[--] Study performance of individual modules to make improvements.
+			\item[--] Test software fixes for LED pulser sequences.
+		\end{itemize}
+\end{itemize}
+
+\end{frame}
+
+%\begin{frame}{HCAL-J Summary}
+%
+%	\begin{itemize}
+%		\item Detects protons and neutrons for future JLab Hall A SBS experiments.
+%			\begin{itemize}
+%				\item[--] Measure nucleon form factors up to high $Q^2$.
+%			\end{itemize}
+%		\item Energy resolution $\approx$30\%.
+%		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{High time resolution ($\approx$0.5 ns).}
+%		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Excellent position resolution (as low as 3-4 cm).}
+%		\item Similar detection efficiency for protons and neutrons.
+%		\item ML particle ID detector trigger research ongoing. 
+%			\begin{itemize}
+%				\item[--] Serve as test bed for FPGA based ML detector triggers at JLab and hopefully create a cleaner HCal trigger.
+%			\end{itemize}
+%	\end{itemize}
+%
+%\end{frame}
+
+\begin{frame}{Acknowledgments}
+%Thanks to \alert{Gregg Franklin} for his many dedicated years designing and overseeing the construction of HCal. Thanks to \alert{Universit\'{a} di Catania} for their major financial contributions. 
+\vspace{-2mm}
+Many people and institutions were involved in HCal's development:
+\vspace{-3mm}
+    \begin{itemize}
+    		\item Special thanks to \alert{Juan Carlos Cornejo} and \alert{Sebastian Seeds} for getting HCal where it is today.
+        \item Thanks to the many students who have worked on HCal including \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Alexis Ortega}, \alert{So Young Jeon}, \alert{Jorge Pe\~{n}a}, \alert{Carly Wever}, \alert{Vanessa Brio}, \alert{Sebastian Seeds}, and \alert{Provakar Datta}. 
+        \item Thanks to \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Gregg Franklin}, \alert{Brian Quinn}, and the \alert{Carnegie Mellon} team for design, overseeing construction, and ongoing guidance.
+        \item Thanks to \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Universit\'{a} di Catania} for major financial contributions.
+        \item Thanks to \alert{Vanessa Brio}, \alert{Cattia Petta}, and \alert{Vincenzo Bellini} for their cosmic commissioning efforts.
+        \item Thanks to \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Alexandre Camsonne} and \alert{Bryan Moffit} for DAQ work.
+        \item Thanks to \alert{Chuck Long} for all his help fixing and acquiring things.
+        \item Thanks to \alert{Bogdan Wojtsekhowski} for his guidance and advice.
+        \item Thanks to the rest of the HCal Working Group as well:\setbeamercolor{alerted text}{fg=TolLightRed}\alert{Dimitrii Nikolaev}, \alert{Jim Napolitano}, and \alert{Donald Jones}.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Questions?}%{References}
+	
+	\setbeamertemplate{bibliography item}{}%Removes page icon in from of each references.
+	\renewcommand*{\bibfont}{\scriptsize}%Change bib font size.
+	%\printbibliography[heading=bibintoc, title=References]
+	\printbibliography
+	%\bibliographystyle{plainnat}
+	%\bibliography{bib_Books}
+	
+\end{frame}
+
+\begin{frame}{Backup Slides}
+
+	\begin{center}
+			\Huge{\alert{Backup Slides}}
+	\end{center}
+
+\end{frame}
+
+%\begin{frame}{Geant4 Simulations}
+%	
+%	\vspace{-2mm}
+%	\begin{itemize}
+%		\item Geant4 simulations model all detectors, the target, and magnets.
+%			\begin{itemize}
+%				\item[--] Full optical photon processes (light yields and backgrounds).
+%			\end{itemize}
+%		\item Require excellent spatial resolution for high $Q^2$ SBS experiments. 
+%			\begin{itemize}
+%				\item[--] $P_N$ = 8 GeV: X (horizontal) resolution = 3.2 cm, Y (vertical) resolution = 3.8 cm.
+%				\item[--] $P_N$ = 2.5 GeV: X and Y resolution = 6-7 cm.
+%			\end{itemize}
+%	\end{itemize}
+%	
+%	\vspace{-2mm}
+%	\begin{center}
+%  		\includegraphics[width=0.65\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/hcal_efficiency_resolution.png}
+%  	\end{center}
+%  	\vspace{-5mm}
+%	\tiny{Image image from Juan Carlos Cornejo.}
+%	
+%\end{frame}
+%
+%\begin{frame}{Geant4 Simulations}
+%
+%	\begin{itemize}
+%		\item HCal also requires nearly identical detection efficiency for protons and neutrons. 
+%			\begin{itemize}
+%				\item[--] Ratio of simulated neutron detection efficiency to proton detection efficiency. 
+%				\item[--] Ratio = 0.985 at 7-8 GeV. Drops to $\approx$0.966 between 2.5-4 GeV.
+%			\end{itemize}
+%	\end{itemize}
+%	
+%	\vspace{-1mm}
+%	\begin{center}
+%  		\includegraphics[width=0.65\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/hcal_efficiency_ratio.png}
+%  	\end{center}
+%  	\vspace{-4mm}
+%  	\tiny{Image image from Juan Carlos Cornejo.}
+%
+%\end{frame}
+
+\begin{frame}{TDC Timing Resolution}
+
+	\begin{columns}[T,onlytextwidth]
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item Require cosmic to be nearly \alert{`vertical'}.
+			\begin{itemize}
+				\item[--] Vertical F1 signals.
+				\item[--] No surrounding F1 signals.
+			\end{itemize}
+		\item TDC time:
+		\begin{equation*}
+			\text{T}_{\text{cor}}=\text{T}_{\text{PMT}} - \text{T}_{\text{ref}},
+		\end{equation*}
+		\begin{equation*}
+			\text{T}_{\text{ref}}=\frac{\text{TDC\;1}+\text{TDC\;2}}{2}.
+		\end{equation*}
+		\item Extract standard deviation of single PMT.
+		\begin{equation*}
+    			\sigma_{PMT} = \sqrt{|\sigma_{cor}^2-\sigma_{ref}^2|}.
+    		\end{equation*}
+	\end{itemize}
+	
+	\column{0.4\textwidth}
+	\begin{center}
+  		\includegraphics[width=1.6\linewidth]{/home/skbarcus/JLab/SBS/HCal/Analysis/Cosmics/fADC_Timing_Res_3_12_2020/fADC_Timing_Resolution_Cuts.png}
+  	\end{center}
+  	\end{columns}
+  	
+  	\begin{center}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/TDC_Timing_run820_6vert_Cropped.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{LED HV Calibration}
+	\vspace{-1mm}
+	\begin{itemize}
+		\item Plots of PMT gain curves and measured number of photoelectrons from LEDs.
+		\begin{itemize}
+			\item[--] Images from Sebastian Seeds.
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{-7mm}
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	
+	\begin{center}
+  		\includegraphics[width=.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/JLab_PMT_Gain_Curve.png}
+  	\end{center}
+	
+	\vspace{-7mm}
+	\column{0.5\textwidth}
+	
+	\begin{center}
+  		\includegraphics[width=.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/CMU_PMT_Gain_Curve.png}
+  	\end{center}
+	
+	\end{columns}
+	
+	\vspace{-4mm}
+	\begin{center}
+  		\includegraphics[width=.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/NPE_vs_HV.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Cosmic Calibration Progress}
+
+	\begin{itemize}
+		\item Plots display the average fADC signal (RAU) during a cosmic event versus PMT module for three runs.
+			\begin{itemize}
+				\item[--] Each successive run calibrates signals closer to goal of 61 RAU by adjusting HV.
+			\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+	%\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[12cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Avg_Cosmic_Amp_Run1263.png}
+	%\end{center}%error
+	%\caption[\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut}]{
+	%{\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	%\label{fig:3he_fch_no_cut}
+	\onslide<2>\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Avg_Cosmic_Amp_Run1265.png}
+	%\caption[\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut}]{
+	%{\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut.}} }
+	%\label{fig:3he_fch_cut}
+	%\end{center}%error
+	\onslide<3>\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Avg_Cosmic_Amp_Run1267.png}
+	\end{overprint}
+	%\end{center}
+	%\end{figure}
+	\end{center}
+
+
+\end{frame}
+
+%\begin{frame}{Brief Overview of Neural Network Training}
+%
+%	\vspace{-3mm}
+%	\begin{center}
+%  		\includegraphics<1>[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/SBS_Meeting_July_2020/neural_network.png}\\
+%  		\tiny{Image from https://www.astroml.org/book$\_$figures/chapter9/fig$\_$neural$\_$network.html.}
+%  	\end{center}
+%  	
+%  	\vspace{-5mm}
+%  	\begin{columns}[T,onlytextwidth]
+%  	\column{0.5\textwidth}
+%  	
+%  	\begin{itemize}
+%  		\item \alert{Feed Forward:}
+%  			\begin{itemize}%\itemsep100pt%\setlength{\itemsep}{100pt}%[itemsep=4pt]
+%  				\item[--] Initialize weights/biases.
+%  				\item[--] Enter labeled training data to input layer.
+%  				\item[--] Calculate activation (output) of each neuron.
+%  				\item[--] Feed forward activation until output layer reached.
+%  			\end{itemize}
+%  	\end{itemize}
+%  	
+%  	\column{0.5\textwidth}
+%  	
+%  	\begin{itemize}
+%  		\item \alert{Backpropagation:}
+%  			\begin{itemize}%[itemsep=4pt]
+%  				\item[--] Evaluate loss function. \setbeamercolor{alerted text}{fg=TolLightRed}\alert{How wrong is the NN's guess?}
+%  				\item[--] Step back through NN calculating partial derivatives of loss function.
+%  				%\item[--] Apply backpropagation algorithm to step back through NN (Chain rule).
+%  				\item[--] Adjust weights and biases along the gradient of descent (\setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{minimize loss function}).
+%  				\item[--] Feed forward again. 
+%  			\end{itemize}
+%  	\end{itemize}
+%
+%	\end{columns}
+%
+%\end{frame}
+%
+%\begin{frame}{Commissioning a Machine Learning Detector Trigger for HCal}
+%
+%	\begin{itemize}
+%		\item \alert{Motivation:}
+%			\begin{itemize}
+%				\item[--] High background rates obscure physics signals.
+%			\end{itemize}
+%		\item \alert{Traditional Solutions:}
+%			\begin{itemize}
+%				\item[--] Prescaling the data.
+%				\item[--] Energy threshold cuts.
+%				\item[--] Decreasing the beam current.
+%			\end{itemize}
+%		\item \alert{Machine Learning Solution:}
+%			\begin{itemize}
+%				\item[--] Use data from Geant4 converted to detector outputs to train NN.
+%				\item[--] Train a neural network to classify detector events (e.g. p, n, $\pi$).
+%				\item[--] Load trained NN onto VTP FPGA (fast) to use as HCal trigger.
+%			\end{itemize}
+%		\item \alert{Goal:}
+%			\begin{itemize}
+%				\item[--] Show that NNs on FPGAs can be used as triggers for JLab detectors.
+%				\item[--] Compare HCal ML trigger to traditional triggering methods.
+%			\end{itemize}
+%	\end{itemize}
+%
+%\end{frame}
+%
+%\begin{frame}{Proposed Convolutional Neural Network Architecture}
+%	\vspace{-2mm}
+%	\begin{center}
+%  		\includegraphics<1>[width=0.72\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/Pictures/HCal_Generic_CNN.png}\\
+%  		%\tiny{Image from https://www.mdpi.com/2076-3417/9/21/4500.}
+%  	\end{center}
+%
+%	\vspace{-5mm}
+%	\begin{itemize}
+%		%\item Started with image classification. 
+%		\item \alert{PMT pulse shapes are essentially images.}
+%			\begin{itemize}
+%				\item[--] Each event every PMT has several fADC samples and a TDC value.
+%			\end{itemize}
+%		%\item Fully connected NNs assume each neuron connects to each neuron in the next layer and that each connection is equally important.
+%%			\begin{itemize}
+%%				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{The location of PMTs relative to one another matters!}
+%%			\end{itemize}
+%		\item CNN scans across the image with a kernel creating \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{filters} which \alert{identify localized features} (like PMT hits).
+%		\begin{itemize}
+%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Detector geometry preserved.}
+%			\item[--] Pooling decreases dimensionality by merging adjacent signals.
+%			\item[--] Batch normalization improves speed and regularization.
+%			\item[--] Dropout helps reduce over-fitting.
+%		\end{itemize}
+%		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Tools:} ROOT, Python, Numpy, Scikit-learn, Tensorflow, Keras, Google Colaboratory (GPUs).
+%	\end{itemize}
+%
+%\end{frame}
+%
+%%\begin{frame}{Training a Neural Network with Digitized Simulation Data}
+%%
+%%\begin{itemize}
+%%	\item \alert{Tools:} ROOT, Python, Numpy, Scikit-learn, Tensorflow, Keras, Google Colaboratory (GPUs).
+%%	\item \alert{Steps:}
+%%	\begin{enumerate}
+%%		\item Understand the data.
+%%		\item Preprocess HCal data for CNN compatibility.
+%%		\item Build CNN model architecture.
+%%		\item Train CNN.
+%%		\item Evaluate model's performance.
+%%		\item Improve model's performance.
+%%	\end{enumerate}
+%%\end{itemize}
+%%
+%%\end{frame}
+%
+%\begin{frame}{Understanding the Data}
+%
+%	\begin{itemize}
+%		\item<1|only@1> Comparison of real and digitized simulated data from Geant4.
+%		\begin{itemize}
+%			\item<1|only@1>[--] Event displays show fADC waveforms of 1/4 of HCal PMTs.
+%		\end{itemize}
+%		\item<1|only@1> Real cosmic data (more vertical tracks).
+%		\item<1|only@1> fADCs take numerous energy samples (250 MHz, 4ns bins).
+%		\begin{itemize}
+%			\item<1|only@1>[--] fADC waveforms look similar to Landau functions.
+%		\end{itemize}
+%		
+%		\item<2|only@2> Digitized simulated hadron data from Geant4 (horizontal tracks).
+%		\item<2|only@2> Does not yet have correct waveform shape.
+%		\item<2|only@2> PMTs without hits (blue) filled with pedestal noise.
+%		%\item<3|only@3> For initial studies use integral of fADC waveform.
+%		%\item<3|only@3> Train neural net to find clusters of PMT hits.
+%		%\begin{itemize}
+%			%\item<3|only@3>[--] Similar to fADC waveforms in red.
+%		%\end{itemize}
+%	\end{itemize}
+%    		
+%    \begin{center}
+%        \includegraphics<1|only@1>[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Event_Display_Cosmic_Run_1456.png}
+%
+%         \includegraphics<2|only@2>[width=0.95\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Event_Display_G4SBS_Dig_No_Background.png} 
+%
+%        %\includegraphics<3|only@3>[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Event_Display_Cosmic_Run_1456.png}
+%        %\includegraphics<3|only@3>[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Event_Display_G4SBS_Dig_No_Background.png} 
+%    \end{center}
+%
+%\end{frame}
+%
+%\begin{frame}{Data Preprocessing (Convolutional Neural Network)}
+%
+%	\begin{itemize}
+%		\item Use fADC waveform integral initially.
+%		\item 48112 digitized events available for training.
+%		\item Split data into training, validation, and test sets.
+%		\begin{itemize}
+%			\item[--] \alert{Training: Labeled data that trains the CNN (80\%).}
+%			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Validation: Data to prevent overfitting (10\% of training).}
+%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Test: Partitioned data to test CNN's ability to extrapolate (20\%).}
+%		\end{itemize}
+%		\item Normalize the data.
+%		\begin{itemize}
+%			\item[--] Normalize fADC integrals from 0 to 1.
+%		\end{itemize}
+%		\item Shape the data for CNN input.
+%		\begin{itemize}
+%			\item[--] Training data are 288 fADC integrals per event. 
+%			\item[--] Shape the fADC integrals into HCal's row and column geometry (38489$\times$24$\times$12).
+%			\item[--] Labels are PMT hit or not (0 or 1) in Geant4 (38489$\times$288).
+%		\end{itemize}
+%	\end{itemize}
+%
+%\end{frame}
+%
+%\begin{frame}{Build Convolutional Neural Network Architecture}
+%
+%\begin{columns}[T,onlytextwidth]
+%  	\column{.45\textwidth}
+%  	
+%  	\begin{itemize}
+%  		\item \alert{Three conv2D layers:}
+%  		\begin{itemize}
+%  			\item[--] 256 filters, 3$\times$3 kernel.
+%  			\item[--] 512 filters, 1$\times$1 kernel.
+%  			\item[--] 1024 filters, 1$\times$1 kernel.
+%  		\end{itemize}
+%  		\item Dropout layers (50\%) between convolutional.
+%  		\begin{itemize}
+%  			\item[--] Decreases over-fitting.
+%  		\end{itemize}
+%  		\item Flatten data for fully connected layers.
+%  		\item \alert{Two fully connected layers:}
+%  		\begin{itemize}
+%  			\item[--] 128 neurons, activation = relu.
+%  			\item[--] 288 neurons, activation = sigmoid (0-1 output).
+%  		\end{itemize}
+%  	\end{itemize}
+%
+%	\column{.55\textwidth}
+%    \begin{center}
+%    		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_CNN_Architecture.png}
+%    	\end{center}
+%    		
+%    	\begin{center}
+%        \includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_CNN_Summary.png}
+%	\end{center}
+%	
+%\end{columns}
+%	
+%\end{frame}
+%
+%\begin{frame}{Train Convolutional Neural Network}
+%
+%	\vspace{-1mm}
+%	\begin{itemize}
+%		\item Use binary crossentropy loss function.
+%			\begin{itemize}
+%				\item[--] Optimizer Adam with learning rate = 0.001. 
+%				\item[--] Batch size = 128. Train CNN for 50 epochs.
+%			\end{itemize}
+%		%\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Validation data} = 10\% of \setbeamercolor{alerted text}{fg=TolLightRed}\alert{training data}.
+%		\item Loss function CNN minimizes is decreasing with training.
+%		\begin{itemize}
+%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Validation data diverges eventually, indicating the model is beginning to over-fit the training data.}
+%		\end{itemize}
+%	\end{itemize}
+%	
+%	\vspace{-3mm}
+%	\begin{center}
+%    		\includegraphics[width=0.67\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_CNN_Loss.png}
+%    	\end{center}
+%	
+%%	\vspace{-3mm}
+%%	\begin{center}
+%%		\resizebox{10cm}{!}{\begin{tikzpicture}%[scale=0.20]
+%%			\node(a){\includegraphics{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_Training_1_Zoom.png}};
+%%			\node at(a.center)[draw, red,line width=3pt,ellipse, minimum width=150pt, minimum 		height=320pt,rotate=0,yshift=-70pt]{};
+%%			\node at(a.center)[draw, blue,line width=3pt,ellipse, minimum width=180pt, minimum 		height=320pt,rotate=0,yshift=-70pt,xshift=300pt]{};
+%%		\end{tikzpicture} }
+%%    		%\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_Training_1_Zoom.png}
+%%    	\end{center}
+%%    		
+%%    	\vspace{-5mm}
+%%    	\begin{center}
+%%    		\resizebox{10cm}{!}{\begin{tikzpicture}%[scale=0.20]
+%%			\node(a){\includegraphics{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_Training_3_Zoom.png}};
+%%			\node at(a.center)[draw, red,line width=3pt,ellipse, minimum width=150pt, minimum 		height=230pt,rotate=0,yshift=0pt]{};
+%%			\node at(a.center)[draw, blue,line width=3pt,ellipse, minimum width=180pt, minimum 		height=230pt,rotate=0,yshift=0pt,xshift=300pt]{};
+%%		\end{tikzpicture} }
+%%    	\end{center}
+%
+%\end{frame}
+%
+%%\begin{frame}{Evaluate Convolutional Neural Network Performance}
+%%
+%%	\begin{itemize}
+%%		\item Plot loss function CNN minimizes for training and validation data.
+%%		\begin{itemize}
+%%			\item[--] Loss is decreasing with training.
+%%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Validation data diverges eventually, indicating the model is beginning to overfit the training data.}
+%%		\end{itemize}
+%%	\end{itemize}
+%%	
+%%	\vspace{-2.5mm}
+%%	\begin{center}
+%%    		\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_CNN_Loss.png}
+%%    	\end{center}
+%%
+%%\end{frame}
+%
+%\begin{frame}{Evaluate Convolutional Neural Network Performance Cont.}
+%	\vspace{-2mm}
+%	\begin{itemize}
+%		\item Run test data through CNN and evaluate which PMT hits/misses it predicts correctly.
+%		\item Confusion matrix:
+%	\end{itemize}
+%	
+%	\begin{center}
+%    		\includegraphics[width=0.4\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_CNN_Confusion_Matrix.png}
+%    	\end{center}
+%    	
+%    	\vspace{-2mm}
+%	\begin{itemize}
+%		\item Predicts 97.39\% of PMTs correctly, but PMT hits matter more.
+%		\begin{itemize}
+%			\item[--] Correctly identified  98.98\% of PMT misses as misses.
+%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Incorrectly identified  24.79\% of PMT hits as misses.}
+%			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Correctly identified  75.21\% of PMT hits as PMT hits.}
+%			\item[--] Incorrectly identified  1.02\% of PMT misses as PMT hits.
+%		\end{itemize}
+%	\end{itemize}
+%	
+%\end{frame}
+%
+%\begin{frame}{Evaluate Convolutional Neural Network Performance Cont.}	
+%	\vspace{-3mm}
+%	\begin{itemize}
+%		\item Is there a pattern in the PMT hits the CNN is misidentifying? 
+%		\item Plot the 24 rows and 12 columns of HCal PMTs.
+%	\end{itemize}
+%	
+%	\vspace{-6mm}
+%	\begin{columns}[T,onlytextwidth]
+%  	\column{.5\textwidth}
+%
+%  	\begin{center}
+%    		\includegraphics[width=0.45\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_Colored_Hit_Map.png}
+%    	\end{center}
+%    	
+%    	\vspace{-6mm}
+%    	\begin{itemize}
+%		\item CNN predictions:
+%		\begin{itemize}
+%			\item[--] 1 = PMT hit. 0 = miss.
+%			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Blue = correct prediction.}
+%			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Red = incorrect.}
+%		\end{itemize}
+%  	\end{itemize}
+%  	
+%  	\vspace{-6mm}
+%  	\column{.5\textwidth}
+%  	
+%  	\begin{center}
+%    		\includegraphics[width=0.73\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_fADC_Integral_Heat_Map.png}
+%    	\end{center}
+%  	
+%  	\vspace{-6mm}
+%  	\begin{itemize}
+%		\item Heat map of PMT fADC integral values.
+%		\begin{itemize}
+%			\item[--] \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Majority of energy concentrated in a few PMTs.}
+%  		\end{itemize} 
+%  	\end{itemize}
+%  	
+%  	\end{columns}
+%  	
+%\end{frame}
+%
+%\begin{frame}{Evaluate Convolutional Neural Network Performance Cont.}
+%	
+%	\begin{itemize}
+%		\item Plot the fADC integrals for PMT correct/incorrect hits/misses.
+%	\end{itemize}
+%	
+%	\begin{center}
+%    		\includegraphics[width=0.73\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Digitization/Dig_G4SBS_fADC_Integral_Hits_and_Misses.png}
+%    	\end{center}
+%	
+%	\begin{itemize}
+%		\item The CNN appears to be missing mostly low energy PMT hits.
+%		\begin{itemize}
+%			\item[--] \alert{These hits look like pedestal noise.}
+%			\item[--] Apply a threshold to the fADC integral to eliminate small hits.
+%		\end{itemize}
+%		\item With an fADC integral threshold of 6100 the CNN correctly identifies 97.8\% of PMT hits.
+%	\end{itemize}
+%
+%\end{frame}
+%
+%\begin{frame}{Future Work with HCal Neural Networks}
+%
+%	\begin{itemize}
+%		\item \alert{Introduce background noise} and try to extract signal events.
+%		\item Further optimize hyperparameters and CNN architecture.
+%		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Utilize full fADC waveform}, as opposed to integral.
+%		\begin{itemize}
+%			\item[--] Pulse shape should improve identification of PMT hits.
+%			\item[--] Requires software modifications for digitizing Geant4 outputs.
+%			\item[--] CNN training likely to be significantly more resource intensive.
+%		\end{itemize}
+%		\item Improve training data.
+%		\begin{itemize}
+%			\item[--] Give each PMT a more realistic pedestal.
+%		\end{itemize}
+%		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Incorporate other detector data.}
+%		\begin{itemize}
+%			\item[--] Use timing information form VETROC TDCs.
+%			\item[--] Explore using high-level info from BigBite detector (e$^-$ arm).
+%		\end{itemize}
+%		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Load neural network onto VTP FPGA and use the CNN algorithm as a real-time trigger for HCal.}
+%		\begin{itemize}
+%			\item[--] Use hls4ml to translate the CNN into FPGA compatible code.
+%			\item[--] If promising algorithm is developed, test with beam in JLab Hall A.
+%		\end{itemize}
+%	\end{itemize}
+%
+%\end{frame}
+
+\end{document}

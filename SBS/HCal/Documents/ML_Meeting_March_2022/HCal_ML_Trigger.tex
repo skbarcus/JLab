@@ -1,0 +1,383 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=authoryear,% Author , Date style citations.
+  %style=phys,% APS Style citations.
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+\addbibresource{references.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+\usepackage{amsmath}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\newcommand{\brown}{\setbeamercolor{alerted text}{fg=mLightBrown}}
+\newcommand{\red}{\setbeamercolor{alerted text}{fg=TolLightRed}}
+\newcommand{\blue}{\setbeamercolor{alerted text}{fg=TolDarkBlue}}
+
+\title{HCal Neural Network Real-Time Trigger}
+\subtitle{}
+\date{March 17\textsuperscript{th} 2022}
+\author{Scott Barcus}
+%\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Commissioning a Machine Learning Detector Trigger for HCal}
+
+	\begin{itemize}
+		\item \alert{Motivation:}
+			\begin{itemize}
+				\item[--] High background rates obscure physics signals.
+			\end{itemize}
+		\item \alert{Traditional Solutions:}
+			\begin{itemize}
+				\item[--] Prescaling the data.
+				\item[--] Energy threshold cuts.
+				\item[--] Decreasing the beam current.
+			\end{itemize}
+		\item \alert{Machine Learning Solution:}
+			\begin{itemize}
+				\item[--] Use data from Geant4 converted to detector outputs to train NN.
+				\item[--] Train a neural network to classify detector events (e.g. p, n, $\pi$).
+				\item[--] Load trained NN onto VTP FPGA (fast) to use as HCal trigger.
+			\end{itemize}
+		\item \alert{Goal:}
+			\begin{itemize}
+				\item[--] Show that NNs on FPGAs can be used as triggers for JLab detectors.
+				\item[--] Compare HCal ML trigger to traditional triggering methods.
+			\end{itemize}
+		\item \alert{Tools:}
+			\begin{itemize}
+				\item[--] Python, Numpy, Scikit-learn, Tensorflow, Keras, Google Colaboratory (GPUs), hls4ml, ROOT.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{VXS Trigger Processor}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.55\textwidth}
+	\begin{itemize}
+		\item Linux OS which can run standard CODA ROC (Zynq-7030 SoC).
+		\item \alert{Create software trigger with FPGA (like ROC).}
+			\begin{itemize}
+				\item[--] Virtex-7 7VX550T FPGA.
+			\end{itemize}
+	\end{itemize}
+
+	\column{0.4\textwidth}	
+	
+  	\centerline{\includegraphics[width=1.\textwidth]{/home/skbarcus/JLab/SBS/HCal/Documents/ML_Meeting_March_2022/pictures/VTP_FPGA_Stats.png}}
+  	
+  	\end{columns}
+  	
+  	\centerline{\includegraphics[width=0.75\textwidth]{/home/skbarcus/JLab/SBS/HCal/Documents/ML_Meeting_March_2022/pictures/VTP_Scematic.png}}
+
+\end{frame}
+
+\begin{frame}{Data Acquisition System}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.55\textwidth}
+  	
+  	\begin{itemize}
+  		\item Two VXS crates.
+  		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{18 16-channel fADC250 flash ADCs measure energy.}
+  			\begin{itemize}
+  				\item[--] Takes numerous samples (250 MHz, 4ns).
+  				\item[--] Time over threshold measurements extract timing.% (CFD removes time walk).
+  			\end{itemize}
+  		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{5 64-channel F1TDCs for timing.}
+  		\item VXS Trigger Processors (VTPs) contain FPGAs to form triggers (future use).
+  		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Triggers:}
+  			\begin{itemize}
+  				\item[--] Scintillator paddle (cosmics).
+  				\item[--] Summing module trigger.
+  				\item[--] LED pulser trigger.
+  				\item[--] BigBite coincidence trigger.
+  			\end{itemize}
+  	\end{itemize}
+  	
+  	\column{0.5\textwidth}
+  	\vspace{-2mm}
+	\centerline{\includegraphics[width=0.65\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Landau_Fit_706_Evt1_2-10_Clean.png}}
+	
+	\vspace{1mm}	
+	
+	\centerline{\includegraphics[width=0.85\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Cosmic_Hit_run820_evt16_Arrow.png}}
+	
+	\vspace{1mm}
+	
+	\centerline{\includegraphics[width=0.4\textwidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/Summing_Module_Triggers.png}}
+
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Neural Network Preprocessing}
+
+	\begin{itemize}
+		%\item Use fADC waveform integral initially.
+		\item $\approx$4M events from $G_M^n$ experiment used for training.
+		\begin{itemize}
+			\item[--] Experimental trigger was electron arm.% so these are basically coincident trigger events.
+			\item[--] \alert{Training data are HCal cluster (X,Y) position, energy (fADC integrals), and TDC time (electron arm info. improves).} 
+			\item[--] Events include elastic hadrons (signal) as well as inelastic events, knock on electrons, pions, cosmics etc. (background). 
+		\end{itemize}
+		\item Normalize the training data.
+		\item Identify elastic events with traditional physics cuts on calorimeter energies, position, $W^2$ etc. \setbeamercolor{alerted text}{fg=TolLightRed}\alert{$\approx$ 8k elastic hadrons.}
+			\begin{itemize}
+				\item[--] Small signal makes training on whole data set difficult. Remove 95-99\% non-elastic events to help train.
+			\end{itemize}
+		\item Split data into training, validation, and test sets.
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Training: Labeled data that trains the CNN (80\%).}
+			\item[--] \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Validation: Data to prevent overfitting (10\% of training).}
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Test: Partitioned data to test NN's ability to extrapolate (20\%).}
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Build Neural Network Architecture}
+
+\begin{columns}[T,onlytextwidth]
+  	\column{.55\textwidth}
+  	
+  	\begin{itemize}
+  		\item 4 variables cluster (X,Y), energy, and timing.
+  		\item \alert{Four layer fully connected neural network:}
+  		\begin{itemize}
+  			\item[--] 512 neurons, activation = relu.
+  			\item[--] 1024 neurons, activation = relu.
+  			\item[--] 512 neurons, activation = relu.
+  			\item[--] 1 neuron, activation = sigmoid (0-1 output).
+  		\end{itemize}
+  	\end{itemize}
+
+	\column{.45\textwidth}
+    \begin{center}
+    		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Architecture_1_Clean.png}
+    	\end{center}
+    		
+    	\end{columns}	
+    		
+    	\begin{center}
+        \includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Architecture_2_Clean.png}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{Train Neural Network}
+
+	\vspace{-1mm}
+	\begin{itemize}
+		\item \alert{Neural networks are  trained by minimizing a loss function.}
+			\begin{itemize}
+				\item[--] Use mean squared error loss function.
+				\item[--] Optimizer Adam with lr = 0.0001. Batch size = 64. 150 epochs.
+			\end{itemize}
+		%\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Validation data} = 10\% of \setbeamercolor{alerted text}{fg=TolLightRed}\alert{training data}.
+		\item Loss function NN minimizes is decreasing with training.
+		\begin{itemize}
+			\item[--] 10\% validation data (monitor overfitting).
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Validation loss has yet to diverge from training data loss. May be able to train longer without overfitting.}
+		\end{itemize}
+	\end{itemize}
+	
+	\vspace{-3mm}
+	\begin{center}
+    		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Training_Plots.png}
+    	\end{center}
+	
+\end{frame}
+
+\begin{frame}{Evaluate Neural Network Performance Cont.}
+	\vspace{-2mm}
+	\begin{itemize}
+		\item Run test data through NN and evaluate predictions.
+		\item Confusion matrix:
+	\end{itemize}
+	
+	\begin{center}
+    		\includegraphics[width=0.4\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Confusion_Matrix.png}
+    	\end{center}
+    	
+    	\vspace{-5mm}
+	\begin{itemize}
+		\item \alert{Predicts 82.59\% of events correctly, but elastic events matter more.}
+		%\item \alert{NN elastic trigger would decrease data rate by a factor of 2.98.}
+		\item Correctly identified  82\% of non-elastics as non-elastics.
+		\item Incorrectly identified 18\% of non-elastics as elastics.
+		\begin{itemize}
+			\item[--] Not a big deal if overall data rate still reduced.
+		\end{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Incorrectly identified  15.46\% of elastics as non-elastics.}
+		\begin{itemize}
+			\item[--] Dangerous if losing biased elastic sample. Less so if random.
+		\end{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Correctly identified  84.54\% of elastics as elastics.}
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Any Patterns in NN Mistakes?}
+
+	\begin{itemize}
+		\item Are there any patterns in the events the NN is misclassifying?
+		\item Plot the labeled events on HCal's surface (left) then compare with the NN classifications (right).
+			\begin{itemize}
+				\item[--] Left: \setbeamercolor{alerted text}{fg=TolLightRed}\alert{red = non-elastic}, \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{blue = elastic}.
+				\item[--] Right: \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{blue = correct elastic}, \setbeamercolor{alerted text}{fg=TolLightRed}\alert{red = incorrect elastic}, \setbeamercolor{alerted text}{fg=mLightGreen}\alert{green = correct nonelastic}, \setbeamercolor{alerted text}{fg=mLightBrown}\alert{yellow = incorrect nonelastic}.
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-7mm}
+	\begin{columns}[T,onlytextwidth]
+  	\column{.5\textwidth}
+	
+	\begin{center}
+    		\includegraphics[width=0.6\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Plot_Truth.png}
+    	\end{center}
+    	
+    	\column{.5\textwidth}
+    	
+    	\begin{center}
+    		\includegraphics[width=0.6\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Plot_Predicted.png}
+    	\end{center}
+    	
+    	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Individual Training Variable Comparisons}
+	\begin{center}
+	
+%	\onslide<1>\item Cluster energy of NN classified events.
+%	\onslide<2>\item Cluster timing of NN classified events.
+%	\onslide<3>\item Cluster X-position of NN classified events.
+%	\onslide<4>\item Cluster Y-position of NN classified events.
+
+	\begin{overprint}%[11.7cm]
+	\onslide<1>\centerline{\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Cluster_Energy.png}}
+	\centerline{\bf{Cluster energy of NN classified events}}
+	\onslide<2>\centerline{\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Time.png}}
+	\centerline{\bf{Cluster timing of NN classified events.}}
+	\onslide<3>\centerline{\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_X-Position.png}}
+	\centerline{\bf{Cluster X-position of NN classified events.}}
+	\onslide<4>\centerline{\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/GMN/Pictures/GMn_SBS4_Elastic_NN_Y-Position.png}}
+	\centerline{\bf{Cluster Y-position of NN classified events.}}
+	\end{overprint}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}{Future Work with HCal Neural Networks}
+
+	\begin{itemize}
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Train on more beam data!}
+			\begin{itemize}
+				\item[--] Cluster finding AI like K-means and DBSCAN \parencite{Article:osti_1786294}.
+				\item[--] Can protons and neutrons be separated?
+				\item[--] Evaluate trigger biases.
+			\end{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Full minimum bias Geant4 simulations for upcoming experiments}.
+		\begin{itemize}
+			\item[--] Utilize full fADC waveform (\setbeamercolor{alerted text}{fg=TolLightRed}\alert{resource intensive}).
+		\end{itemize}
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Incorporate other detector data.}
+		\begin{itemize}
+			\item[--] Use timing information form VETROC TDCs.
+			\item[--] Explore using high-level info from BigBite electron detector. %(e$^-$ arm).
+		\end{itemize}
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Explore other NN architectures and convolutional NNs.}
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Load NN onto VTP FPGA and use as real-time HCal trigger.}
+		\begin{itemize}
+			\item[--] Use hls4ml to translate the NN into FPGA compatible code.
+			\item[--] Test with beam in JLab's Hall A.
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Questions for the Data Science Department}
+
+	\begin{itemize}
+		\item How to evaluate the size and speed of a NN that can be placed on an FPGA?
+		\item How difficult is translating a NN to FPGA compatible code?
+			\begin{itemize}
+				\item[--] Is hls4ml the best approach here?
+			\end{itemize}
+		\item What is the best way to evaluate the performance of the NNs?
+		\item What is the best way to explore different model architectures and hyperparameters thoroughly?
+		\item What other ML/AI techniques could be of benefit to an online trigger?
+		\item How can one access JLab's GPU resources for training etc.?
+		\item Other ML/AI detector applications like auto-calibrations?
+	\end{itemize}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,115 @@
+[108467] [run] [info] Run number: -1
+[108467] [run] [info] Run date:   Sun Jan  1 00:00:00 1995
+[108467] [run] [info] Requested event range: 0-5000
+[108467] [run] [info] Analyzed events:      0 
+[108467] [run] [info] Assume Date:          false 
+[108467] [run] [info] Database read:        false 
+[108467] [run] [info] Initialized  :        false 
+[108467] [run] [info] Opened       :        false 
+[108467] [run] [info] Date set/read/req:     false false true
+[108467] [run] [info] Run num set/read/req:  false false true
+[108467] [run] [info] Run type set/read/req: false false true
+[108467] [run] [info] Prescales set/rd/req:  false false false
+[108467] [run] [info] Max # scan    : 1 
+[108467] [run] [info] CODA  file    : ./raw/shms_all_07120.dat 
+[108467] [run] [info] Segment number: 0 
+[108467] [run] [info] Creating new output file: ROOTfiles/shms_replay_production_default_07120_5000.root 
+[108467] [run] [debug] THaRun::Open:  coda version 2 
+[108467] [run] [info] Run number: 7120
+[108467] [run] [info] Run date:   Sun Feb 10 14:06:34 2019
+[108467] [run] [info] Requested event range: 0-5000
+[108467] [run] [info] Max # scan    : 1 
+[108467] [run] [info] CODA  file    : ./raw/shms_all_07120.dat 
+[108467] [run] [info] Segment number: 0 
+[109619] [run] [info] Run number: -1
+[109619] [run] [info] Run date:   Sun Jan  1 00:00:00 1995
+[109619] [run] [info] Requested event range: 0-5000
+[109619] [run] [info] Analyzed events:      0 
+[109619] [run] [info] Assume Date:          false 
+[109619] [run] [info] Database read:        false 
+[109619] [run] [info] Initialized  :        false 
+[109619] [run] [info] Opened       :        false 
+[109619] [run] [info] Date set/read/req:     false false true
+[109619] [run] [info] Run num set/read/req:  false false true
+[109619] [run] [info] Run type set/read/req: false false true
+[109619] [run] [info] Prescales set/rd/req:  false false false
+[109619] [run] [info] Max # scan    : 1 
+[109619] [run] [info] CODA  file    : ./raw/shms_all_07120.dat 
+[109619] [run] [info] Segment number: 0 
+[109619] [run] [info] Overwriting existing output file: ROOTfiles/shms_replay_production_default_07120_5000.root 
+[109619] [run] [debug] THaRun::Open:  coda version 2 
+[109619] [run] [info] Run number: 7120
+[109619] [run] [info] Run date:   Sun Feb 10 14:06:34 2019
+[109619] [run] [info] Requested event range: 0-5000
+[109619] [run] [info] Max # scan    : 1 
+[109619] [run] [info] CODA  file    : ./raw/shms_all_07120.dat 
+[109619] [run] [info] Segment number: 0 
+[117398] [run] [info] Run number: -1
+[117398] [run] [info] Run date:   Sun Jan  1 00:00:00 1995
+[117398] [run] [info] Requested event range: 0-5000
+[117398] [run] [info] Analyzed events:      0 
+[117398] [run] [info] Assume Date:          false 
+[117398] [run] [info] Database read:        false 
+[117398] [run] [info] Initialized  :        false 
+[117398] [run] [info] Opened       :        false 
+[117398] [run] [info] Date set/read/req:     false false true
+[117398] [run] [info] Run num set/read/req:  false false true
+[117398] [run] [info] Run type set/read/req: false false true
+[117398] [run] [info] Prescales set/rd/req:  false false false
+[117398] [run] [info] Max # scan    : 1 
+[117398] [run] [info] CODA  file    : ./raw/shms_all_07121.dat 
+[117398] [run] [info] Segment number: 0 
+[117398] [run] [info] Creating new output file: ROOTfiles/shms_replay_production_default_07121_5000.root 
+[117398] [run] [debug] THaRun::Open:  coda version 2 
+[117398] [run] [info] Run number: 7121
+[117398] [run] [info] Run date:   Sun Feb 10 14:43:24 2019
+[117398] [run] [info] Requested event range: 0-5000
+[117398] [run] [info] Max # scan    : 1 
+[117398] [run] [info] CODA  file    : ./raw/shms_all_07121.dat 
+[117398] [run] [info] Segment number: 0 
+[118688] [run] [info] Run number: -1
+[118688] [run] [info] Run date:   Sun Jan  1 00:00:00 1995
+[118688] [run] [info] Requested event range: 0-5000
+[118688] [run] [info] Analyzed events:      0 
+[118688] [run] [info] Assume Date:          false 
+[118688] [run] [info] Database read:        false 
+[118688] [run] [info] Initialized  :        false 
+[118688] [run] [info] Opened       :        false 
+[118688] [run] [info] Date set/read/req:     false false true
+[118688] [run] [info] Run num set/read/req:  false false true
+[118688] [run] [info] Run type set/read/req: false false true
+[118688] [run] [info] Prescales set/rd/req:  false false false
+[118688] [run] [info] Max # scan    : 1 
+[118688] [run] [info] CODA  file    : ./raw/shms_all_07121.dat 
+[118688] [run] [info] Segment number: 0 
+[118688] [run] [info] Overwriting existing output file: ROOTfiles/shms_replay_production_default_07121_5000.root 
+[118688] [run] [debug] THaRun::Open:  coda version 2 
+[118688] [run] [info] Run number: 7121
+[118688] [run] [info] Run date:   Sun Feb 10 14:43:24 2019
+[118688] [run] [info] Requested event range: 0-5000
+[118688] [run] [info] Max # scan    : 1 
+[118688] [run] [info] CODA  file    : ./raw/shms_all_07121.dat 
+[118688] [run] [info] Segment number: 0 
+[85223] [run] [info] Run number: -1
+[85223] [run] [info] Run date:   Sun Jan  1 00:00:00 1995
+[85223] [run] [info] Requested event range: 0-5000
+[85223] [run] [info] Analyzed events:      0 
+[85223] [run] [info] Assume Date:          false 
+[85223] [run] [info] Database read:        false 
+[85223] [run] [info] Initialized  :        false 
+[85223] [run] [info] Opened       :        false 
+[85223] [run] [info] Date set/read/req:     false false true
+[85223] [run] [info] Run num set/read/req:  false false true
+[85223] [run] [info] Run type set/read/req: false false true
+[85223] [run] [info] Prescales set/rd/req:  false false false
+[85223] [run] [info] Max # scan    : 1 
+[85223] [run] [info] CODA  file    : ./raw/shms_all_07120.dat 
+[85223] [run] [info] Segment number: 0 
+[85223] [run] [info] Overwriting existing output file: ROOTfiles/shms_replay_production_default_07120_5000.root 
+[85223] [run] [debug] THaRun::Open:  coda version 2 
+[85223] [run] [info] Run number: 7120
+[85223] [run] [info] Run date:   Sun Feb 10 14:06:34 2019
+[85223] [run] [info] Requested event range: 0-5000
+[85223] [run] [info] Max # scan    : 1 
+[85223] [run] [info] CODA  file    : ./raw/shms_all_07120.dat 
+[85223] [run] [info] Segment number: 0 

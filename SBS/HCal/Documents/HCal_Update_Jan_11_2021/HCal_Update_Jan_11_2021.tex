@@ -1,0 +1,578 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=phys,% 
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+\usepackage{amsmath}
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{HCal Update}
+\subtitle{}
+\date{January 11\textsuperscript{th} 2020}
+\author{The HCal Working Group}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\newcommand{\hcal}{HCal}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Whole Detector Running}
+
+	\begin{itemize}
+		\item Previously running HCal as two independent halves.
+		\item Now running whole detector at once. 
+			\begin{itemize}
+				\item[--] Trigger is OR of cosmic paddles above either detector half.
+				\item[--] All fADCs set to 2 V range. $\rightarrow$ May have resolved DMA data transfer error!
+				\item[--] DB updated to match final configuration of HCal stacked in hall. 
+			\end{itemize}
+	\end{itemize}
+
+	\vspace{-3mm}
+	\begin{center}
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Full_Detector/Both_Halves.jpg}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Misc. Work}
+
+	\begin{itemize}
+		\item Tracked down several broken channels on the right half and fixed them.
+		\item Swapped out a buggy HV card that didn't always give voltage readback data.
+		\item Cable swap between HCal and BB worked out with Mark Jones.
+			\begin{itemize}
+				\item[--] HCal currently has 50 m cables for TDC, but needs $\approx$300 100 m cables.
+				\item[--] HCal will swap it's 50 m TDC cables with BB's shower/preshower 100 m cables plus some ECAL cables.
+				\item[--] Still need final HCal trigger cable. (100 m or less)
+			\end{itemize} 
+		\item Anticipate moving HCal to hall in April.
+		\item HCal timing diagram created for coordinating with BB trigger.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{HCal Timing Diagram}
+
+	\begin{center}
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_Timing_Diagram_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{LED System Work}
+
+    \begin{itemize}
+		\item HCal has 288 PMT modules. 
+		\item Each module can observe 6 different LEDs over fibers.
+		\item Each successive LED is roughly twice as bright as the previous LED.
+        \item Powered by 8 LED power boxes on front-end (4 completed).
+        \item Each LED power box controls 2 LED boxes on the sides of HCal (all 16 completed).
+    \end{itemize}
+    
+    \begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	
+	%For some incomprehensible reason these two images rotate when downloaded. To compensate they're rotated oddly in this online version.
+	\vspace{-3mm}
+	\begin{center}
+	    \textbf{LED Power Boxes}
+	    \includegraphics[width=0.8\textwidth, height=.45\textheight,angle=270]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Update_Nov_9_2020/Pictures/LED_Power_Boxes_2.jpg}
+  		%\includegraphics[width=3cm, height=4cm]{Images/LED_Power_Boxes_1.jpg}
+  	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\vspace{-3mm}
+	\begin{center}
+		\textbf{LED Boxes}
+		\includegraphics[width=0.8\textwidth, height=.45\textheight,angle=270]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Update_Nov_9_2020/Pictures/LED_Boxes.jpg}
+  	\end{center}
+	
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{LED System Work Cont.}
+
+    \begin{itemize}
+    		\item LEDs control boards use clock and data signals.
+        \item New HV cables (thanks Chuck!).
+        \item New LED pulse signal cable bundles.
+        \item Retimed fADCs and F1TDCs for LEDs.
+    \end{itemize}
+
+%    \begin{columns}[T,onlytextwidth]
+%	\column{0.5\textwidth}
+	
+	\vspace{-2mm}
+	\begin{center}
+	    \textbf{Clock = Blue, Data = Yellow }
+	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/Good_LED_Clock_and_Data_In.jpg}
+  	\end{center}
+	
+%	\column{0.5\textwidth}
+%	
+%	\vspace{-2mm}
+%	\begin{center}
+%		\textbf{Retiming LEDs}
+%		\includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/LED_Timing_Offset.jpg}
+%  	\end{center}
+%	
+%	\end{columns}
+
+\end{frame}
+
+\begin{frame}{LED Event Display}
+
+	\begin{itemize}
+		\item Now able to illuminate all PMTs at once using the LEDs.
+		\item Gives a fast stable signal to work with.
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/LED_Pulses_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Voltage Calibration Scans}
+
+	\begin{itemize}
+		\item Goal: Set PMT HVs such that each PMT has the same signal response to equal amounts of light (energy deposited in scintillators).
+		\item Plot fADC signal strength vs. PMT HV for a stable LED source.
+		\item fADC signal strength can be measured by signal peak or integral.
+		\begin{itemize}
+			\item[--] 250 Hz fADCs (4 ns bins) with 30 samples taken (120 ns window).
+		\end{itemize}
+		\item Landau function happens to fit pulse well.
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Landau_Fit_706_Evt1_2-10_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Signal Peak and Integral Proportionality}
+
+	\begin{itemize}
+		\item Plot of fADC integral vs fADC signal peak.
+			\begin{itemize}
+				\item[--] Relationship is linear.
+				\item[--] Both fADC signal peak and integral valid but integral is simpler. 
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/PMT_2-1_Integral_vs_Peak_Run1222.png}
+  	\end{center}
+
+\end{frame}
+
+
+\begin{frame}{LED Voltage Scan Procedure}
+
+	\begin{itemize}
+		\item Program LEDs to cycle during run in 1000 event increments.
+			\begin{itemize}
+				\item[--] Off$\rightarrow$LED1$\rightarrow$LED2$\rightarrow$LED3$\rightarrow$LED4$\rightarrow$LED5$\rightarrow$Repeat
+			\end{itemize}
+		\item The LEDs being off provides regular pedestal measurements.
+		\item Multiple LEDs are used to ensure PMT HV calibrations are consistent.
+		\item Data was taken on the left half of HCal at eight voltages.
+			\begin{itemize}
+				\item[--] -1200 V, -1250 V, -1300 V, -1350 V, -1375 V, -1400 V, -1425 V, -1450 V.
+				\item[--] Five full cycles of data were taken (5k events/setting).
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]
+	\column{0.8\textwidth}
+	\begin{itemize}
+		\item At low voltages and dimmer LEDs sometimes there is no PMT response.
+		\item At high voltage and brighter LEDs sometimes the fADC saturates.
+	\end{itemize}
+	
+	\column{0.2\textwidth}
+	\vspace{-4mm}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/Single_Saturated_fADC.png}
+  	\end{center}
+  	
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{fADC Pedestals}
+
+	\begin{itemize}
+		\item Typical fADC pedestal results using raw ADC units (RAU) and summed raw ADC units (SRAU).
+			\begin{itemize}
+				\item[--] RAU pedestal std. dev. $\approx$1.5 and SRAU std. dev. $\approx$20.
+			\end{itemize}
+	\end{itemize}
+
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/fADC_RAU_Pedestal_Clean.png}
+  	\end{center}
+	
+	\column{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/fADC_SRAU_Pedestal_Clean.png}
+  	\end{center}
+	
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{SRAU for 5 LEDs}
+
+	\begin{itemize}
+		\item Fit each LED fADC signal histogram with a Gaussian for each HV setting.
+		\item Pictured below PMT 129 at a single voltage looking at 5 different LEDs.
+		\begin{itemize}
+			\item[--] Each LED roughly doubles in brightness as expected.
+			\item[--] LED signals not fit all together. Plot just shows results.
+			\item[--] Plot is not pedestal subtracted.
+		\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/5_LED_Peaks_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Number of Photoelectrons from LEDs}
+
+\begin{itemize}
+	\item Calculate number of photoelectrons produced by LED:
+			\begin{equation}
+				NPE = \left( \frac{<ADC>}{\sqrt{RMS^2-RMS_{pedestal}^2}} \right)^2.
+			\end{equation}
+	\begin{itemize}
+		\item[--] $<ADC>$ is the mean ADC value (SRAU and pedestal subtracted).
+		\item[--] $RMS$ is the standard deviation of the LED spectrum.
+		\item[--] $RMS_{pedestal}$ is the standard deviation of the pedestal value.
+	\end{itemize}
+	\item Looking at PMT 129 again we find the following:
+		\begin{itemize}
+			\item[--] LED1 = 64 PE.
+			\item[--] LED2 = 103 PE.
+			\item[--] LED3 = 180 PE.
+			\item[--] LED4 = 516 PE.
+			\item[--] LED5 = 1356 PE.
+		\end{itemize}
+	%\item Variation from fiber quality and positioning.
+	\item Max energy deposited in single PMT for $G_M^n$ 13.5 GeV kinematic is 700 MeV$\rightarrow$3850 PE.
+	\begin{itemize}
+		\item[--] Sixth LED produces 3-4k PE so next tests will use that LED.
+	\end{itemize}
+\end{itemize}	
+
+\end{frame}
+
+\begin{frame}{Fitting the LED Voltage Scan Results}
+
+	\begin{itemize}
+		\item The fADC signal strength should go roughly like the high voltage raised to the power of the number of dynodes in the PMTs.
+		\item Two different PMT types.
+			\begin{itemize}
+				\item[--] 192 CMU PMTs = 12 stage 2'' Photonis XP2262 PMTs.
+				\item[--] 96 JLab PMTs = 8 stage 2'' Photonis XP2282 PMTs.
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{equation}
+		SRAU = P_0\left( HV - P_1 \right)^{P_2}-P_3
+	\end{equation}
+	\begin{itemize}
+		\item $HV$ = PMT HV setting.
+		\item $P_0$ = coefficient.
+		\item $P_1$ and $P_3$ = X and Y offsets.
+		\item $P_2$ = exponent corresponding to number of stages.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Selected Results}
+
+	\begin{itemize}
+		\item The CMU PMTs have exponents $\approx$ 10-11.
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/CMU_PMT_Good_Chi2_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+%\begin{frame}{Selected Results}
+%
+%	\begin{itemize}
+%		\item Some good looking fits have questionable $\chi^2$. Still investigating these.
+%	\end{itemize}
+%	
+%	\begin{center}
+%		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/CMU_PMT_Bad_Chi2_Clean.png}
+%  	\end{center}
+%
+%\end{frame}
+
+\begin{frame}{Selected Results}
+
+	\begin{itemize}
+		\item The JLab PMTs have exponents $\approx$ 8.
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/JLab_PMT_Good_Chi2_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Saturation}
+
+	\begin{itemize}
+		\item Example of the fifth LED causing the fADC to saturate.
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/CMU_PMT_Saturating_LED_5_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Odd Results}
+
+	\begin{itemize}
+		\item Then there are the oddball results that need to be individually checked.
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/CMU_PMT_Odd_Data_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Going Forward}
+
+	\begin{itemize}
+		\item Coefficient is very small. Possibly making the fit difficult. 
+		\item Normalizing HV and signal would make coefficient more similar to other parameters.
+		\begin{equation}
+			\frac{G_2}{G_1} = \frac{V_2}{V_1}^{P_0 * N_{dynodes}}
+		\end{equation}
+			\begin{itemize}
+				\item[--] $P_0 \approx$ 0.6-0.8. (Photonis PMT Basics.)  
+			\end{itemize}
+		%\item Try using only one offset parameter.
+		%\item Test which model is most effective with model selection criteria.
+		\item Optimize fit starting parameters to ensure not trapped in local minima.
+		\item Find and remove saturated fADCs. Check other anomalies.
+		\item Print out NPE and other parameters to compare PMTs and flag issues.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Cosmic Ray HV Calibration}
+
+	\begin{itemize}
+		\item Can also calibrate the HV using cosmic rays.
+		\item Want to set cosmic ray signal such that a maximum energy deposition hadron during $G_M^n$ wouldn't saturate the electronics.
+		\item There are two considerations for electronics saturation.
+			\begin{itemize}
+				\item[--] The PS 776 10$\times$ amplifiers which have a 3 V saturation limit $\rightarrow$ no more than 300 mv off the PMT max.
+				\item[--] The fADCs have a 2V dynamic range and 4096 (0-4095) channels, or Raw ADC Units (RAU).
+				\item[--] So we have 2.0475 RAU/mV.
+				\item[--] Max 3 V off amp with about 50\% cable attenuation gives 1.5 V at the fADCs so our amps are our limiting factors.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{G4SBS for HV Calibration}
+
+	\begin{itemize}
+		\item Need G4SBS to determine how much energy is deposited by hadrons vs cosmics.
+		\begin{itemize}
+			\item[--] Plot of energy deposited in scintillators vs incident hadron energy. (Plot thanks to Sebastian Seeds.)
+		\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/From_Sebastian/P_and_N_Eng_Dep_11_6_2020/Edep_Einc_HCAL_pn.pdf}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{G4SBS for HV Calibration}
+
+	\begin{itemize}
+		\item Plot of maximum energy deposited in scintillators seen by a single PMT for $G_M^n$ max kinematic.
+			\begin{itemize}
+				\item[--] Max energy deposited in single PMT $\approx$ 700 MeV.
+			\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Energy_Deposition/TeX_Files/Sumedep_per_Hit_13_5.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{G4SBS for HV Calibration}
+
+	\begin{itemize}
+		\item Now we need the energy deposited by cosmic rays so that we can set a scale for our HV.
+		\begin{itemize}
+			\item[--] Plots show average energy deposited in a single PMT's scintillators for a vertical cosmic ray. (Plots from Juan Carlos Cornejo.)
+			\item[--] Average energy $\approx$ 14 MeV.
+		\end{itemize}
+	\end{itemize}
+
+    \begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	
+	\vspace{-5mm}
+	\begin{center}
+	\includegraphics[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Cosmics/Cosmic_Simulations_Cuts_JC_1-3.png}
+	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\vspace{-5mm}
+	\begin{center}
+	\includegraphics[width=0.5\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Cosmics/Cosmic_Simulations_Cuts_JC_4-6.png}
+	\end{center}
+	
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{Cosmic HV Calibration}
+
+	\begin{itemize}
+		\item Maximum energy deposited by a hadron is 50 times greater than that of the average cosmic ray (700 MeV/14 MeV = 50).
+		\item 300 mV maximum off the PMTs to not saturate the amps $\rightarrow$ 1/50th of max is 6 mV off of the PMTs for an average cosmic ray.
+		\item 6 mV from the PMT is amplified to 60 mV off the amp.
+		\item 60 mV then attenuates to $\approx$30 mV at the fADCs.
+		\item 30 mV at the fADC is equal to 61 RAU.
+		\item If we set all HVs such that the average cosmic ray produces 61 RAU in the fADC then the maximum energy hadrons in $G_M^n$ will not saturate the electronics.
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Cosmic HV Calibration}
+
+	\begin{itemize}
+		\item Cosmic runs are currently being taken to calibrate the HV based on fADC signal.
+		\item Plot shows what G4SBS predicts cosmics will look like in HCal. (Plot from Juan Carlos Cornejo.)
+	\end{itemize}
+	
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/G4SBS_Cosmics.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Actaul Cosmic Results}
+
+	\begin{itemize}
+		\item Plot shows all PMT hits for the whole detector.
+		\begin{itemize}
+			\item[--] Right half of HCal (0-143) needs some channels checked.
+			\item[--] Looks like a bad discriminator is likely the issue.
+			\item[--] Otherwise resembles G4SBS well.
+		\end{itemize}
+		\item Once issues are resolved HV calibration will continue.
+	\end{itemize}
+
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Vertical_TDC_Hits_Run1239_Clean.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Acknowledgments}
+Thanks to \alert{Gregg Franklin} for his many dedicated years designing and overseeing the construction of {\hcal}. Thanks to \alert{Universit\'{a} di Catania} for their major financial contributions. Many other people and institutions were involved in making {\hcal} possible, including, but not limited to:
+    \begin{itemize}
+        \item Thanks to the many students who have worked on {\hcal} including \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Alexis Ortega}, \alert{So Young Jeon}, \alert{Jorge Pe\~{n}a}, \alert{Carly Wever}, and  \alert{Dimitrii Nikolaev}. 
+        \item Thanks to our current students \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Vanessa Brio} and \alert{Sebastian Seeds}.
+        \item Thanks to \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Alexandre Camsonne} for helping us get the DAQ working and finding all the modules for us.
+        \item Thanks to \alert{Chuck Long} for all his help fixing and acquiring things.
+        \item Thanks to \alert{Bryan Moffit} for DAQ help.
+        \item Thanks also to \alert{Brian Quinn} and \alert{Bogdan Wojtsekhowski}.
+        \item Thanks to \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Vanessa Brio}, \alert{Cattia Petta}, and \alert{Vincenzo Bellini} for their cosmic commissioning efforts.% last summer.
+        %\item Finally welcome to \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Dimitrii Nikolaev}, \alert{Jim Napolitano}, \alert{Donald Jones}, and \alert{Kent Paschke}.
+    \end{itemize}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,15 @@
+sbs.testdetector.detmap =
+  2    2      0     0   -1 ## Test Reference ADC
+  2    3      0     0    0
+  4     8     32   32   -1 # Test reference channel
+  4     4     0     0    1 # 64 channels
+
+sbs.testdetector.nrows = 1
+sbs.testdetector.ncols = 1
+
+sbs.testdetector.size  =  1.8567  0.9461  1.0000
+
+sbs.testdetector.position = 0 0 0
+
+sbs.testdetector.xyz    =  0.92835  0.47305 0.0
+sbs.testdetector.dxdydz  =  0.00254  0.00254 0.0

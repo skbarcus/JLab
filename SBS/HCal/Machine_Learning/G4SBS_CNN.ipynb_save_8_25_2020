@@ -1,0 +1,284 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from sklearn.model_selection import train_test_split #For reasons beyond the ken of mortal man, this needs to be loaded first or it will fail. Might be TF that it needs to be loaded before."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Using TensorFlow backend.\n"
+     ]
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "import tensorflow as tf\n",
+    "from matplotlib import pyplot as plt\n",
+    "#from sklearn.model_selection import train_test_split\n",
+    "#import sklearn\n",
+    "from matplotlib.ticker import MaxNLocator #Able to force plots to use integer ticks only.\n",
+    "\n",
+    "from keras import Input, Model, Sequential\n",
+    "from keras.layers import Conv2D, MaxPooling2D, Concatenate, Activation, Dropout, Flatten, Dense\n",
+    "\n",
+    "def plot_learning_curve(history):\n",
+    "    fig, ax = plt.subplots(1, 2, figsize=(12, 4))\n",
+    "    ax[0].plot(history['loss'], label='training')\n",
+    "    ax[0].plot(history['val_loss'], label='validation')\n",
+    "    ax[0].set_title(\"Model losses\")\n",
+    "    ax[0].set_xlabel(\"Epoch\")\n",
+    "    ax[0].set_ylabel(\"Loss\")\n",
+    "    ax[0].set_yscale('log')\n",
+    "    ax[0].xaxis.set_major_locator(MaxNLocator(integer=True))\n",
+    "    ax[0].legend()\n",
+    "    \n",
+    "    ax[1].plot(history['accuracy'], label='training')\n",
+    "    ax[1].plot(history['val_accuracy'], label='validation')\n",
+    "    ax[1].set_title(\"Model accuracy\")\n",
+    "    ax[1].set_xlabel(\"Epoch\")\n",
+    "    ax[1].set_ylabel(\"Accuracy\")\n",
+    "    ax[1].xaxis.set_major_locator(MaxNLocator(integer=True))\n",
+    "    ax[1].legend()\n",
+    "    plt.show()\n",
+    "    # plt.plot(history[\"loss\"], label=\"training loss\")\n",
+    "    # plt.plot(history[\"val_loss\"], label=\"validation loss\")\n",
+    "    # plt.xlabel(\"Epoch\")\n",
+    "    # plt.ylabel(\"Loss\")\n",
+    "    # plt.yscale('log')\n",
+    "    # plt.legend()\n",
+    "    # plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "adc.shape =  (500000, 288)\n",
+      "adc.shape =  (500000, 24, 12, 1)\n",
+      "tdc.shape =  (500000, 288)\n",
+      "tdc.shape =  (500000, 24, 12, 1)\n",
+      "hits matrix =  [0 0 0 ... 0 1 0]\n",
+      "hits.shape =  (500000,)\n"
+     ]
+    }
+   ],
+   "source": [
+    "adc = np.load(\"g4sbs_kin7_pmt_edep_preprocessed.npy\")\n",
+    "tdc = np.load(\"g4sbs_kin7_tavg_preprocessed.npy\")\n",
+    "hits = np.load(\"g4sbs_kin7_fnucl.npy\")\n",
+    "\n",
+    "#print(adc[0])\n",
+    "#print('adc matrix = ', adc)\n",
+    "print('adc.shape = ', adc.shape)\n",
+    "adc = np.reshape(adc, (adc.shape[0], 24, 12, 1))\n",
+    "print('adc.shape = ', adc.shape)\n",
+    "print('tdc.shape = ', tdc.shape)\n",
+    "tdc = np.reshape(tdc, (tdc.shape[0], 24, 12, 1))\n",
+    "print('tdc.shape = ', tdc.shape)\n",
+    "print('hits matrix = ', hits)\n",
+    "print('hits.shape = ', hits.shape)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "adc_train.shape, adc_test.shape =  (100000, 24, 12, 1) (400000, 24, 12, 1)\n",
+      "tdc_train.shape, tdc_test.shape =  (100000, 24, 12, 1) (400000, 24, 12, 1)\n",
+      "hits_train.shape, hits_test.shape =  (100000,) (400000,)\n",
+      "Counts =  {0: 50003, 1: 49997}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Split data into training and test.\n",
+    "\n",
+    "adc_train, adc_test, tdc_train, tdc_test, hits_train, hits_test = train_test_split(adc, tdc, hits, test_size=0.80)\n",
+    "\n",
+    "print('adc_train.shape, adc_test.shape = ', adc_train.shape, adc_test.shape)\n",
+    "print('tdc_train.shape, tdc_test.shape = ', tdc_train.shape, tdc_test.shape)\n",
+    "print('hits_train.shape, hits_test.shape = ', hits_train.shape, hits_test.shape)\n",
+    "#print(adc_train[2])\n",
+    "\n",
+    "unique, counts = np.unique(hits_train, return_counts=True)\n",
+    "counts = dict(zip(unique, counts))\n",
+    "print('Counts = ', counts)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Model: \"sequential_1\"\n",
+      "_________________________________________________________________\n",
+      "Layer (type)                 Output Shape              Param #   \n",
+      "=================================================================\n",
+      "conv2d_1 (Conv2D)            (None, 19, 7, 64)         2368      \n",
+      "_________________________________________________________________\n",
+      "max_pooling2d_1 (MaxPooling2 (None, 19, 7, 64)         0         \n",
+      "_________________________________________________________________\n",
+      "dropout_1 (Dropout)          (None, 19, 7, 64)         0         \n",
+      "_________________________________________________________________\n",
+      "flatten_1 (Flatten)          (None, 8512)              0         \n",
+      "_________________________________________________________________\n",
+      "dense_1 (Dense)              (None, 128)               1089664   \n",
+      "_________________________________________________________________\n",
+      "dense_2 (Dense)              (None, 64)                8256      \n",
+      "_________________________________________________________________\n",
+      "dense_3 (Dense)              (None, 1)                 65        \n",
+      "=================================================================\n",
+      "Total params: 1,100,353\n",
+      "Trainable params: 1,100,353\n",
+      "Non-trainable params: 0\n",
+      "_________________________________________________________________\n"
+     ]
+    }
+   ],
+   "source": [
+    "model = Sequential() #Define the model object\n",
+    "\n",
+    "model.add(Conv2D(filters=64,kernel_size=6,activation='relu',input_shape=adc.shape[1:]))#Shape of a single image.\n",
+    "model.add(MaxPooling2D(1,1))\n",
+    "model.add(Dropout(0.25))\n",
+    "model.add(Flatten())\n",
+    "model.add(Dense(128, activation='relu'))\n",
+    "model.add(Dense(64, activation='relu'))\n",
+    "model.add(Dense(1, activation='sigmoid'))\n",
+    "model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])\n",
+    "#model.compile(optimizers.Adam(lr=0.001),loss='binary_crossentropy',metrics=['accuracy'])\n",
+    "\n",
+    "\"\"\"\n",
+    "model = tf.keras.Sequential() #Define the model object\n",
+    "\n",
+    "model.add(tf.keras.layers.Conv2D(filters=64,kernel_size=6,activation='relu',input_shape=adc.shape[1:]))#Shape of a single image.\n",
+    "model.add(tf.keras.layers.MaxPool2D(1,1))\n",
+    "model.add(Dropout(0.25))\n",
+    "model.add(tf.keras.layers.Flatten())\n",
+    "model.add(tf.keras.layers.Dense(128, activation='relu'))\n",
+    "model.add(tf.keras.layers.Dense(64, activation='relu'))\n",
+    "model.add(tf.keras.layers.Dense(1, activation='sigmoid'))\n",
+    "#model.compile(optimizer='adam',loss='binary_crossentropy',metrics=['accuracy'])\n",
+    "model.compile(tf.keras.optimizers.Adam(lr=0.001),loss='binary_crossentropy',metrics=['accuracy'])\n",
+    "\"\"\"\n",
+    "\n",
+    "\"\"\"\n",
+    "#Dense NN (not CNN layers).\n",
+    "model.add(tf.keras.layers.Dense(128, input_shape=(144,), activation=\"relu\")) #Add the hidden layer\n",
+    "model.add(tf.keras.layers.Dense(64, activation=\"relu\"))\n",
+    "#model.add(tf.keras.layers.Dense(32, activation=\"relu\"))\n",
+    "model.add(tf.keras.layers.Dense(1))\n",
+    "\"\"\"\n",
+    "\n",
+    "#model.compile(tf.keras.optimizers.Adam(lr=0.01),loss=tf.keras.losses.CategoricalCrossentropy()) #Adam optimizer and mean squared error loss\n",
+    "#model.compile(tf.keras.optimizers.Adam(lr=0.0001),loss=tf.keras.losses.MeanSquaredError(),metrics=['accuracy'])\n",
+    "\n",
+    "#Print summary of model.\n",
+    "model.summary()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Train on 80000 samples, validate on 20000 samples\n",
+      "Epoch 1/10\n",
+      "80000/80000 [==============================] - 88s 1ms/step - loss: 0.6912 - accuracy: 0.5228 - val_loss: 0.6909 - val_accuracy: 0.5278\n",
+      "Epoch 2/10\n",
+      "28032/80000 [=========>....................] - ETA: 54s - loss: 0.6894 - accuracy: 0.5328"
+     ]
+    },
+    {
+     "ename": "KeyboardInterrupt",
+     "evalue": "",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-6-4e38b05a7a96>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m#results = model.fit(adc_train, hits_train, epochs=10, batch_size=64, validation_split=0.05)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mresults\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mmodel\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mfit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtdc_train\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mhits_train\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mepochs\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m10\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mbatch_size\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m64\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mvalidation_split\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;36m0.20\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      3\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m \u001b[0;31m#prediction = model.predict()\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      5\u001b[0m \u001b[0;31m#scores = model.evaluate(adc_test, hits_test)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/keras/engine/training.py\u001b[0m in \u001b[0;36mfit\u001b[0;34m(self, x, y, batch_size, epochs, verbose, callbacks, validation_split, validation_data, shuffle, class_weight, sample_weight, initial_epoch, steps_per_epoch, validation_steps, validation_freq, max_queue_size, workers, use_multiprocessing, **kwargs)\u001b[0m\n\u001b[1;32m   1225\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1226\u001b[0m         \u001b[0;31m# Delegate logic to `fit_loop`.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1227\u001b[0;31m         return training_arrays.fit_loop(self, fit_function, fit_inputs,\n\u001b[0m\u001b[1;32m   1228\u001b[0m                                         \u001b[0mout_labels\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mout_labels\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1229\u001b[0m                                         \u001b[0mbatch_size\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mbatch_size\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/keras/engine/training_arrays.py\u001b[0m in \u001b[0;36mfit_loop\u001b[0;34m(model, fit_function, fit_inputs, out_labels, batch_size, epochs, verbose, callbacks, val_function, val_inputs, shuffle, initial_epoch, steps_per_epoch, validation_steps, validation_freq)\u001b[0m\n\u001b[1;32m    194\u001b[0m                     \u001b[0mins_batch\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mins_batch\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mi\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mtoarray\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    195\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 196\u001b[0;31m                 \u001b[0mouts\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mfit_function\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mins_batch\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    197\u001b[0m                 \u001b[0mouts\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mto_list\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mouts\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    198\u001b[0m                 \u001b[0;32mfor\u001b[0m \u001b[0ml\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mo\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mzip\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mout_labels\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mouts\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/tensorflow/python/keras/backend.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, inputs)\u001b[0m\n\u001b[1;32m   3790\u001b[0m         \u001b[0mvalue\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mmath_ops\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcast\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mvalue\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtensor\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mdtype\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3791\u001b[0m       \u001b[0mconverted_inputs\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mappend\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mvalue\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 3792\u001b[0;31m     \u001b[0moutputs\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_graph_fn\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0mconverted_inputs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   3793\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   3794\u001b[0m     \u001b[0;31m# EagerTensor.numpy() will often make a copy to ensure memory safety.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/tensorflow/python/eager/function.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, *args, **kwargs)\u001b[0m\n\u001b[1;32m   1603\u001b[0m       \u001b[0mTypeError\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mFor\u001b[0m \u001b[0minvalid\u001b[0m \u001b[0mpositional\u001b[0m\u001b[0;34m/\u001b[0m\u001b[0mkeyword\u001b[0m \u001b[0margument\u001b[0m \u001b[0mcombinations\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1604\u001b[0m     \"\"\"\n\u001b[0;32m-> 1605\u001b[0;31m     \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_call_impl\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1606\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1607\u001b[0m   \u001b[0;32mdef\u001b[0m \u001b[0m_call_impl\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mkwargs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcancellation_manager\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mNone\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/tensorflow/python/eager/function.py\u001b[0m in \u001b[0;36m_call_impl\u001b[0;34m(self, args, kwargs, cancellation_manager)\u001b[0m\n\u001b[1;32m   1643\u001b[0m       raise TypeError(\"Keyword arguments {} unknown. Expected {}.\".format(\n\u001b[1;32m   1644\u001b[0m           list(kwargs.keys()), list(self._arg_keywords)))\n\u001b[0;32m-> 1645\u001b[0;31m     \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_call_flat\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcaptured_inputs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcancellation_manager\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1646\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1647\u001b[0m   \u001b[0;32mdef\u001b[0m \u001b[0m_filtered_call\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/tensorflow/python/eager/function.py\u001b[0m in \u001b[0;36m_call_flat\u001b[0;34m(self, args, captured_inputs, cancellation_manager)\u001b[0m\n\u001b[1;32m   1743\u001b[0m         and executing_eagerly):\n\u001b[1;32m   1744\u001b[0m       \u001b[0;31m# No tape is watching; skip to running the function.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1745\u001b[0;31m       return self._build_call_outputs(self._inference_function.call(\n\u001b[0m\u001b[1;32m   1746\u001b[0m           ctx, args, cancellation_manager=cancellation_manager))\n\u001b[1;32m   1747\u001b[0m     forward_backward = self._select_forward_and_backward_functions(\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/tensorflow/python/eager/function.py\u001b[0m in \u001b[0;36mcall\u001b[0;34m(self, ctx, args, cancellation_manager)\u001b[0m\n\u001b[1;32m    591\u001b[0m       \u001b[0;32mwith\u001b[0m \u001b[0m_InterpolateFunctionError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    592\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mcancellation_manager\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 593\u001b[0;31m           outputs = execute.execute(\n\u001b[0m\u001b[1;32m    594\u001b[0m               \u001b[0mstr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msignature\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mname\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    595\u001b[0m               \u001b[0mnum_outputs\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_num_outputs\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/anaconda3/envs/tf/lib/python3.8/site-packages/tensorflow/python/eager/execute.py\u001b[0m in \u001b[0;36mquick_execute\u001b[0;34m(op_name, num_outputs, inputs, attrs, ctx, name)\u001b[0m\n\u001b[1;32m     57\u001b[0m   \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     58\u001b[0m     \u001b[0mctx\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mensure_initialized\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 59\u001b[0;31m     tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,\n\u001b[0m\u001b[1;32m     60\u001b[0m                                         inputs, attrs, num_outputs)\n\u001b[1;32m     61\u001b[0m   \u001b[0;32mexcept\u001b[0m \u001b[0mcore\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_NotOkStatusException\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mKeyboardInterrupt\u001b[0m: "
+     ]
+    }
+   ],
+   "source": [
+    "#results = model.fit(adc_train, hits_train, epochs=10, batch_size=64, validation_split=0.05)\n",
+    "results = model.fit(tdc_train, hits_train, epochs=10, batch_size=64, validation_split=0.20)\n",
+    "\n",
+    "#prediction = model.predict()\n",
+    "#scores = model.evaluate(adc_test, hits_test)\n",
+    "scores = model.evaluate(tdc_test, hits_test)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(\"test loss, test acc:\", scores)\n",
+    "\n",
+    "plot_learning_curve(results.history)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

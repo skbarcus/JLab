@@ -1,0 +1,454 @@
+% Template for PLoS
+% Version 1.0 January 2009
+%
+% To compile to pdf, run:
+% latex plos.template
+% bibtex plos.template
+% latex plos.template
+% latex plos.template
+% dvipdf plos.template
+
+\documentclass[10pt]{article}
+\usepackage[bookmarksopen]{hyperref}   %Bookmarks adds index on the sidebar in the PDF viewer.
+% amsmath package, useful for mathematical formulas
+\usepackage{amsmath}
+% amssymb package, useful for mathematical symbols
+\usepackage{amssymb}
+
+% graphicx package, useful for including eps and pdf graphics
+% include graphics with the command \includegraphics
+\usepackage{graphicx}
+
+%Allow captions for figures
+\usepackage{caption}
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+% cite package, to clean up citations in the main text. Do not remove.
+\usepackage{cite}
+
+\usepackage{color} 
+\usepackage{indentfirst}
+\usepackage{wrapfig}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%Allows for use of long table that can go over multiple slides.
+\usepackage{longtable}
+
+\usepackage{geometry}
+\usepackage{pdflscape} %Make PDF landscape.
+
+
+
+%allows for multiple pictures in one figure.
+%\usepackage{subfigure}
+
+% Use doublespacing - comment out for single spacing
+%\usepackage{setspace} 
+%\doublespacing
+
+%\usepackage{cleveref} %Load this package last.
+
+% Text layout
+\topmargin 0.0cm
+\oddsidemargin 0.5cm
+\evensidemargin 0.5cm
+\textwidth 16cm 
+\textheight 21cm
+
+% Bold the 'Figure #' in the caption and separate it with a period
+% Captions will be left justified
+\usepackage[labelfont=bf,labelsep=period,justification=raggedright]{caption}
+%Import graphics package
+
+% Use the PLoS provided bibtex style
+\bibliographystyle{plos2009}
+
+% Remove brackets from numbering in List of References
+\makeatletter
+\renewcommand{\@biblabel}[1]{\quad#1.}
+\makeatother
+
+
+% Leave date blank
+\date{}
+
+%\pagestyle{myheadings}
+%\usepackage{fancyhdr}
+%\lfoot{Hello}
+%\pagestyle{fancy}
+%% ** EDIT HERE **
+
+
+%% ** EDIT HERE **
+%% PLEASE INCLUDE ALL MACROS BELOW
+
+%% END MACROS SECTION
+
+\begin{document}
+
+% Title must be 150 characters or less
+\begin{flushleft}
+{\Large
+\textbf{$G_M^n$ HCal Energy Deposition Study}
+}
+% Insert Author names, affiliations and corresponding author email.
+\\
+\vspace{4mm}
+\hrule height 0.8pt \relax
+\vspace{2mm}
+\textbf{Scott Barcus}, \today, E-mail: skbarcus@jlab.org
+\end{flushleft}
+\vspace{-2mm}
+\hrule height 0.8pt \relax
+\vspace{6mm}
+%\hline
+% Please keep the abstract between 250 and 300 words
+%\section*{Educational Objectives and Professional Goals}
+%\begin{flushleft}
+%{\large\bf{Educational Objectives and Professional Goals}}
+%\end{flushleft}
+
+\setlength{\parindent}{0.5cm}
+
+%\newcommand{\xtimes}[1]{#1{\Rx}}
+
+\section{Introduction}
+
+The $G_M^n$ experiment aims to extract the neutron magnetic form factor from quasielastic deuterium cross section ratios d(e,e'n)p/d(e,e'p)n gathered via electron scattering. The scattered electrons will be measured by the BigBite spectrometer (BB), and the hadrons will be measured by the Hadron Calorimeter (HCal). The experimental setup for the $G_M^n$ experiment is shown in Figure \ref{fig:gmn_setup}. The HCal is shown in Figure \ref{fig:HCal}. The HCal consists of 288 PMT modules across four subassemblies. It detects multiple GeV protons and Neutrons using alternating layers of iron absorbers and scintillators as seen in Figure \ref{fig:HCal_interior}. The iron causes the hadrons to shower, and the scintillators produce photons from this shower. These photons are then transported through a wavelength shifter to increase the photon detection efficiency. Finally the photons pass through custom light guides which delivery the photons to the PMTs. \\
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.8\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/GMn_Layout_Clean_Labels.png}
+	\end{center}
+	\caption{
+	{\bf{$G_M^n$ Experimental Setup.}} The HCal detects the scattered hadrons, and it is positioned to the right of the beamline when facing downstream. HCal sits behind the SBS dipole magnet which is used to separate protons and neutrons. The BigBite spectrometer detects the scattered electrons, and its associated detector package is located to the left of the beamline.}
+\begin{flushleft}
+	•
+	\end{flushleft}	\label{fig:gmn_setup}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.2\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_External_Clean.png}
+	\end{center}
+	\caption{
+	{\bf{SBS Hadron Calorimeter.}} The HCal is composed of 288 PMT modules divided into four separate subassemblies which can be moved by crane (total weight $\approx$40 tons). The fully assembled HCal will have 12 columns and 24 rows of PMT modules. }
+	\label{fig:HCal}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=0.65\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_Interior_Clean.png}
+	\end{center}
+	\caption{
+	{\bf{SBS Hadron Calorimeter Interior.}} The interior of the HCal is comprised of alternating layers of iron absorbers and scintillators. The hadrons shower in the iron and then these showers create photons in the scintillators. These photons pass through a wavelength shifter before being transported into the PMTs via light guides.}
+	\label{fig:HCal_interior}
+	\end{figure}	
+
+This document describes the expected energy deposition in the HCal scintillators for each of the seven $G_M^n$ kinematics. This analysis aims to estimate the maximum energy deposited in a single PMT for each kinematic. The goal is to ensure that 99.5\% of events are properly recorded by the DAQ. Thus we wish to calibrate the HCal's PMT HV to not saturate the fADCs during events in which the `maximum' energy for a kinematic is deposited in a single PMT. Clearly, there will always be the chance of even higher energy events than seen in simulation, but as long as no more than 0.5\% of all events saturate the DAQ the experiment's needs will be met. These calculations will also be performed for the `maximum' total energy deposited in an entire event in case it were decided that recording the summing module output to the fADCs would be useful.\\
+
+\section{$G_M^n$ Simulation}
+\subsection{Methodology}
+
+These values were determined using G4SBS simulations of the full $G_M^n$ experiment. Each kinematic was simulated according to the run plan with 10,000 elastic electrons incident upon a 15 cm LD$_2$ target at 44$\mu$A. The placement of HCal and other equipment was set in accordance with the run plan. Electrons were generated in a wide area to fully cover the acceptance. The electrons were generated centered on the BB set angle with HCal detecting the corresponding scattered hadrons. Specifically, $\theta = \pm10^{\circ}$ of the BB set angle for the given kinematic setting and $\phi = \pm30^{\circ}$.\\
+
+\subsection{Energy and Coincidence Cuts}
+\label{ssec:cuts}
+
+This analysis is interested in identifying protons and neutrons scattered directly from the target impacting HCal. To select these events two energy cuts are applied to the data. The first energy cut is applied to the energy deposited in each single event in HCal (the energy of an event is equal to the sum of the energies of each individual hit in that event). Figure \ref{fig:hcal_evt_eng} shows a histogram of the energies of each event detected by HCal. Notice that there seems to be an increase in event occurrences at low energy. Many of these events are likely low energy secondaries from sources like scattering off of the beampipe. A cut is applied to the accepted data cutting out these low energy events. This cut is generally around 10\% of the maximum energy deposited during a single event. For $G_M^n$'s 13.5 GeV$^2$ kinematic shown in Figure \ref{fig:hcal_evt_eng} a cut of 150 MeV was chosen. \\
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{HCal_Event_Energies_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Event Energies in HCal for $G_M^n$ Kinematic 13.5 GeV$^2$.}} Energy deposited in all HCal scintillators for each event. An energy cut is chosen at 150 MeV for this analysis to remove low energy events. There is also a global 10 MeV threshold applied to this data.}
+	\label{fig:hcal_evt_eng}
+	\end{figure}	
+	
+The second energy cut is applied to the sum of the BB preshower and shower energies. The purpose of this cut is to require a coincident electron to to be detected in BB along with the hadron in HCal simulating the $G_M^n$ trigger. Figure \ref{fig:bb_evt_eng} shows a histogram of the combined energies of the BB preshower and shower for each event. An energy cut is applied to the BB data to select the desired electron events. This cut is generally around 50\% of the maximum energy deposited in the BB preshower and shower during a single event. For $G_M^n$'s 13.5 GeV$^2$ kinematic shown in Figure \ref{fig:bb_evt_eng} a cut of 2500 MeV is chosen to select the good electron events to form a coincidence with HCal.\\
+
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{BB_Event_Energies_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Event Energies in BB Preshower and Shower for $G_M^n$ Kinematic 13.5 GeV$^2$.}} Energy deposited in BB preshower and shower for each event. An energy cut is chosen at 2500 MeV for this analysis to select good events. There is also a global 10 MeV threshold applied to this data.}
+	\label{fig:bb_evt_eng}
+	\end{figure}
+
+Table \ref{tab:thresholds} gives the energy cuts chosen for HCal and the combined BB preshower and shower for each $G_M^n$ kinematic. The results of these cuts on the HCal event energy spectrum are shown in Figure \ref{fig:hcal_evt_eng_cuts} which shows the histogram of the energies of each event detected by HCal with the energy cuts applied for $G_M^n$'s 13.5 GeV$^2$ kinematic. The event energies look reasonably Gaussian as expected. The average energy per HCal event is 499 MeV with a standard deviation of 131 Mev. \\
+	
+	\begin{table}[h]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|c|cc|}
+	\hline
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{HCal Event Energy\\Threshold $[$MeV$]$} & \makecell{BB Event Energy\\Threshold $[$MeV$]$}\\
+	\hline
+	3.5 & 40 & 1700\\
+    4.5 & 40 & 1300\\
+    5.7 & 50 & 850\\
+    8.1 & 100 & 1400\\
+    10.2 & 120 & 2200\\
+    12.0 & 110 & 1500\\
+    13.5 & 150 & 2500\\
+	\hline
+	\end{tabular}
+	%\label{tab:edep}
+	\caption{{\bf{HCal and BB Energy Thresholds.}} The minimum energy thresholds for HCal and the combined BB preshower and shower energies are given. The HCal energy threshold is usually around 10\% of the maximum energy deposited in an event, and the BB energy threshold is generally around 50\% of the maximum energy deposited in the BB preshower and shower combined for an event.} %Caption* supresses printing of second caption saying Table number again.
+	\label{tab:thresholds}
+	\end{table}
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{HCal_Event_Energies_13_5_Cuts.png}
+	\end{center}
+	\caption{
+	{\bf{Event Energies in HCal for $G_M^n$ Kinematic 13.5 GeV$^2$ with Energy Cuts.}} Energy deposited in all HCal scintillators for each event with cuts on HCal and BB combined preshower and shower energies to kill low energy events and create a BB electron coincidence. The average energy per HCal event is 499 MeV with a standard deviation of 131 Mev.}
+	\label{fig:hcal_evt_eng_cuts}
+	\end{figure}
+
+\subsection{Simulation Analysis}
+
+	The following plots presented are generated from a G4SBS simulation of the seventh $G_M^n$ kinematic at 13.5 GeV$^2$ as an example of the simulation results. There is a global energy threshold minimum of 10 MeV throughout the simulation so no hits with energy below 10 MeV are recorded. Hits on the HCal are accepted only if they pass the energy cuts described in Section \ref{ssec:cuts}. This removes very low energy events and requires a coincident electron in BB.\\
+	
+	Figure \ref{fig:cell_hits} shows the distribution of hits on the surface of HCal based on the row and column of the PMT module that observed the hit. All hits are treated identically, i.e. there is no weighting based on the energy deposited by a hit. Notice that the hits seem well centered and have a slight crescent shape to their distribution. The module with a * in it represents the module which saw the greatest energy deposited in the scintillators observed by a single PMT throughout the entire run. Note there is currently a bug in G4SBS where the columns of the PMT modules are flipped in space. This is being investigated and resolved, but for the purposes of this document take any directions from the plot in Figure \ref{fig:xy_hits} with explicit X-Y directions as this orientation is correct. (Flip the columns of the PMT modules in Figure \ref{fig:cell_hits} and it will match the correct orientation shown in Figure \ref{fig:xy_hits}. i.e. Column 1$\rightarrow$12, 2$\rightarrow$11, 3$\rightarrow$10,...).\\
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{HCal_Cell_Hits_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Distribution of Hits on the HCal by PMT Module for $G_M^n$ Kinematic 13.5 GeV$^2$.}} The distribution of hits on the surface of HCal based on the row and column of the 288 PMT modules in which the hit was detected. This plot is not weighted by energy deposition. The module with a * in it represents the module which saw the greatest energy deposited in the scintillators observed by a single PMT throughout the entire run. There is a global 10 MeV threshold applied to this data. In this plot the beamline direction is to the left.}
+	\label{fig:cell_hits}
+	\end{figure}	
+	
+	Figure \ref{fig:xy_hits} shows the local X-Y coordinates of the nucleon hits on HCal in meters. These hits are weighted by the energy deposited in the scintillator for each hit. These hits on the HCal are distributed similarly to those in Figure \ref{fig:cell_hits} as expected, except the image is mirrored due to the G4SBS bug flipping the column numbers. In this plot the +X direction is to beam left, which for the HCal position in $G_M^n$ is towards the beamline. The +Y direction is vertically up. Note that G4SBS gives the global X-Y coordinates which have been transformed into the local X-Y coordinates with an origin at the center of HCal via the following coordinate transformations:
+	
+	\begin{align}
+		&X_{local} = X_{global}\times\cos\left(\theta_{SBS}\right) + Z_{global}\times\sin\left(\theta_{SBS}\right) \\
+		&Y_{local} = Y_{global} - 0.45
+	\end{align}
+	
+	\noindent The X-coordinate is transformed by a rotation, and the Y-coordinate has a value of 0.45 m subtracted to account for the HCal vertical offset. Figure \ref{fig:xy_hits} shows that the energy weighted hits on HCal are concentrated on the +X side (closer to the beamline). \\
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{HCal_XY_Hits_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Energy Weighted Distribution of Hits on the HCal in Local X-Y Coordinates for $G_M^n$ Kinematic 13.5 GeV$^2$.}} The distribution of hits on the surface of HCal based on the local (X,Y) location of the hit. These hits are weighted by the amount of energy deposited in the scintillator. There is a global 10 MeV threshold applied to this data. In this plot the beamline direction is to the right.}
+	\label{fig:xy_hits}
+	\end{figure}	
+	
+	Figure \ref{fig:sumedep} shows the energy deposited per individual hit in the HCal scintillators for the entire run. Note that the global 10 MeV threshold ensure no events are recorded below this threshold. The maximum energy deposited in the scintillator for a single hit (seen by one PMT) is found to be 700 MeV. The energy deposited by a total event is given by summing the energy deposited during each of the individual hits during a single event.\\
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{Sumedep_per_Hit_13_5.png}
+	\end{center}
+	\caption{
+	{\bf{Energy Deposited per Hit in the HCal Scintillators for $G_M^n$ Kinematic 13.5 GeV$^2$.}} Energy deposited on a hit-by-hit basis in the HCal scintillators. The energy deposited by a total event is given by summing the energy deposited during each of the individual hits during a single event. There is a global 10 MeV threshold applied to this data.}
+	\label{fig:sumedep}
+	\end{figure}	
+	
+\subsection{Simulation Energy Deposition Results}
+
+Table \ref{tab:edep} gives the results of the energy deposition study. The column titled \textit{Kine} gives the central BB $Q^2$ value for each of the seven $G_M^n$ kinematics in GeV$^2$. The \textit{SBS Central $\Theta$} column gives the central angle at which the SBS dipole is located. The \textit{Scattered Hadron Energy} column gives the energy of the scattered hadron. The \textit{HCal Events} column gives the number of events that were accepted after passing the thresholds described in Section \ref{ssec:cuts}. The \textit{Total Hits} column gives the total number of hits across all accepted events for the run. The \textit{Avg. Hits/Event} column gives the average number of hits per accepted event.\\
+
+The \textit{Avg. Edep Hit} column gives the average energy deposited in scintillators that was observed by a single PMT hit. The \textit{NPE for Avg. Edep Hit} column gives the average number of photoelectrons seen in a hit. The \textit{99.5\% Energy Hit} column gives the energy threshold below which 99.5\% of hits had lower energy. The \textit{99.5\% NPE Hit} column gives the number of photoelectrons threshold below which 99.5\% of hits had fewer photoelectrons.\\
+
+The \textit{Avg. Edep Event} column gives the average energy deposited in all scintillators for an entire event (an event is made up of one or more hits). The \textit{NPE for Avg. Edep Event} column gives the average number of photoelectrons seen for an entire event. The \textit{Event Energy Std. Dev.} column gives the standard deviation of the event energies. The \textit{99.5\% Energy Event} column gives the energy threshold below which 99.5\% of events had lower energy. The \textit{99.5\% NPE Event} column gives the number of photoelectrons threshold below which 99.5\% of events had fewer photoelectrons.\\
+
+%The \textit{PMT with Max Edep} column lists the row and column number of the PMT in which the maximum energy was deposited (row and column numbers begin counting from zero). The \textit{Max Edep in PMT} column gives the maximum energy deposited in a single PMT during the run in MeV. The \textit{NPE for Max Edep in PMT} column gives the number of photoelectrons expected to be seen by the PMT with maximal energy deposition. It is assumed from previous simulation results that there are $\approx$5.5 PE per MeV. The \textit{Max Edep All PMTs} column gives the maximum energy deposited in all PMTs for a single event in MeV. Note that this event is generally not the same event in which the maximal energy was deposited in a single PMT. The \textit{NPE for Max Edep All PMTs} gives the number of PE deposited in all PMTs for a single event ($\approx$5.5 PE per MeV). 
+
+%	\begin{table}[!ht]
+%	\centering
+%	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+%	\begin{tabular}{|c|ccccccccc|}
+%	\hline
+%	\makecell{Kine\\$[$GeV$^2]$} & \makecell{SBS\\Central\\$\Theta \; [^{\circ}]$} & \makecell{Scattered\\Hadron\\Energy\\$[$GeV$]$} & \makecell{HCal\\Events} & \makecell{Total\\Hits} & \makecell{Avg.\\Hits/\\Event}& \makecell{Max Edep\\in PMT\\$[$MeV$]$} & \makecell{NPE for\\Max Edep\\in PMT} & \makecell{Max Edep\\All PMTs\\$[$MeV$]$} & \makecell{NPE for\\Max Edep\\All PMTs}\\
+%	\hline
+%	3.5 & 31.1 & 2.64 & 2095 & 6714 & 3.20 & 267 & 1469 & 407 & 2236 \\
+%    4.5 & 24.7 & 3.20 & 2431 & 9189 & 3.78 & 305 & 1675 & 465 & 2559 \\
+%    5.7 & 17.5 & 3.86 & 2035 & 8853 & 4.35 & 387 & 2130 & 493 & 2712 \\
+%    8.1 & 17.5 & 5.17 & 2833 & 15490 & 5.47 & 484 & 2661 & 726 & 3893 \\
+%    10.2 & 17.5 & 6.29 & 2797 & 17661 & 6.31 & 551 & 3032 & 797 & 4383 \\
+%    12.0 & 13.8 & 7.27 & 2665 & 17985 & 6.75 & 629 & 3457 & 960 & 5280 \\
+%    13.5 & 14.8 & 8.08 & 3089 & 21469 & 6.95 & 700 & 3849 & 977 & 5373 \\
+%%	3.5 & 3.21 & 2.64 & 3585 & 11211 & 267 & 1469 & 407 & 2236 \\
+%%    4.5 & 1.61 & 3.20 & 4983 & 18332 & 308 & 1694 & 465 & 2559 \\
+%%    5.7 & 0.55 & 3.86 & 7189 & 30595 & 418 & 2302 & 493 & 2712 \\
+%%    8.1 & 1.40 & 5.17 & 7244 & 38245 & 497 & 2733 & 726 & 3893 \\
+%%    10.2 & 2.75 & 6.29 & 6756 & 40496 & 570 & 3132 & 797 & 4383 \\
+%%    12.0 & 1.22 & 7.27 & 8244 & 52939 & 669 & 3682 & 960 & 5280 \\
+%%    13.5 & 2.77 & 8.08 & 5124 & 33962 & 740 & 4070 & 977 & 5373 \\
+%%	3.5 & 3.21 & 2.64 & 5082 & 11747 & 267 & 1469 & 407 & 2236 \\
+%%    4.5 & 1.61 & 3.20 & 6070 & 18859 & 308 & 1694 & 465 & 2559 \\
+%%    5.7 & 0.55 & 3.86 & 7690 & 30942 & 418 & 2302 & 493 & 2712 \\
+%%    8.1 & 1.40 & 5.17 & 7874 & 38803 & 497 & 2733 & 726 & 3893 \\
+%%    10.2 & 2.75 & 6.29 & 7539 & 41205 & 570 & 3132 & 797 & 4383 \\
+%%    12.0 & 1.22 & 7.27 & 8781 & 53540 & 669 & 3682 & 960 & 5280 \\
+%%    13.5 & 2.77 & 8.08 & 6711 & 34567 & 740 & 4070 & 977 & 5373 \\
+%%    3.5 & 5082 & 11747 & r13c5 & 267 & 1469 & 407 & 2236 \\
+%%    4.5 & 6070 & 18859 & r12c4 & 308 & 1694 & 465 & 2559 \\
+%%    5.7 & 7690 & 30942 & r11c1 & 418 & 2302 & 493 & 2712 \\
+%%    8.1 & 7874 & 38803 & r14c3 & 497 & 2733 & 726 & 3893 \\
+%%    10.2 & 7539 & 41205 & r10c3 & 570 & 3132 & 797 & 4383 \\
+%%    12.0 & 8781 & 53540 & r18c7 & 669 & 3682 & 960 & 5280 \\
+%%    13.5 & 6711 & 34567 & r10c0 & 740 & 4070 & 977 & 5373 \\
+%	\hline
+%	\end{tabular}
+%	\caption{{\bf{HCal G4SBS Simulation Energy Deposition.}} Maximal energy deposited in a single PMT and entire event for each of the seven $G_M^n$ kinematics. Accepted events are those that were detected in both HCal and the BigBite preshower that were also above a threshold of 10\% of the maximum energy deposited in a single event.} %Caption* supresses printing of second caption saying Table number again.
+%	\label{tab:edep}
+%	\end{table}
+	
+	\newgeometry{margin=1.1cm}
+	\begin{landscape}
+	
+	\vspace*{60mm}	
+	
+	\begin{table}[!ht]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|c|cccccccccccccc|}
+	\hline
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{SBS\\Central\\$\Theta \; [^{\circ}]$} & \makecell{Scattered\\Hadron\\Energy\\$[$GeV$]$} & \makecell{HCal\\Events} & \makecell{Total\\Hits} & \makecell{Avg.\\Hits/\\Event}& \bf{\makecell{Avg. Edep\\Hit\\$[$MeV$]$}} & \makecell{NPE for\\Avg. Edep\\Hit} & \bf{\makecell{99.5\%\\ Energy\\Hit\\$[$MeV$]$}} & \makecell{99.5\%\\ NPE\\Hit} & \bf{\makecell{Avg. Edep\\ Event\\$[$MeV$]$}} & \makecell{NPE for\\Avg. Edep\\Event} & \makecell{Event\\ Energy\\Std. Dev.\\$[$MeV$]$} & \bf{\makecell{99.5\%\\Energy\\Event\\$[$MeV$]$}} & \makecell{99.5\%\\NPE\\Event}\\
+	\hline
+	3.5 & 31.1 & 2.64 & 1573 & 5091 & 3.24 & \bf{41} & 226 & \bf{178} & 981 & \bf{133} & 730 & 54 & \bf{279} & 1533 \\
+    4.5 & 24.7 & 3.20 & 1792 & 6720 & 3.75 & \bf{44} & 242 & \bf{202} & 1109 & \bf{165} & 909 & 62 & \bf{347} & 1911 \\
+    5.7 & 17.5 & 3.86 & 1482 & 6450 & 4.35 & \bf{48} & 267 & \bf{237} & 1301 & \bf{211} & 1161 & 72 & \bf{411} & 2260 \\
+    8.1 & 17.5 & 5.17 & 1913 & 10689 & 5.59 & \bf{55} & 301 & \bf{303} & 1666 & \bf{305} & 1680 & 87 & \bf{509} & 2799 \\
+    10.2 & 17.5 & 6.29 & 1804 & 11545 & 6.40 & \bf{61} & 335 & \bf{365} & 2008 & \bf{390} & 2145 & 106 & \bf{662} & 3643 \\
+    12.0 & 13.8 & 7.27 & 1785 & 12167 & 6.82 & \bf{66} & 361 & \bf{415} & 2281 & \bf{447} & 2459 & 118 & \bf{770} & 4233 \\
+    13.5 & 14.8 & 8.08 & 2123 & 15117 & 7.12 & \bf{70} & 386 & \bf{459} & 2522 & \bf{499} & 2746 & 131 & \bf{806} & 4431 \\
+	\hline
+	\end{tabular}
+	\caption{{\bf{HCal G4SBS Simulation Energy Deposition.}} Summary of average energies deposited in hits and events along with the thresholds below which 99.5\% of hit and events occurred.} %Caption* supresses printing of second caption saying Table number again.
+	\label{tab:edep}
+	\end{table}
+	
+	\end{landscape}
+	\restoregeometry
+	
+\section{PMT Signal Calibration}
+\subsection{Data Analysis}
+	
+	Figure \ref{fig:FE} shows the front-end electronics and signal flow while Figure \ref{fig:DAQ} shows the DAQ side electronics. They are connected by long BNC cables between racks RR2 and RR4. The signals out of the HCal PMTs first pass through a 10x amplifier on the front end in either the bottom of RR1 or RR3 depending on which half of the detector they originate from. One copy of this signal is then sent to the fADCs through a patch panel and then over a long ($\approx$100m) cable leaving RR2.\\
+	
+	The fADCs have an adjustable dynamic range of 0.5 V, 1 V, and 2 V which are selected using jumpers on the fADC board itself. Assuming the 2 V fADC range is used then any signals out of the amplifier up to 2 V can be recorded without saturating the fADCs. This means that the maximum allowable signal out of a single PMT is 200 mV (200mV$\times$10 = 2 V) without saturating the fADC channel. Note that this neglects the signal attenuation over the long cables. Attenuation studies were performed for the long cables by CMU. Unfortunately, I do not currently have these results, but I believe that the long cables attenuated the signal by a factor of $\approx$2 times. This document will be updated when a more reliable number is found. \\
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_FE.png}
+	\end{center}
+	\caption{
+	{\bf{HCal Front-End Electronics and Signal Map.}} The front-end electronics consist of three racks: RR1, RR2, and RR3. RR1 and RR3 are mirrored with half of the HCal channels each and contain the amplifiers, splitters, and summing modules. RR2 contains F1TDC discriminators and connects to rack RR4 on the DAQ side via patch panels and long BNC cables. Signals enter the front-end through the amplifiers on the bottom of RR1 and RR3 and ultimately flow to RR2.}
+	\label{fig:FE}
+	\end{figure}	
+	
+	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Schematics/My_Maps/HCal_DAQ.png}
+	\end{center}
+	\caption{
+	{\bf{HCal DAQ Electronics and Signal Map.}} The DAQ electronics side is made up of racks RR4 and RR5. RR4 connects to RR2 via long BNC cables and contains discriminators for the F1TDCs. RR5 contains the computer electronics for CODA as well as the fADCs and F1TDCs and their associated electronics.}
+	\label{fig:DAQ}
+	\end{figure}		
+	
+	A second copy of the PMT signal out of the 10x amplifiers goes to a 50-50 splitter panel in either RR1 or RR3. Of the two outputs from the splitter panel one goes to the F1TDCs via patch panels to long BNC cables leaving RR2 and is only used for timing. The other output with 50\% of the amplified signal goes to the summing modules at the top of RR1 or RR3. These modules sum 4x4 blocks of HCal PMT signals. Their output can be used as a trigger, but it could also be sent to an fADC to be recorded if desired.\\
+	
+	 Neglecting the long cable attenuation again, the summing modules can output a maximum of 2 V of signal from the 16 PMT signals they sum without saturating the fADCs. Since the inputs to the summing module come from a 50-50 splitter after the 10x amplifier that means a maximum combined signal directly out of the 16 summed PMTs can total 400 mV before saturating the fADC channel. For this analysis we will consider all of the energy to have been deposited in scintillators observed by the 4x4 block of PMTs going to the summing module to represent the most energy that could be summed at once.\\ 
+	
+	A more concrete example of the signal flow and strength at each point in the electronics before reaching the DAQ is given below. An imaginary 100 mV signal is traced from the PMTs until it reaches the fADCs, F1TDCs, and summing modules. The signal strength listed is for the signal after it has passed through or exited a module or panel. \\
+	
+	\noindent \textbf{fADC Signal Tracing:}
+	\begin{enumerate}
+		\item PMT outputs signal. Signal strength 100 mV.
+		\item Phillips Scientific 776 10$\times$ amplifier (dual output) in RR1 or RR3. Signal strength 1000 mV.
+		\item Patch panel in RR2. Signal strength 1000 mV.
+		\item Long BNC cable to RR4. Signal strength 500 mV (attenuation).
+		\item fADCs in RR5. Signal strength 500 mV.
+	\end{enumerate}
+	
+\noindent \textbf{F1TDC Signal Tracing:}
+	\begin{enumerate}
+		\item PMT outputs signal. Signal strength 100 mV.
+		\item Phillips Scientific 776 10$\times$ amplifier (dual output) in RR1 or RR3. Signal strength 1000 mV.
+		\item 50-50 splitter in RR1 or RR3. Signal strength 500 mV.
+		\item Philips Scientific 706 discriminator $\approx$11 mV threshold. Signal strength NIM standard.
+		\item Patch panel in RR2. Signal strength NIM standard.
+		\item Long BNC cable to RR4. Signal strength 1/2 NIM standard.
+		\item LeCroy 2313 discriminators in RR4. Signal strength ECL standard.
+		\item F1TDCs in RR5. Signal strength ECL standard.
+	\end{enumerate}
+	
+\noindent \textbf{Summing Module Signal Tracing:}
+	\begin{enumerate}
+		\item PMT outputs signal. Signal strength 100 mV.
+		\item Phillips Scientific 776 10$\times$ amplifier (dual output) in RR1 or RR3. Signal strength 1000 mV.
+		\item 50-50 splitter in RR1 or RR3. Signal strength 500 mV.
+		\item Summing modules in RR1 or RR3. Signal strength for single PMT 500 mV. Signal strength for 16 PMTs with equal signal (4$\times$4 block) 8000 mV.
+	\end{enumerate}
+	
+\subsection{PMT Signal Calibration Results}
+	
+	Table \ref{tab:max_outputs} gives the maximal signal allowed out of the PMTs without saturating the fADCs based on the maximum energy deposited in the scintillators. The column titled \textit{Kine} gives the $Q^2$ value for each of the seven $G_M^n$ kinematics in GeV$^2$. The \textit{99.5\% NPE Hit} column gives the number of photoelectrons threshold below which 99.5\% of hits had fewer photoelectrons. The column titled \textit{Max mV/PE per Hit (2 V/1.5 V)} gives the maximum output signal in mV that can be produced from a single PMT per PE detected by that PMT without saturating the fADC. For example, at $G_M^n$'s 13.5 GeV$^2$ kinematic the maximum PMT output signal without fADC saturation is 200 mV. This value is divided by the 99.5\% NPE threshold number of PEs detected by a single PMT from Table \ref{tab:edep}. This gives 200 mV divided by 2522 PEs which gives a PMT HV calibration maximum of 0.08 mV of signal output per PE detected by the PMT. Two values are given. The first is assuming the full 2 V range of the fADC is utilized and the second assuming only 1.5 V of the fADC range is used to allow for some overhead. The column titled \textit{Max mV/PE per Hit with Attenuation (2 V/1.5 V)} gives the same value as the previous column except it accounts for a factor of two signal attenuation due to the long BNC cable. \\
+	 
+	 The \textit{99.5\% NPE Event} column gives the number of photoelectrons threshold below which 99.5\% of events had fewer photoelectrons. The \textit{Max mV/PE per Event (2 V/1.5 V)} column gives the maximum sum of output signals in mV that can be produced from all PMTs per PE detected without saturating the fADC. Again, a value for an fADC range of 2 V and 1.5 V is given. Finally the \textit{Max mV/PE per Event (2 V/1.5 V) with Attenuation} column is the same as the one preceding it except that it accounts for a factor of two signal attenuation due to the long BNC cables.\\
+	
+	\begin{table}[h]
+	\centering
+	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+	\begin{tabular}{|c|cccccc|}
+	\hline
+	\makecell{Kine\\$[$GeV$^2]$} & \makecell{99.5\%\\NPE\\Hit} & \makecell{Max $[$mV/PE$]$\\per Hit\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\per Hit\\with Cable\\Attenuation\\(2 V/1.5 V)} & \makecell{99.5\%\\NPE\\Event} & \makecell{Max $[$mV/PE$]$\\per Event\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\per Event\\with Cable\\Attenuation\\(2 V/1.5 V)}\\
+	\hline
+	3.5 & 981 & 0.20/0.15 & 0.41/0.31 & 1533 & 0.26/0.20 & 0.52/0.39\\
+    4.5 & 1109 & 0.18/0.14 & 0.36/0.27 & 1911 & 0.21/0.16 & 0.42/0.31\\
+    5.7 & 1301 & 0.15/0.12 & 0.31/0.23 & 2260 & 0.18/0.13 & 0.35/0.27\\
+    8.1 & 1666 & 0.12/0.09 & 0.24/0.18 & 2799 & 0.14/0.11 & 0.29/0.21\\
+    10.2 & 2008 & 0.10/0.07 & 0.20/0.15 & 3643 & 0.11/0.08 & 0.22/0.16\\
+    12.0 & 2281 & 0.09/0.07 & 0.18/0.13 & 4233 & 0.09/0.07 & 0.19/0.14\\
+    13.5 & 2522 & 0.08/0.06 & 0.16/0.12 & 4431 & 0.18/0.07 & 0.18/0.14\\
+	\hline
+	\end{tabular}
+	%\label{tab:edep}
+	\caption{{\bf{PMT HV Calibration Limits.}} PMT output signal [mV] limits per photoelectron for each of the seven $G_M^n$ kinematics. Values for fADC ranges of 2 V and 1.5 V are given as well as values with and without signal attenuation due to the long cables.} %Caption* supresses printing of second caption saying Table number again.
+	\label{tab:max_outputs}
+	\end{table}
+	
+%	\begin{table}[h]
+%	\centering
+%	%\caption{Spectrometer Central Kinematics}%Prints title above table.
+%	\begin{tabular}{|c|cccccc|}
+%	\hline
+%	\makecell{Kine\\$[$GeV$^2]$} & \makecell{Max Edep\\in PMT\\$[$MeV$]$} & \makecell{Max $[$mV/PE$]$\\from PMT\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\from PMT\\with Cable\\Attenuation\\(2 V/1.5 V)} & \makecell{Max Edep\\All PMTs\\$[$MeV$]$} & \makecell{Max $[$mV/PE$]$\\All PMTs\\(2 V/1.5 V)} & \makecell{Max $[$mV/PE$]$\\All PMTs\\with Cable\\Attenuation\\(2 V/1.5 V)}\\
+%	\hline
+%	3.5 & 267 & 0.136/0.102 & 0.272/0.204 & 407 & 0.179/0.134 & 0.358/0.268\\
+%    4.5 & 305 & 0.119/0.090 & 0.239/0.179 & 465 & 0.156/0.117 & 0.313/0.234\\
+%    5.7 & 387 & 0.094/0.070 & 0.188/0.141 & 493 & 0.148/0.111 & 0.295/0.221\\
+%    8.1 & 484 & 0.075/0.056 & 0.150/0.113 & 726 & 0.100/0.075 & 0.200/0.150\\
+%    10.2 & 551 & 0.066/0.049 & 0.132/0.099 & 797 & 0.091/0.068 & 0.183/0.137\\
+%    12.0 & 629 & 0.058/0.043 & 0.116/0.087 & 960 & 0.076/0.057 & 0.152/0.114\\
+%    13.5 & 700 & 0.052/0.039 & 0.104/0.078 & 977 & 0.074/0.056 & 0.149/0.112\\
+%%	3.5 & 267 & 0.75/0.56 & 1.50/1.12 & 407 & 0.98/0.74 & 1.97/1.47\\
+%%    4.5 & 308 & 0.65/0.49 & 1.30/0.97 & 465 & 0.86/0.65 & 1.72/1.29 \\
+%%    5.7 & 418 & 0.48/0.36 & 0.96/0.72 & 493 & 0.81/0.61 & 1.62/1.22 \\
+%%    8.1 & 497 & 0.40/0.30 & 0.80/0.60 & 726 & 0.55/0.41 & 1.10/0.83 \\
+%%    10.2 & 570 & 0.35/0.26 & 0.70/0.53 & 797 & 0.50/0.38 & 1.00/0.75\\
+%%    12.0 & 669 & 0.30/0.22 & 0.60/0.45 & 960 & 0.42/0.31 & 0.83/0.63\\
+%%    13.5 & 740 & 0.27/0.20 & 0.54/0.41 & 977 & 0.41/0.31 & 0.82/0.61\\
+%	\hline
+%	\end{tabular}
+%	%\label{tab:edep}
+%	\caption{{\bf{PMT HV Calibration Limits.}} PMT output signal [mV] limits per photoelectron for each of the seven $G_M^n$ kinematics. Values for fADC ranges of 2 V and 1.5 V are given as well as values with and without signal attenuation due to the long cables.} %Caption* supresses printing of second caption saying Table number again.
+%	\label{tab:max_outputs}
+%	\end{table}
+
+\end{document}
+

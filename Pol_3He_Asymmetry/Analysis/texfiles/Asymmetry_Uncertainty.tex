@@ -1,0 +1,174 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=phys,% 
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+\usepackage{amsmath}
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\newcommand{\hcal}{HCal}
+
+\title{Asymmetry Uncertainty}
+\subtitle{}
+\date{August 31\textsuperscript{th} 2020}
+\author{Scott Barcus}
+\institute{Jefferson Lab}
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Uncertainty Propagation}
+
+	\begin{itemize}
+		\item Generic Uncertainty Propagation Equation:
+	\end{itemize}
+
+	\begin{equation}
+		q=f(x_1,...,x_n)
+	\end{equation}
+	
+	\begin{equation}
+		\delta q = \sqrt{\left( \frac{\delta q}{\delta x_1}\delta x_1 \right)^2 +...+\left( \frac{\delta q}{\delta x_n}\delta x_n \right)^2}
+	\end{equation}
+	
+	\begin{itemize}
+		\item Asymmetry:
+	\end{itemize}
+	
+	\begin{equation}
+		A=\frac{N_+-N_-}{N_++N_-}
+	\end{equation}
+
+\end{frame}
+
+\begin{frame}{Uncertainty Calculation}
+
+	\begin{itemize}
+		\item Partial Derivatives:
+	\end{itemize}
+	
+	\begin{equation}
+		\frac{\partial A}{\partial N_+}=\frac{2N_-}{\left( N_++N_- \right)^2}
+	\end{equation}
+	\begin{equation}
+		\frac{\partial A}{\partial N_-}=-\frac{2N_+}{\left( N_++N_- \right)^2}
+	\end{equation}
+	
+	\begin{itemize}
+		\item Uncertainty on Helicity Counts:
+	\end{itemize}
+	
+	\begin{equation}
+		\delta N_+ = \frac{1}{\sqrt{N_+}}
+	\end{equation}
+	\begin{equation}
+		\delta N_- = \frac{1}{\sqrt{N_-}}
+	\end{equation}
+
+\end{frame}
+
+\begin{frame}{Uncertainty Calculation}
+
+	\begin{itemize}
+		\item Putting it all together:
+	\end{itemize}
+
+	\begin{equation}
+		\delta A = \sqrt{ \left( \frac{2N_-}{\left( N_++N_- \right)^2} \frac{1}{\sqrt{N_+}} \right)^2 + \left( \frac{-2N_+}{\left( N_++N_- \right)^2} \frac{1}{\sqrt{N_-}} \right)^2 }
+	\end{equation}
+	
+	\begin{equation}
+		\delta A = \sqrt{ \left( \frac{4N_-^2}{N_+ \left( N_++N_- \right)^4} \right) + \left( \frac{4N_+^2}{N_- \left( N_++N_- \right)^4} \right) }
+	\end{equation}
+	
+	\begin{itemize}
+		\item $N_+ \approx N_-$
+	\end{itemize}
+	
+	\begin{equation}
+		\delta A = \sqrt{\frac{8N_+}{\left( N_+ + N_+ \right)^4}}
+	\end{equation}
+
+\end{frame}
+
+\begin{frame}{Uncertainty Calculation}
+
+	\begin{itemize}
+		\item $N_+ + N_+ \approx N$ and $N_+ \approx \frac{N}{2}$
+	\end{itemize}
+	
+	\begin{equation}
+		\delta A = \sqrt{\frac{4N}{N^4}} = \sqrt{\frac{4}{N^3}} = \frac{2}{N^{\frac{3}{2}}}
+	\end{equation}
+	
+\end{frame}
+
+\begin{frame}{Uncertainty Monte Carlo}
+
+
+
+\end{frame}
+
+\end{document}

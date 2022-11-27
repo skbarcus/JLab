@@ -1,0 +1,13 @@
+History log of mpv904 channel settings. File produced by DAC_Control_GUI.py. Written and maintained by Scott Barcus (skbarcus@jlab.org).
+Voltage settings listed from channel 0 up to channel 15.
+
+April 28, 2021, 14:15:15:
+New Voltage Settings = ['0.00', '2', '0.00', '0.00', '9.9', '0.00', '0.00', '7', '8', '8', '10', '11', '0.00', '7.8', '0.00', '0.00']
+April 28, 2021, 14:15:16:
+New Voltage Settings = ['0.00', '2', '0.00', '0.00', '9.9', '0.00', '0.00', '7', '8', '8', '10', '11', '0.00', '7.8', '0.00', '0.00']
+April 28, 2021, 14:16:06:
+New Voltage Settings = ['0.00', '2', '0.00', '0.00', '19.9', '0.00', '0.00', '7', '8', '8', '10', '11', '0.00', '7.8', '0.00', '0.00']
+April 28, 2021, 14:20:34:
+New Voltage Settings = ['0.00', '2', '0.00', '0.00', '19.9', '0.00', '0.00', '7', '8', '8', '10', '11', '0.00', '7.8', '0.00', '0.00']
+April 28, 2021, 14:20:45:
+New Voltage Settings = ['0.00', '2', '0.00', '0.00', '9.9', '0.00', '0.00', '7', '8', '8', '10', '11', '0.00', '7.8', '0.00', '0.00']

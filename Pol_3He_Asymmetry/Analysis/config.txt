@@ -1,0 +1,445 @@
+[108467] [config] [info] Opening parameter file: [1] PARAM/GEN/genflags.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/GEN/gdebug.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/GEN/gtarget.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/GEN/gbeam.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/GEN/gscalers.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pcana.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pdebug.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/shmsflags.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/ptracking.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/p_reftime_cut_shmsdaq.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_geom.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_geom.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_geom.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_geom.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_geom.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_geom.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_cuts.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_cuts.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_cuts.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_cuts.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_cuts.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_cuts.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_calib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_calib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_tzero_per_wire.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_calib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_TWcalib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_Vpcalib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_calib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_calib.param 
+[108467] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_calib.param 
+[108467] [config] [info] Detector ID Map
+[108467] [config] [info]    TSHMS      20         
+[108467] [config] [info]    PNGCER     21         
+[108467] [config] [info]    PDC        22         
+[108467] [config] [info]    PSCIN      23         
+[108467] [config] [info]    PHGCER     24         
+[108467] [config] [info]    PAERO      25         
+[108467] [config] [info]    PCAL       26         
+[108467] [config] [info]    PRASTER    28         
+[108467] [config] [debug] <CodaRawDecoder::init_cmap> - MAPS/db_cratemap.dat: Opening database file MAPS/db_cratemap.dat ... ... ok
+[108467] [config] [debug] Spectrometer  P 
+[108467] [config] [debug] hodo planes     = 4
+[108467] [config] [debug] sel using scin  = 0
+[108467] [config] [debug] fPruneXp        = 0.2
+[108467] [config] [debug] fPruneYp        = 0.2
+[108467] [config] [debug] fPruneYtar      = 20.0
+[108467] [config] [debug] fPruneDelta     = 30.0
+[108467] [config] [debug] fPruneBeta      = 30.0
+[108467] [config] [debug] fPruneDf        = 1.0
+[108467] [config] [debug] fPruneChiBeta   = 100.0
+[108467] [config] [debug] fPruneFpTime    = 1000.0
+[108467] [config] [debug] fPruneNPMT      = 6.0
+[108467] [config] [debug] sel using prune = 0
+[108467] [config] [warning] Rounded pngcer_adcrefcut to nearest integer 
+[108467] [config] [warning] Rounded pdc_tdcrefcut to nearest integer 
+[108467] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[108467] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[108467] [config] [warning] Rounded phodo_tdcrefcut to nearest integer 
+[108467] [config] [warning] Rounded phodo_adcrefcut to nearest integer 
+[108467] [config] [warning] Rounded phgcer_adcrefcut to nearest integer 
+[108467] [config] [warning] Rounded paero_adcrefcut to nearest integer 
+[108467] [config] [warning] Rounded pcal_adcrefcut to nearest integer 
+[108467] [config] [info] From THcShower::Setup: created Shower planes for P 
+[108467] [config] [warning] requested 2 elements of pcal_c_cor which has length 1
+[108467] [config] [warning] requested 2 elements of pcal_d_cor which has length 1
+[108467] [config] [warning] Rounded t_shms_trig_tdcrefcut to nearest integer 
+[108467] [config] [warning] Rounded t_shms_trig_adcrefcut to nearest integer 
+[108467] [config] [info] In THcHelicity::ReadDatabase
+[108467] [config] [info] THcHelicityReader::ReadDatabase: Helicity information from ROC 2 (SHMS)
+[108467] [config] [info] SetROCInfo: 0 (roc: 2, slot: 14, index: 9)
+[108467] [config] [info] SetROCInfo: 1 (roc: 2, slot: 14, index: 8)
+[108467] [config] [info] SetROCInfo: 2 (roc: 2, slot: 14, index: 10)
+[108467] [config] [info] SetROCInfo: 3 (roc: 2, slot: 14, index: 7)
+[108467] [config] [info] SetROCInfo: 4 (roc: 2, slot: 21, index: 2)
+[108467] [config] [info] Helicity decoder initialized with frequency of 120.0007547169 Hz and reporting delay of 8 cycles.
+[108467] [config] [info] Called THcHelicity::DefineVariables with mode == 0
+[108467] [config] [info] Calling THcHelicity DefineVarsFromList
+[108467] [config] [debug] In THcExtTarCor::ReadDatabase()
+[108467] [config] [info] THcHodoEff::ReadDatabase nplanes=4
+[108467] [config] [info] Plane = 1   counters = 13 
+[108467] [config] [info] Plane = 2   counters = 13 
+[108467] [config] [info] Plane = 3   counters = 14 
+[108467] [config] [info] Plane = 4   counters = 21 
+[108467] [config] [info] THcHodoEff::Init nplanes=4
+[108467] [config] [info] THcHodoEff::Init Apparatus = hod P
+[108467] [config] [debug] <OpenFile()> - PScalevt: Opening database file db_PScalevt.dat ... ... failed
+[108467] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/20110416/db_PScalevt.dat ... ... failed
+[108467] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/db_PScalevt.dat ... ... failed
+[109619] [config] [info] Opening parameter file: [1] PARAM/GEN/genflags.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/GEN/gdebug.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/GEN/gtarget.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/GEN/gbeam.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/GEN/gscalers.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pcana.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pdebug.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/shmsflags.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/ptracking.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/p_reftime_cut_shmsdaq.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_geom.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_geom.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_geom.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_geom.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_geom.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_geom.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_cuts.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_cuts.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_cuts.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_cuts.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_cuts.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_cuts.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_calib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_calib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_tzero_per_wire.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_calib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_TWcalib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_Vpcalib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_calib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_calib.param 
+[109619] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_calib.param 
+[109619] [config] [info] Detector ID Map
+[109619] [config] [info]    TSHMS      20         
+[109619] [config] [info]    PNGCER     21         
+[109619] [config] [info]    PDC        22         
+[109619] [config] [info]    PSCIN      23         
+[109619] [config] [info]    PHGCER     24         
+[109619] [config] [info]    PAERO      25         
+[109619] [config] [info]    PCAL       26         
+[109619] [config] [info]    PRASTER    28         
+[109619] [config] [debug] <CodaRawDecoder::init_cmap> - MAPS/db_cratemap.dat: Opening database file MAPS/db_cratemap.dat ... ... ok
+[109619] [config] [debug] Spectrometer  P 
+[109619] [config] [debug] hodo planes     = 4
+[109619] [config] [debug] sel using scin  = 0
+[109619] [config] [debug] fPruneXp        = 0.2
+[109619] [config] [debug] fPruneYp        = 0.2
+[109619] [config] [debug] fPruneYtar      = 20.0
+[109619] [config] [debug] fPruneDelta     = 30.0
+[109619] [config] [debug] fPruneBeta      = 30.0
+[109619] [config] [debug] fPruneDf        = 1.0
+[109619] [config] [debug] fPruneChiBeta   = 100.0
+[109619] [config] [debug] fPruneFpTime    = 1000.0
+[109619] [config] [debug] fPruneNPMT      = 6.0
+[109619] [config] [debug] sel using prune = 0
+[109619] [config] [warning] Rounded pngcer_adcrefcut to nearest integer 
+[109619] [config] [warning] Rounded pdc_tdcrefcut to nearest integer 
+[109619] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[109619] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[109619] [config] [warning] Rounded phodo_tdcrefcut to nearest integer 
+[109619] [config] [warning] Rounded phodo_adcrefcut to nearest integer 
+[109619] [config] [warning] Rounded phgcer_adcrefcut to nearest integer 
+[109619] [config] [warning] Rounded paero_adcrefcut to nearest integer 
+[109619] [config] [warning] Rounded pcal_adcrefcut to nearest integer 
+[109619] [config] [info] From THcShower::Setup: created Shower planes for P 
+[109619] [config] [warning] requested 2 elements of pcal_c_cor which has length 1
+[109619] [config] [warning] requested 2 elements of pcal_d_cor which has length 1
+[109619] [config] [warning] Rounded t_shms_trig_tdcrefcut to nearest integer 
+[109619] [config] [warning] Rounded t_shms_trig_adcrefcut to nearest integer 
+[109619] [config] [info] In THcHelicity::ReadDatabase
+[109619] [config] [info] THcHelicityReader::ReadDatabase: Helicity information from ROC 2 (SHMS)
+[109619] [config] [info] SetROCInfo: 0 (roc: 2, slot: 14, index: 9)
+[109619] [config] [info] SetROCInfo: 1 (roc: 2, slot: 14, index: 8)
+[109619] [config] [info] SetROCInfo: 2 (roc: 2, slot: 14, index: 10)
+[109619] [config] [info] SetROCInfo: 3 (roc: 2, slot: 14, index: 7)
+[109619] [config] [info] SetROCInfo: 4 (roc: 2, slot: 21, index: 2)
+[109619] [config] [info] Helicity decoder initialized with frequency of 120.0007547169 Hz and reporting delay of 8 cycles.
+[109619] [config] [info] Called THcHelicity::DefineVariables with mode == 0
+[109619] [config] [info] Calling THcHelicity DefineVarsFromList
+[109619] [config] [debug] In THcExtTarCor::ReadDatabase()
+[109619] [config] [info] THcHodoEff::ReadDatabase nplanes=4
+[109619] [config] [info] Plane = 1   counters = 13 
+[109619] [config] [info] Plane = 2   counters = 13 
+[109619] [config] [info] Plane = 3   counters = 14 
+[109619] [config] [info] Plane = 4   counters = 21 
+[109619] [config] [info] THcHodoEff::Init nplanes=4
+[109619] [config] [info] THcHodoEff::Init Apparatus = hod P
+[109619] [config] [debug] <OpenFile()> - PScalevt: Opening database file db_PScalevt.dat ... ... failed
+[109619] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/20110416/db_PScalevt.dat ... ... failed
+[109619] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/db_PScalevt.dat ... ... failed
+[117398] [config] [info] Opening parameter file: [1] PARAM/GEN/genflags.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/GEN/gdebug.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/GEN/gtarget.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/GEN/gbeam.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/GEN/gscalers.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pcana.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pdebug.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/shmsflags.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/ptracking.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/p_reftime_cut_shmsdaq.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_geom.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_geom.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_geom.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_geom.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_geom.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_geom.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_cuts.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_cuts.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_cuts.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_cuts.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_cuts.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_cuts.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_calib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_calib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_tzero_per_wire.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_calib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_TWcalib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_Vpcalib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_calib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_calib.param 
+[117398] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_calib.param 
+[117398] [config] [info] Detector ID Map
+[117398] [config] [info]    TSHMS      20         
+[117398] [config] [info]    PNGCER     21         
+[117398] [config] [info]    PDC        22         
+[117398] [config] [info]    PSCIN      23         
+[117398] [config] [info]    PHGCER     24         
+[117398] [config] [info]    PAERO      25         
+[117398] [config] [info]    PCAL       26         
+[117398] [config] [info]    PRASTER    28         
+[117398] [config] [debug] <CodaRawDecoder::init_cmap> - MAPS/db_cratemap.dat: Opening database file MAPS/db_cratemap.dat ... ... ok
+[117398] [config] [debug] Spectrometer  P 
+[117398] [config] [debug] hodo planes     = 4
+[117398] [config] [debug] sel using scin  = 0
+[117398] [config] [debug] fPruneXp        = 0.2
+[117398] [config] [debug] fPruneYp        = 0.2
+[117398] [config] [debug] fPruneYtar      = 20.0
+[117398] [config] [debug] fPruneDelta     = 30.0
+[117398] [config] [debug] fPruneBeta      = 30.0
+[117398] [config] [debug] fPruneDf        = 1.0
+[117398] [config] [debug] fPruneChiBeta   = 100.0
+[117398] [config] [debug] fPruneFpTime    = 1000.0
+[117398] [config] [debug] fPruneNPMT      = 6.0
+[117398] [config] [debug] sel using prune = 0
+[117398] [config] [warning] Rounded pngcer_adcrefcut to nearest integer 
+[117398] [config] [warning] Rounded pdc_tdcrefcut to nearest integer 
+[117398] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[117398] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[117398] [config] [warning] Rounded phodo_tdcrefcut to nearest integer 
+[117398] [config] [warning] Rounded phodo_adcrefcut to nearest integer 
+[117398] [config] [warning] Rounded phgcer_adcrefcut to nearest integer 
+[117398] [config] [warning] Rounded paero_adcrefcut to nearest integer 
+[117398] [config] [warning] Rounded pcal_adcrefcut to nearest integer 
+[117398] [config] [info] From THcShower::Setup: created Shower planes for P 
+[117398] [config] [warning] requested 2 elements of pcal_c_cor which has length 1
+[117398] [config] [warning] requested 2 elements of pcal_d_cor which has length 1
+[117398] [config] [warning] Rounded t_shms_trig_tdcrefcut to nearest integer 
+[117398] [config] [warning] Rounded t_shms_trig_adcrefcut to nearest integer 
+[117398] [config] [info] In THcHelicity::ReadDatabase
+[117398] [config] [info] THcHelicityReader::ReadDatabase: Helicity information from ROC 2 (SHMS)
+[117398] [config] [info] SetROCInfo: 0 (roc: 2, slot: 14, index: 9)
+[117398] [config] [info] SetROCInfo: 1 (roc: 2, slot: 14, index: 8)
+[117398] [config] [info] SetROCInfo: 2 (roc: 2, slot: 14, index: 10)
+[117398] [config] [info] SetROCInfo: 3 (roc: 2, slot: 14, index: 7)
+[117398] [config] [info] SetROCInfo: 4 (roc: 2, slot: 21, index: 2)
+[117398] [config] [info] Helicity decoder initialized with frequency of 120.0007547169 Hz and reporting delay of 8 cycles.
+[117398] [config] [info] Called THcHelicity::DefineVariables with mode == 0
+[117398] [config] [info] Calling THcHelicity DefineVarsFromList
+[117398] [config] [debug] In THcExtTarCor::ReadDatabase()
+[117398] [config] [info] THcHodoEff::ReadDatabase nplanes=4
+[117398] [config] [info] Plane = 1   counters = 13 
+[117398] [config] [info] Plane = 2   counters = 13 
+[117398] [config] [info] Plane = 3   counters = 14 
+[117398] [config] [info] Plane = 4   counters = 21 
+[117398] [config] [info] THcHodoEff::Init nplanes=4
+[117398] [config] [info] THcHodoEff::Init Apparatus = hod P
+[117398] [config] [debug] <OpenFile()> - PScalevt: Opening database file db_PScalevt.dat ... ... failed
+[117398] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/20110416/db_PScalevt.dat ... ... failed
+[117398] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/db_PScalevt.dat ... ... failed
+[118688] [config] [info] Opening parameter file: [1] PARAM/GEN/genflags.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/GEN/gdebug.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/GEN/gtarget.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/GEN/gbeam.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/GEN/gscalers.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pcana.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pdebug.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/shmsflags.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/ptracking.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/p_reftime_cut_shmsdaq.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_geom.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_geom.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_geom.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_geom.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_geom.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_geom.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_cuts.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_cuts.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_cuts.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_cuts.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_cuts.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_cuts.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_calib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_calib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_tzero_per_wire.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_calib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_TWcalib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_Vpcalib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_calib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_calib.param 
+[118688] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_calib.param 
+[118688] [config] [info] Detector ID Map
+[118688] [config] [info]    TSHMS      20         
+[118688] [config] [info]    PNGCER     21         
+[118688] [config] [info]    PDC        22         
+[118688] [config] [info]    PSCIN      23         
+[118688] [config] [info]    PHGCER     24         
+[118688] [config] [info]    PAERO      25         
+[118688] [config] [info]    PCAL       26         
+[118688] [config] [info]    PRASTER    28         
+[118688] [config] [debug] <CodaRawDecoder::init_cmap> - MAPS/db_cratemap.dat: Opening database file MAPS/db_cratemap.dat ... ... ok
+[118688] [config] [debug] Spectrometer  P 
+[118688] [config] [debug] hodo planes     = 4
+[118688] [config] [debug] sel using scin  = 0
+[118688] [config] [debug] fPruneXp        = 0.2
+[118688] [config] [debug] fPruneYp        = 0.2
+[118688] [config] [debug] fPruneYtar      = 20.0
+[118688] [config] [debug] fPruneDelta     = 30.0
+[118688] [config] [debug] fPruneBeta      = 30.0
+[118688] [config] [debug] fPruneDf        = 1.0
+[118688] [config] [debug] fPruneChiBeta   = 100.0
+[118688] [config] [debug] fPruneFpTime    = 1000.0
+[118688] [config] [debug] fPruneNPMT      = 6.0
+[118688] [config] [debug] sel using prune = 0
+[118688] [config] [warning] Rounded pngcer_adcrefcut to nearest integer 
+[118688] [config] [warning] Rounded pdc_tdcrefcut to nearest integer 
+[118688] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[118688] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[118688] [config] [warning] Rounded phodo_tdcrefcut to nearest integer 
+[118688] [config] [warning] Rounded phodo_adcrefcut to nearest integer 
+[118688] [config] [warning] Rounded phgcer_adcrefcut to nearest integer 
+[118688] [config] [warning] Rounded paero_adcrefcut to nearest integer 
+[118688] [config] [warning] Rounded pcal_adcrefcut to nearest integer 
+[118688] [config] [info] From THcShower::Setup: created Shower planes for P 
+[118688] [config] [warning] requested 2 elements of pcal_c_cor which has length 1
+[118688] [config] [warning] requested 2 elements of pcal_d_cor which has length 1
+[118688] [config] [warning] Rounded t_shms_trig_tdcrefcut to nearest integer 
+[118688] [config] [warning] Rounded t_shms_trig_adcrefcut to nearest integer 
+[118688] [config] [info] In THcHelicity::ReadDatabase
+[118688] [config] [info] THcHelicityReader::ReadDatabase: Helicity information from ROC 2 (SHMS)
+[118688] [config] [info] SetROCInfo: 0 (roc: 2, slot: 14, index: 9)
+[118688] [config] [info] SetROCInfo: 1 (roc: 2, slot: 14, index: 8)
+[118688] [config] [info] SetROCInfo: 2 (roc: 2, slot: 14, index: 10)
+[118688] [config] [info] SetROCInfo: 3 (roc: 2, slot: 14, index: 7)
+[118688] [config] [info] SetROCInfo: 4 (roc: 2, slot: 21, index: 2)
+[118688] [config] [info] Helicity decoder initialized with frequency of 120.0007547169 Hz and reporting delay of 8 cycles.
+[118688] [config] [info] Called THcHelicity::DefineVariables with mode == 0
+[118688] [config] [info] Calling THcHelicity DefineVarsFromList
+[118688] [config] [debug] In THcExtTarCor::ReadDatabase()
+[118688] [config] [info] THcHodoEff::ReadDatabase nplanes=4
+[118688] [config] [info] Plane = 1   counters = 13 
+[118688] [config] [info] Plane = 2   counters = 13 
+[118688] [config] [info] Plane = 3   counters = 14 
+[118688] [config] [info] Plane = 4   counters = 21 
+[118688] [config] [info] THcHodoEff::Init nplanes=4
+[118688] [config] [info] THcHodoEff::Init Apparatus = hod P
+[118688] [config] [debug] <OpenFile()> - PScalevt: Opening database file db_PScalevt.dat ... ... failed
+[118688] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/20110416/db_PScalevt.dat ... ... failed
+[118688] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/db_PScalevt.dat ... ... failed
+[85223] [config] [info] Opening parameter file: [1] PARAM/GEN/genflags.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/GEN/gdebug.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/GEN/gtarget.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/GEN/gbeam.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/GEN/gscalers.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pcana.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/pdebug.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/shmsflags.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/ptracking.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/GEN/p_reftime_cut_shmsdaq.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_geom.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_geom.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_geom.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_geom.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_geom.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_geom.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_cuts.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_cuts.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_cuts.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_cuts.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_cuts.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_cuts.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/NGCER/pngcer_calib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_calib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/DC/pdc_tzero_per_wire.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_calib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_TWcalib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HODO/phodo_Vpcalib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/HGCER/phgcer_calib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/AERO/paero_calib.param 
+[85223] [config] [info] Opening parameter file: [1] PARAM/SHMS/CAL/pcal_calib.param 
+[85223] [config] [info] Detector ID Map
+[85223] [config] [info]    TSHMS      20         
+[85223] [config] [info]    PNGCER     21         
+[85223] [config] [info]    PDC        22         
+[85223] [config] [info]    PSCIN      23         
+[85223] [config] [info]    PHGCER     24         
+[85223] [config] [info]    PAERO      25         
+[85223] [config] [info]    PCAL       26         
+[85223] [config] [info]    PRASTER    28         
+[85223] [config] [debug] <CodaRawDecoder::init_cmap> - MAPS/db_cratemap.dat: Opening database file MAPS/db_cratemap.dat ... ... ok
+[85223] [config] [debug] Spectrometer  P 
+[85223] [config] [debug] hodo planes     = 4
+[85223] [config] [debug] sel using scin  = 0
+[85223] [config] [debug] fPruneXp        = 0.2
+[85223] [config] [debug] fPruneYp        = 0.2
+[85223] [config] [debug] fPruneYtar      = 20.0
+[85223] [config] [debug] fPruneDelta     = 30.0
+[85223] [config] [debug] fPruneBeta      = 30.0
+[85223] [config] [debug] fPruneDf        = 1.0
+[85223] [config] [debug] fPruneChiBeta   = 100.0
+[85223] [config] [debug] fPruneFpTime    = 1000.0
+[85223] [config] [debug] fPruneNPMT      = 6.0
+[85223] [config] [debug] sel using prune = 0
+[85223] [config] [warning] Rounded pngcer_adcrefcut to nearest integer 
+[85223] [config] [warning] Rounded pdc_tdcrefcut to nearest integer 
+[85223] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[85223] [config] [warning] Rounded pSmallAngleApprox to nearest integer 
+[85223] [config] [warning] Rounded phodo_tdcrefcut to nearest integer 
+[85223] [config] [warning] Rounded phodo_adcrefcut to nearest integer 
+[85223] [config] [warning] Rounded phgcer_adcrefcut to nearest integer 
+[85223] [config] [warning] Rounded paero_adcrefcut to nearest integer 
+[85223] [config] [warning] Rounded pcal_adcrefcut to nearest integer 
+[85223] [config] [info] From THcShower::Setup: created Shower planes for P 
+[85223] [config] [warning] requested 2 elements of pcal_c_cor which has length 1
+[85223] [config] [warning] requested 2 elements of pcal_d_cor which has length 1
+[85223] [config] [warning] Rounded t_shms_trig_tdcrefcut to nearest integer 
+[85223] [config] [warning] Rounded t_shms_trig_adcrefcut to nearest integer 
+[85223] [config] [info] In THcHelicity::ReadDatabase
+[85223] [config] [info] THcHelicityReader::ReadDatabase: Helicity information from ROC 2 (SHMS)
+[85223] [config] [info] SetROCInfo: 0 (roc: 2, slot: 14, index: 9)
+[85223] [config] [info] SetROCInfo: 1 (roc: 2, slot: 14, index: 8)
+[85223] [config] [info] SetROCInfo: 2 (roc: 2, slot: 14, index: 10)
+[85223] [config] [info] SetROCInfo: 3 (roc: 2, slot: 14, index: 7)
+[85223] [config] [info] SetROCInfo: 4 (roc: 2, slot: 21, index: 2)
+[85223] [config] [info] Helicity decoder initialized with frequency of 120.0007547169 Hz and reporting delay of 8 cycles.
+[85223] [config] [info] Called THcHelicity::DefineVariables with mode == 0
+[85223] [config] [info] Calling THcHelicity DefineVarsFromList
+[85223] [config] [debug] In THcExtTarCor::ReadDatabase()
+[85223] [config] [info] THcHodoEff::ReadDatabase nplanes=4
+[85223] [config] [info] Plane = 1   counters = 13 
+[85223] [config] [info] Plane = 2   counters = 13 
+[85223] [config] [info] Plane = 3   counters = 14 
+[85223] [config] [info] Plane = 4   counters = 21 
+[85223] [config] [info] THcHodoEff::Init nplanes=4
+[85223] [config] [info] THcHodoEff::Init Apparatus = hod P
+[85223] [config] [debug] <OpenFile()> - PScalevt: Opening database file db_PScalevt.dat ... ... failed
+[85223] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/20110416/db_PScalevt.dat ... ... failed
+[85223] [config] [debug] <OpenFile()> - PScalevt: Opening database file /w/halla-scifs17exp/e08014/disk1/dien/DB/db_PScalevt.dat ... ... failed

@@ -8,19 +8,19 @@
 //#include "SBSGEMStand.h"
 //#include "SBSBigBite.h"
 R__ADD_INCLUDE_PATH(../sbsoffline)
-R__LOAD_LIBRARY(../sbsoffline/build/libsbs)
+R__LOAD_LIBRARY(../sbsoffline/build_a17/libsbs)
 #include "SBSEArm.h"
 #include "SBSHCal.h"
 
 void replay_hcal(Int_t runnum = 495, Int_t lastEvent = -1){
 
-  gSystem->Load("../libsbs.so");
-  //SBSHCal *hcal = new SBSHCal("hcal","HCAL");
-  SBSCalorimeter *hcal = new SBSCalorimeter("hcal","HCAL");
-  hcal->SetWithTDC(true);
+  gSystem->Load("../sbsoffline/build_a17/libsbs.so");
+  SBSHCal *hcal = new SBSHCal("hcal","HCAL");
+  //SBSCalorimeter *hcal = new SBSCalorimeter("hcal","HCAL");
+  //hcal->SetWithTDC(true);
   //SBSCalorimeter *hcal = new SBSCalorimeter("hcal","HCAL");
   //hcal->SetWithADC(true);
-  hcal->SetWithADCSamples(true);
+  //hcal->SetWithADCSamples(true);
   //hcal->SetWithADCAndSamples(true);
 
   SBSEArm *harm = new SBSEArm("sbs","Hadron Arm with HCal");
@@ -61,23 +61,53 @@ void replay_hcal(Int_t runnum = 495, Int_t lastEvent = -1){
   //  THaRun* run = new THaRun( "prod12_4100V_TrigRate25_4.dat" );
   //THaRun* run = new THaRun(TString::Format("/home/daq/data/fadcAERO_%d.dat.0",runnum) );
   //THaRun* run = new THaRun(TString::Format("%s/fadcAERO_%d.dat.0",getenv("HCAL_DATA"),runnum));
-  THaRun* run = new THaRun(TString::Format("%s/fadc_f1tdc_%d.dat",getenv("HCAL_DATA"),runnum));
-  run->SetLastEvent(lastEvent);
+  //THaRun* run = new THaRun(TString::Format("%s/fadc_f1tdc_%d.dat",getenv("HCAL_DATA"),runnum));
+  THaRun* run = 0;
+  int seg = 0;
+  bool seg_ok = true;
+  while(seg_ok) {
+    TString data_fname;
+    if(runnum<861) {
+      //run = new THaRun(TString::Format("%s/hcal_adc_tdc_%d.dat",getenv("HCAL_DATA"),runnum));
+      data_fname = TString::Format("%s/hcal_adc_tdc_%d.dat",getenv("HCAL_DATA"),runnum);
+    } else { // Starting with CODA3 they now have .0 appended
+      //run = new THaRun(TString::Format("%s/hcal_adc_tdc_%d.dat.%d",getenv("HCAL_DATA"),runnum,seg));
+      data_fname = TString::Format("%s/hcal_adc_tdc_%d.dat.%d",getenv("HCAL_DATA"),runnum,seg);
+    }
+    std::cout << "Looking for segment " << seg << " file " << data_fname.Data() << std::endl;
+    
+    // Check if segment exits
+    if( gSystem->AccessPathName(data_fname)) {
+      seg_ok = false;
+      std::cout << "Segment " << seg << " not found. Exiting" << std::endl;
+      continue;
+    }
 
-  run->SetDataRequired(0);
-  run->SetDate(TDatime());
+    // With the raw data found, create a run and analyze this segment
+    run = new THaRun(data_fname);
+    run->SetLastEvent(lastEvent);
 
-  analyzer->SetVerbosity(2);
-  analyzer->SetOdefFile("output_chcal.def");
-  analyzer->SetMarkInterval(500);
+    run->SetDataRequired(0);
+    run->SetDate(TDatime());
 
-  // Define the analysis parameters
-  analyzer->SetEvent( event );
-  //analyzer->SetOutFile( TString::Format("rootfiles/fadcAERO_%d.root",runnum));
-  analyzer->SetOutFile( TString::Format("%s/fadc_f1tdc_%d.root",getenv("HCAL_ROOTFILES"),runnum));
-  // File to record cuts accounting information
-  analyzer->SetSummaryFile(TString::Format("sbs_hcal_led_%d.log",runnum)); // optional
+    analyzer->SetVerbosity(2);
+    analyzer->SetOdefFile("output_chcal.def");
+    analyzer->SetMarkInterval(500);
 
-  //analyzer->SetCompressionLevel(0); // turn off compression
-  analyzer->Process(run);     // start the actual analysis
+    // Define the analysis parameters
+    analyzer->SetEvent( event );
+    //analyzer->SetOutFile( TString::Format("rootfiles/fadcAERO_%d.root",runnum));
+    analyzer->SetOutFile( TString::Format("%s/fadc_f1tdc_%d.root",
+      getenv("HCAL_ROOTFILES"),runnum));
+    // File to record cuts accounting information
+    analyzer->SetSummaryFile(TString::Format("fadc_f1tdc_%d.log",runnum)); // optional
+
+    //analyzer->SetCompressionLevel(0); // turn off compression
+    analyzer->Process(run);     // start the actual analysis
+
+    // Cleanup this run segment
+    delete run;
+    
+    seg++; // Increment for next search
+  }
 }

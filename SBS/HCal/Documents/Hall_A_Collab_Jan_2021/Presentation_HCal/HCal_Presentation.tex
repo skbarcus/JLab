@@ -1,0 +1,768 @@
+\documentclass[10pt]{beamer}
+
+%Allow captions for subfigures
+\usepackage{subcaption}
+
+%Setup for bibtex.
+\usepackage[%
+  sorting=none,%
+%  backend=bibtex,%
+  backend=biber,%
+%  style=numeric,%
+  style=authoryear,% Author , Date style citations.
+  %style=phys,% APS Style citations.
+  pageranges=false,% Print only first page, only works with style=phys
+  chaptertitle=false,% for incollections show chapter titles - true for AIP style, false for APS style
+  articletitle=true,% Print article title, AIP = false, APS = true
+  biblabel=brackets,% Number entries by bracked notation
+  related=true,%
+  isbn=false,% Don't print ISBN
+  doi=false,% Don't print DOI
+  url=false,% Don't print URL
+  eprint=false,% Don't print eprint information
+  hyperref=true,%
+%  note=false,%
+  firstinits=true,% Use first intials only
+  maxnames=3,% Truncate after N names
+  minnames=1,% Print at least N names if truncated
+%  natbib=true%
+ ]{biblatex}
+ 
+%Italicize et al.
+ \DefineBibliographyStrings{english}{%
+  andothers = {\textit{et al}\adddot}
+}
+
+%\addbibresource{bib_Books.bib}
+\addbibresource{references.bib}
+
+%\begin{filecontents}{\jobname.bib}
+%@article{Baird2002,
+%author = {Baird, Kevin M and Hoffmann, Errol R and Drury, Colin G},
+%journal = {Applied ergonomics},
+%month = jan,
+%number = {1},
+%pages = {9--14},
+%title = {{The effects of probe length on Fitts' law.}},
+%volume = {33},
+%year = {2002}
+%}
+%\end{filecontents}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+%Allows for the making of cells in tables.
+\usepackage{makecell}
+
+%\setbeamertemplate{itemize item}[circle]
+%\setbeamertemplate{itemize subitem}[-]
+
+\title{The Hadron Calorimeter for Upcoming SBS Experiments}
+\subtitle{}
+\date{January 22\textsuperscript{nd} 2021}
+\author{The HCal Working Group \\ presented by Scott Barcus}
+\institute{Jefferson Lab}
+\titlegraphic{\hfill\includegraphics[height=4.0cm]{/home/skbarcus/JLab/SBS/HCal/Pictures/20190508_170610.jpg}}
+
+\begin{document}
+
+\maketitle
+
+%\begin{frame}{Table of contents}
+%  	\begin{columns}[T,onlytextwidth]
+%  	\column{0.5\textwidth}
+%
+%	\vspace{10mm}
+%  	\setbeamertemplate{section in toc}[sections numbered]
+%  	\tableofcontents[hideallsubsections]
+%  
+%  	\column{0.5\textwidth}
+%%		\vspace{0mm}
+%%		\begin{center}
+%%		\includegraphics[width=.5\linewidth]{wm_cypher_gold.png}
+%%		\end{center}
+%		
+%		\vspace{11mm}
+%		\begin{center}
+%		\includegraphics[width=1.0\linewidth]{/home/skbarcus/Documents/DNP_2019/Presentation/JLab_logo_text_white1.jpg}
+%		\end{center}
+%		
+%		\vspace{12mm}
+%		\begin{center}
+%		\includegraphics[width=.6\linewidth]{/home/skbarcus/Documents/DNP_2019/Presentation/DOE_Logo.jpg}
+%		\end{center}
+%	
+%\end{columns}
+%\end{frame}
+
+\begin{frame}{HCal Overview}
+
+	\vspace{-3mm}
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.5\textwidth}
+  	
+  	\begin{center}
+  	
+	\begin{itemize}
+		\item Design based on COMPASS HCAL1 \parencite{hcal1}.
+		\item Segmented calorimeter designed to detect multiple GeV protons and neutrons.
+		\begin{itemize}\itemsep0pt \parskip0pt \parsep0pt
+			\item[--] 288 PMT modules (12$\times$24).
+			\item[--] Four craneable subassemblies.
+			\item[--] Weighs $\approx$40 tons.
+			%\item[--] Wavelength shifter.
+			%\item[--] Custom light guides.
+			\item[--] LED fiber optics system.
+		\end{itemize}
+		\item SBS dipole magnet separates scattered hadrons by charge.
+		\item Designed for \setbeamercolor{alerted text}{fg=TolLightRed}\alert{good time resolution} (goal 0.5 ns) and \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{good position resolution}.
+		\item Energy resolution $\approx$30\%.
+	\end{itemize}
+	
+	\end{center}
+	
+	\column{0.5\textwidth}
+	  \begin{center}
+  		\includegraphics[width=.45\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_External_Clean.png}
+  	\end{center}
+	\begin{center}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/G4SBS/Proton_Neutron_Separation_Kin3_Clean.png}
+  	\end{center}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{HCal Interior (288 Individual PMT Modules)}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.48\textwidth}
+  	
+  	\begin{itemize}
+  		\item 40 layers of iron absorbers alternate with 40 layers of scintillator.
+		\item Iron layers cause the hadrons to shower. 
+		\item Scintillator layers sample the energy.
+		\item Photons pass through a wavelength shifter increasing detection efficiency.
+		\item Custom light guides transport photons to PMTs.
+			\begin{itemize}
+				\item[--] 192 12 stage 2'' Photonis XP2262 PMTs.
+				\item[--] 96 8 stage 2'' Photonis XP2282 PMTs.
+			\end{itemize}
+  	\end{itemize}
+
+  	\column{0.48\textwidth}
+  	
+  	\begin{center}
+  		\vspace{5mm}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/HCal_Interior_Clean.png}
+		\vspace{10mm}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/HCal_Single_Module_Clean.png}
+  	\end{center}
+  	
+	\end{columns}
+	
+\end{frame}
+
+\begin{frame}{$G_M^n$ Experiment}
+
+	\begin{itemize}
+		\item $G_M^n$ experiment will extract neutron magnetic form factor.
+		\begin{itemize}
+			\item[--] Quasielastic deuterium cross section ratios d(e,e'n)p/d(e,e'p)n \parencite{gmn_slides,gmn}.
+		\end{itemize}		 
+		\item HCal will detect scattered hadrons.
+		\item BigBite spectrometer will detect scattered electrons.
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/GMn_Layout_Clean_Labels.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{$G_M^n$ Experiment: Science Results}
+
+		\begin{itemize}
+			\item Flavor decomposition of $G_M^n$ and $G_M^p$ allows extraction of flavor form factors.
+			%\item GPD constraining sum rules ($H$ and $E$).
+			\item Nucleon form factors constrain GPDs (first moments of $H$ and $E$).
+			\item High $Q^2$ $G_M^n$ measurements test lattice QCD, pQCD, VMD models, and effective field theories \parencite{gmn_slides,gmn}.
+		\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=0.65\linewidth]{/home/skbarcus/Documents/JLab_SS1/Seminar/GMn_Results_Clean.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Geant4 Simulations}
+	
+	\vspace{-2mm}
+	\begin{itemize}
+		\item Geant4 simulations model all detectors, the target, and magnets.
+			\begin{itemize}
+				\item[--] Full optical photon processes (light yields and backgrounds).
+			\end{itemize}
+		\item Require excellent spatial resolution for high $Q^2$ SBS experiments. 
+			\begin{itemize}
+				\item[--] $P_N$ = 8 GeV: X (horizontal) resolution = 3.2 cm, Y (vertical) resolution = 3.8 cm.
+				\item[--] $P_N$ = 2.5 GeV: X and Y resolution = 6-7 cm.
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-2mm}
+	\begin{center}
+  		\includegraphics[width=0.65\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/hcal_efficiency_resolution.png}
+  	\end{center}
+  	\vspace{-5mm}
+	\tiny{Image image from Juan Carlos Cornejo.}
+	
+\end{frame}
+
+\begin{frame}{Geant4 Simulations}
+
+	\begin{itemize}
+		\item HCal also requires nearly identical detection efficiency for protons and neutrons. 
+			\begin{itemize}
+				\item[--] Ratio of simulated neutron detection efficiency to proton detection efficiency. 
+				\item[--] Ratio = 0.985 at 7-8 GeV. Drops to $\approx$0.966 between 2.5-4 GeV.
+			\end{itemize}
+	\end{itemize}
+	
+	\vspace{-1mm}
+	\begin{center}
+  		\includegraphics[width=0.65\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/NIM_Paper/pictures/hcal_efficiency_ratio.png}
+  	\end{center}
+  	\vspace{-4mm}
+  	\tiny{Image image from Juan Carlos Cornejo.}
+
+\end{frame}
+
+\begin{frame}{Data Acquisition System}
+
+    \begin{columns}[T,onlytextwidth]
+  	\column{0.55\textwidth}
+  	
+  	\begin{itemize}
+  		\item Two VXS crates.
+  		\item 18 16-channel fADC250 flash ADCs measure energy.
+  			\begin{itemize}
+  				\item[--] Takes numerous samples (250 MHz, 4ns).
+  				\item[--] Time over threshold measurements extract timing (CFD removes time walk).
+  				%\item[--] PMT traces fit by Landau.
+  			\end{itemize}
+  		\item 5 64-channel F1TDCs for timing.
+  		\item VXS Trigger Processors (VTPs) contain FPGAs to form triggers.
+  		\item \alert{Triggers:}
+  			\begin{itemize}
+  				\item[--] Scintillator paddle (cosmics).
+  				\item[--] Summing module trigger.
+  				\item[--] LED pulser trigger.
+  				\item[--] BigBite coincidence trigger.
+  			\end{itemize}
+  	\end{itemize}
+  	
+  	\column{0.5\textwidth}
+	\includegraphics[width=1.0\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Landau_Fit_706_Evt1_2-10_Clean.png}
+	
+\vspace{10mm}	
+	
+	\includegraphics[width=1.0\textwidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Cosmic_Hit_run820_evt16_Arrow.png}
+
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{fADC Pedestals}
+
+	\begin{itemize}
+		\item Typical fADC pedestal results using raw ADC units (RAU) and summed raw ADC units (SRAU).
+			\begin{itemize}
+				\item[--] RAU pedestal std. dev. $\approx$1 and SRAU std. dev. $\approx$30.
+			\end{itemize}
+	\end{itemize}
+
+	\vspace{-6mm}
+
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Pedestals/Ped_Avg_Run1263_PMT14_Clean.png}
+  	\end{center}
+	
+	\column{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Pedestals/Ped_Int_Run1263_PMT14_Clean.png}
+  	\end{center}
+	
+	\end{columns}
+	
+	\begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Pedestals/Avg_RAU_fADC_Ped_Run1263_Clean.png}
+  	\end{center}
+	
+	\column{0.5\textwidth}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Pedestals/Avg_RAU_fADC_Ped_Std_Dev_Run1263_Clean.png}
+  	\end{center}
+	
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{TDC Timing Resolution}
+	\vspace{-2mm}
+	\begin{columns}[T,onlytextwidth]
+	\column{0.6\textwidth}
+	\begin{itemize}
+		\item High time resolution allows separation of elastic and inelastic events.
+		\item Require cosmic to be nearly \alert{`vertical'}.
+			\begin{itemize}
+				\item[--] Vertical F1 signals (no surrounding).
+				%\item[--] No surrounding F1 signals.
+			\end{itemize}
+		\item TDC time:
+		\begin{equation*}
+			\text{T}_{\text{cor}}=\text{T}_{\text{PMT}} - \text{T}_{\text{ref}},
+		\end{equation*}
+		\begin{equation*}
+			\text{T}_{\text{ref}}=\frac{\text{TDC\;1}+\text{TDC\;2}}{2}.
+		\end{equation*}
+		\item Standard deviation of single PMT:
+		\begin{equation*}
+    			\sigma_{PMT} = \sqrt{|\sigma_{cor}^2-\sigma_{ref}^2|}.
+    		\end{equation*}
+	\end{itemize}
+	
+	\column{0.4\textwidth}
+	\begin{center}
+  		\includegraphics[width=1.6\linewidth]{/home/skbarcus/JLab/SBS/HCal/Analysis/Cosmics/fADC_Timing_Res_3_12_2020/fADC_Timing_Resolution_Cuts.png}
+  	\end{center}
+  	\end{columns}
+  	
+  	\begin{center}
+  		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/TDC_Timing_run820_6vert_Cropped.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{HCal LED System}
+
+    \begin{itemize}
+		\item All 288 PMT modules can observe 6 different LEDs via fiber.
+		\item Each successive LED is roughly twice as bright as the previous LED.
+        \item Powered by 8 LED power boxes on front-end (4 completed).
+        \item Each LED power box controls 2 LED boxes on the sides of HCal (all 16 completed).
+    \end{itemize}
+    
+    \begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	
+	%For some incomprehensible reason these two images rotate when downloaded. To compensate they're rotated oddly in this online version.
+	\vspace{-3mm}
+	\begin{center}
+	    \textbf{LED Power Boxes}
+	    \includegraphics[width=0.8\textwidth, height=.45\textheight,angle=270]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Update_Nov_9_2020/Pictures/LED_Power_Boxes_2.jpg}
+  		%\includegraphics[width=3cm, height=4cm]{Images/LED_Power_Boxes_1.jpg}
+  	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\vspace{-3mm}
+	\begin{center}
+		\textbf{LED Boxes}
+		\includegraphics[width=0.8\textwidth, height=.45\textheight,angle=270]{/home/skbarcus/JLab/SBS/HCal/Documents/HCal_Update_Nov_9_2020/Pictures/LED_Boxes.jpg}
+  	\end{center}
+	
+	\end{columns}
+
+\end{frame}
+
+%\begin{frame}{HCal LED System Cont.}
+%
+%    \begin{itemize}
+%    		\item LEDs control boards use clock and data signals.
+%		\begin{itemize}
+%			\item[--] 6 bits control which LEDs are on.
+%			\item[--] LED1$\rightarrow$1, LED2$\rightarrow$2, LED 3$\rightarrow$4, LED4$\rightarrow$8, LED 5$\rightarrow$16, LED 6$\rightarrow$32.
+%			\item[--] Multiple LEDs: LED2 + LED4 = 10 etc. 
+%		\end{itemize}
+%    \end{itemize}
+%
+%	\vspace{-2mm}
+%	\begin{center}
+%	    \textbf{Clock = Blue, Data = Yellow }
+%	    \includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/Good_LED_Clock_and_Data_In.jpg}
+%  	\end{center}
+%
+%\end{frame}
+
+\begin{frame}{LED Event Display}
+
+	\begin{itemize}
+		\item Gives a fast stable signal to work with.
+		\item LED cycles programmable (i.e. turn LED1 on for 1000 triggers then LED2 for 1000).
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=1\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/LED_Pulses_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Cosmic Ray HV Calibration}
+	\vspace{-0mm}
+	\begin{itemize}
+		\item Calibrate the HV using cosmic rays (match fADC signals).
+		\item Set cosmic ray signals so a hadron depositing the maximal energy during $G_M^n$ won't saturate electronics.
+		\item Use G4SBS to determine energy deposited by hadrons and cosmics.
+		\begin{itemize}
+			\item[--] Plot of energy deposited in scintillators vs. incident hadron energy. (Plot thanks to Sebastian Seeds.)
+		\end{itemize}
+	\end{itemize}
+
+	\vspace{-3mm}
+	\begin{center}
+	\includegraphics[width=0.75\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/From_Sebastian/P_and_N_Eng_Dep_11_6_2020/Edep_Einc_HCAL_pn.pdf}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{G4SBS for HV Calibration}
+
+	\begin{itemize}
+		\item Plot of maximum energy deposited in scintillators seen by a single PMT for $G_M^n$ max kinematic.
+			\begin{itemize}
+				\item[--] Max energy deposited in single PMT $\approx$ 700 MeV.
+			\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+	\includegraphics[width=1.0\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Energy_Deposition/TeX_Files/Sumedep_per_Hit_13_5.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{G4SBS for HV Calibration}
+	\vspace{-2mm}
+	\begin{itemize}
+		\item Plots show average energy deposited in a single PMT's scintillators for a vertical cosmic ray. (Plots from Juan Carlos Cornejo.)
+		\begin{itemize}
+			\item[--] Average energy $\approx$ 14 MeV. (700 MeV/14 MeV = 50)
+			\item[--] \alert{Set HV such that cosmics reach 1/50th electronics saturation.}
+		\end{itemize}
+	\end{itemize}
+
+    \begin{columns}[T,onlytextwidth]
+	\column{0.5\textwidth}
+	
+	\vspace{-6mm}
+	\begin{center}
+	\includegraphics[width=0.59\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Cosmics/Cosmic_Simulations_Cuts_JC_1-3.png}
+	\end{center}
+	
+	\column{0.5\textwidth}
+	
+	\vspace{-6mm}
+	\begin{center}
+	\includegraphics[width=0.59\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Cosmics/Cosmic_Simulations_Cuts_JC_4-6.png}
+	\end{center}
+	
+	\end{columns}
+
+\end{frame}
+
+%\begin{frame}{Cosmic HV Calibration}
+%
+%	\begin{itemize}
+%		\item Maximum energy deposited by a hadron is 50 times greater than that of the average cosmic ray (700 MeV/14 MeV = 50).
+%		\item 300 mV maximum off the PMTs to not saturate the amps $\rightarrow$ 1/50th of max is 6 mV off of the PMTs for an average cosmic ray.
+%		\item 6 mV from the PMT is amplified to 60 mV off the amp.
+%		\item 60 mV then attenuates to $\approx$30 mV at the fADCs.
+%		\item 30 mV at the fADC is equal to 61 RAU.
+%		\item If we set all HVs such that the average cosmic ray produces 61 RAU in the fADC then the maximum energy hadrons in $G_M^n$ will not saturate the electronics.
+%	\end{itemize}
+%
+%\end{frame}
+
+\begin{frame}{G4SBS Cosmics}
+
+	\begin{itemize}
+		\item Cosmic runs are currently being taken to calibrate the HV based on fADC signal.
+		\item Plot shows what G4SBS predicts cosmics will look like in HCal. (Plot from Juan Carlos Cornejo.)
+	\end{itemize}
+	
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/G4SBS_Cosmics.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Cosmic Results}
+
+	\begin{itemize}
+		\item Plot shows vertical (three consecutive) PMT fADC hits for HCal.
+	\end{itemize}
+
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Vert_fADC_Cosmics_Run1267.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Finding Average Cosmic Amplitude}
+
+	\begin{itemize}
+		\item Cosmic hit defined as fADC signals above threshold above and below PMT module.
+		\begin{itemize}
+			\item[--] fADC threshold applied to central module as well to cut out pedestal.
+		\end{itemize}
+		\item Fit signal peak with Gaussian (skewed).
+	\end{itemize}
+
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Vert_fADC_Run_1263_PMT_117_Clean.png}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}{Cosmic Calibration Progress}
+
+	\begin{itemize}
+		\item Plots display the average fADC signal (RAU) during a cosmic event versus PMT module for three runs.
+			\begin{itemize}
+				\item[--] Each successive run calibrates signals closer to goal of 61 RAU by adjusting HV.
+			\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+	%\begin{figure}[!ht]
+	%\begin{center}
+	\begin{overprint}[12cm]
+	%\begin{center}%error
+	\onslide<1>\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Avg_Cosmic_Amp_Run1263.png}
+	%\end{center}%error
+	%\caption[\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut}]{
+	%{\bf{Charge Form Factors from 1352 $^3$He Fits with no $\chi^2_{max}$ cut.}} }
+	%\label{fig:3he_fch_no_cut}
+	\onslide<2>\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Avg_Cosmic_Amp_Run1265.png}
+	%\caption[\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut}]{
+	%{\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\chi^2_{max}$ = 500 cut.}} }
+	%\label{fig:3he_fch_cut}
+	%\end{center}%error
+	\onslide<3>\includegraphics[width=1.\linewidth]	{/home/skbarcus/JLab/SBS/HCal/Pictures/Cosmics/Avg_Cosmic_Amp_Run1267.png}
+	\end{overprint}
+	%\end{center}
+	%\end{figure}
+	\end{center}
+
+
+\end{frame}
+
+\begin{frame}{Machine Learning Detector Trigger for HCal}
+
+	\begin{itemize}
+		\item \alert{Motivation:}
+			\begin{itemize}
+				\item[--] High background rates obscure physics signals.
+			\end{itemize}
+		\item \alert{Traditional Solutions:}
+			\begin{itemize}
+				\item[--] Energy threshold cuts.
+				\item[--] Prescaling the data.
+				\item[--] Decreasing the beam current.
+			\end{itemize}
+		\item \alert{Machine Learning Solution:}
+			\begin{itemize}
+				\item[--] Train a neural network to classify detector events (e.g. p, n, $\pi$).
+				\item[--] Use data from G4SBS converted to detector output to train NN.
+				\item[--] Load trained NN onto VTP FPGA (fast) to use as HCal trigger.
+			\end{itemize}
+		\item \alert{Goal:}
+			\begin{itemize}
+				\item[--] Demonstrate that NNs can be loaded onto VTPs for triggering JLab detectors.
+				\item[--] Allow HCal to run at higher current with a cleaner trigger.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Proposed Convolutional Neural Network Architecture}
+
+	\begin{center}
+  		\includegraphics<1>[width=0.85\linewidth]{/home/skbarcus/JLab/SBS/HCal/Machine_Learning/Pictures/HCal_Generic_CNN.png}\\
+  		%\tiny{Image from https://www.mdpi.com/2076-3417/9/21/4500.}
+  	\end{center}
+
+	\vspace{-3mm}
+	\begin{itemize}
+		%\item Started with image classification. 
+		\item \alert{PMT pulse shapes are essentially images.}
+			\begin{itemize}
+				\item[--] Each event every PMT has several fADC samples and a TDC value.
+			\end{itemize}
+		%\item Fully connected NNs assume each neuron connects to each neuron in the next layer and that each connection is equally important.
+%			\begin{itemize}
+%				\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{The location of PMTs relative to one another matters!}
+%			\end{itemize}
+		\item CNN scans across the image with a kernel creating \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{filters} which \alert{identify localized features} (like hits).
+		\begin{itemize}
+			\item[--] \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Detector geometry preserved.}
+			\item[--] Pooling decreases dimensionality by merging adjacent signals.
+			\item[--] Batch normalization improves speed and regularization.
+			\item[--] Dropout helps reduce overfitting.
+		\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Toy Example HCal Neural Network}
+
+	\begin{itemize}
+		\item Create CNN to identify events with large cosmic signals. 
+		\begin{itemize}
+			\item[--] Input: PMT fADC integrals.
+			\item [--] Note: Traditional methods work better than this illustrative example.
+		\end{itemize}			
+		\item \alert{Tools:} ROOT, Python, Numpy, Scikit-learn, Tensorflow, Keras, Google Colaboratory (GPUs).
+		\item \setbeamercolor{alerted text}{fg=mLightBrown}\alert{99\% accuracy} with small amount of optimizing!
+	\end{itemize}
+	
+	\begin{center}
+  		\includegraphics<1>[width=1.\linewidth]{/home/skbarcus/Documents/ML_LDRD/LDRD_Proposal_Talk/CNN_Results_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{HCAL-J Summary}
+
+	\begin{itemize}
+		\item Detects protons and neutrons for future JLab Hall A SBS experiments.
+			\begin{itemize}
+				\item[--] Measure nucleon form factors up to high $Q^2$.
+			\end{itemize}
+		\item Energy resolution $\approx$30\%.
+		\item \setbeamercolor{alerted text}{fg=TolLightRed}\alert{High time resolution ($\approx$0.5 ns).}
+		\item \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Excellent position resolution (as low as 3-4 cm).}
+		\item Similar detection efficiency for protons and neutrons.
+		\item LED system for calibrations (currently studying HV vs. gain).
+		\item Cosmic ray testing and calibrations in progress.
+		\item ML particle ID detector trigger research ongoing. 
+			\begin{itemize}
+				\item[--] Serve as test bed for FPGA based ML detector triggers at JLab and hopefully create a cleaner HCal trigger.
+			\end{itemize}
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Acknowledgments}
+Thanks to \alert{Gregg Franklin} for his many dedicated years designing and overseeing the construction of HCal. Thanks to \alert{Universit\'{a} di Catania} for their major financial contributions. Many other people and institutions were involved in making HCal possible, including, but not limited to:
+    \begin{itemize}
+        \item Thanks to the many students who have worked on HCal including \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Alexis Ortega}, \alert{So Young Jeon}, \alert{Jorge Pe\~{n}a}, \alert{Carly Wever}, and  \alert{Dimitrii Nikolaev}. 
+        \item Thanks to our current students \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Vanessa Brio} and \alert{Sebastian Seeds}.
+        \item Thanks to \setbeamercolor{alerted text}{fg=mLightBrown}\alert{Alexandre Camsonne} for helping us get the DAQ working.
+        \item Thanks to \alert{Chuck Long} for all his help fixing and acquiring things.
+        \item Thanks to \alert{Bryan Moffit} for DAQ help.
+        \item Thanks also to \alert{Brian Quinn} and \alert{Bogdan Wojtsekhowski}.
+        \item Thanks to \setbeamercolor{alerted text}{fg=TolDarkBlue}\alert{Vanessa Brio}, \alert{Cattia Petta}, and \alert{Vincenzo Bellini} for their cosmic commissioning efforts.% last summer.
+        %\item Finally welcome to \setbeamercolor{alerted text}{fg=TolLightRed}\alert{Dimitrii Nikolaev}, \alert{Jim Napolitano}, \alert{Donald Jones}, and \alert{Kent Paschke}.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Questions?}%{References}
+	
+	\setbeamertemplate{bibliography item}{}%Removes page icon in from of each references.
+	\renewcommand*{\bibfont}{\scriptsize}%Change bib font size.
+	%\printbibliography[heading=bibintoc, title=References]
+	\printbibliography
+	%\bibliographystyle{plainnat}
+	%\bibliography{bib_Books}
+	
+\end{frame}
+
+\begin{frame}{LED High Voltage Calibration}
+
+	\begin{itemize}
+		\item Want to know fADC signal to HV calibration (gain calibration).
+		\item Program LEDs to cycle during run in 1000 event increments.
+			\begin{itemize}
+				\item[--] Off$\rightarrow$LED1$\rightarrow$LED2$\rightarrow$LED3$\rightarrow$LED4$\rightarrow$LED5$\rightarrow$Repeat
+			\end{itemize}
+		\item Data was taken on the left half of HCal at eight voltages.
+			\begin{itemize}
+				\item[--] -1200 V, -1250 V, -1300 V, -1350 V, -1375 V, -1400 V, -1425 V, -1450 V.
+				\item[--] Five full cycles of data were taken (5k events/setting).
+			\end{itemize}
+	\end{itemize}
+	
+	\begin{columns}[T,onlytextwidth]
+	\column{0.8\textwidth}
+	\begin{itemize}
+		\item At low voltages and dimmer LEDs sometimes there is no PMT response.
+		\item At high voltage and brighter LEDs sometimes the fADC saturates.
+	\end{itemize}
+	
+	\column{0.2\textwidth}
+	\vspace{-4mm}
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/Single_Saturated_fADC.png}
+  	\end{center}
+  	
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}{SRAU for 5 LEDs}
+
+	\begin{itemize}
+		\item Fit each LED fADC signal histogram for each HV setting.
+		\item Pictured below PMT 129 at a single voltage looking at 5 different LEDs.
+		\begin{itemize}
+			\item[--] Each LED roughly doubles in brightness as expected.
+			\item[--] Plot is not pedestal subtracted.
+		\end{itemize}
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/5_LED_Peaks_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Selected Results}
+
+	\begin{itemize}
+		\item The CMU PMTs have exponents $\approx$ 10-11.
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/CMU_PMT_Good_Chi2_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\begin{frame}{Selected Results}
+
+	\begin{itemize}
+		\item The JLab PMTs have exponents $\approx$ 8.
+	\end{itemize}
+	
+	\begin{center}
+		\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Pictures/LEDs/JLab_PMT_Good_Chi2_Clean.png}
+  	\end{center}
+
+\end{frame}
+
+\end{document}

@@ -468,6 +468,52 @@ Inside of HCal are a series of LEDs which can illuminate the PMT faces via fiber
 		\item Use both the NPE to ADC calibration and the HV to ADC calibration to predict a safe HV range that the PMTs can be set at during experiments. This will be based on having the expected hadron signals with 99.5\% of maximum energy produce either 150 mv or 200 mv at the PMT output. (Depending on the safety margin for ADC saturation selected.)
 \end{enumerate}
 
+\section{Cosmic Ray HV Calibration}
+\label{cosmic_hv}
+
+Cosmic rays can be used to calibrate the high voltage settings that HCal will use during the $G_M^n$ experiment. The goal of this HV calibration is to ensure that none of the electronics are saturated by a hadron depositing the maximum amount of energy in a single PMT. There are two main considerations for electronics saturation. The first is the Phillips Scientific 776 10$\times$ amplifiers. These amps have a stable voltage output up to 3 Volts. Therefore the maximum voltage off of a PMT that will not saturate the amplifier is 300 mV. The second consideration for saturation is the fADC250s. These are set to a 2 Volt dynamic range, which can also be set to 0.5 V or 1 V. They have 12 bits to store the energy information. Thus the fADC has 4096 raw ADC units (RAU) to measure energy with and has a maximum fADC value of 4095 (since we start at zero). Thus there are 2.0475 RAU/mV detected by the fADCs.
+
+A plot of incident hadron energy versus energy deposited in all scintillators was produced by a G4SBS simulation and is shown in Figure \ref{fig:edep_vs_einc}. The maximum energy deposited in a single PMT hit for the $G_M^n$ 13.5 GeV kinematic is $\approx$ 700 MeV (see Fig \ref{fig:sumedep}). G4SBS also shows $\approx$ 5.5 photoelectrons are produced per MeV deposited in scintillator (***need plot). Therefore 700 MeV corresponds to 3850 photoelectrons. If 700 MeV is the maximum energy deposited in a single PMT then the HV should be calibrated such that a 700 MeV hadron just barely reaches saturation. In this case saturation depends on the PS 776 amplifier's 3 Volt maximum linear output so we want 700 MeV of energy deposited in a single PMT module to produce 300 mV off of the PMT. This 300 mV pulse will then be amplified to 3 V and transported over the long BNC cables to the fADC. These long cables will attenuate the signal by a factor of $\approx$2. Thus the largest signal reaching the fADC should be 1.5 V which corresponds to 3071 RAU which, even ignoring the pedestal, will not saturate the fADC.
+
+ 	\begin{figure}[!ht]
+	\begin{center}
+	\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/From_Sebastian/P_and_N_Eng_Dep_11_6_2020/Edep_Einc_HCAL_pn.pdf}
+	\end{center}
+	\caption{
+	{\bf{G4SBS Simulation of Incident Hadron Energy vs. Maximum Energy Deposited in All Scintillators.}} Incident hadron energy is given in 1 GeV increments.}
+	\label{fig:edep_vs_einc}
+	\end{figure}	   
+
+
+We now have an upper limit for the signal strength. Next we need a point of comparison we can use to set the HV prior to the start of the experiment. One calibration source nearly always available is cosmic rays. G4SBS simulations show that vertical cosmic rays on average deposit approximately 14 MeV in HCal scintillators (see Fig \ref{fig:vertical_cosmics}). This means that the average vertical cosmic ray should produce about 77 photoelectrons. This is 50 times less (700/14=50) than the signal produced by the maximum energy hadron during $G_M^n$. If the PMT HV is calibrated such that the average vertical cosmic ray produces 1/50th of the saturation signal then those voltages should be sufficient for the experiment. 1/50th of the 300 mV max signal off of the PMTs is 6 mV which corresponds to 60 mV after the amp and about 30 mV at the fADC due to cable attenuation. This final 30 mV signal corresponds to 61 RAU on the fADC.
+
+	\begin{figure}[!ht]
+		\begin{subfigure}{.5\textwidth}
+  		\centering
+  			\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Cosmics/Cosmic_Simulations_Cuts_JC_1-3.png}
+  			%\caption{\bf{Charge Form Factors from 1352 $^3$He Fits with no $\boldsymbol{\chi^2_{max}}$ cut.}}
+  			\label{fig:vertical_cosmics_1-3}
+		\end{subfigure}
+		\begin{subfigure}{.5\textwidth}
+  		\centering
+  			\includegraphics[width=1.\linewidth]{/home/skbarcus/JLab/SBS/HCal/Documents/Cosmics/Cosmic_Simulations_Cuts_JC_4-6.png}
+  			%\caption{\bf{Charge Form Factors from 852 $^3$He Fits surviving a $\boldsymbol{\chi^2_{max}}$ = 500 cut.}}
+  			\label{fig:vertical_cosmics_4-6}
+		\end{subfigure}
+		\caption{
+{\bf{G4SBS Simulation of Cosmic Rays.}} A cut was placed on the cosmic events requiring verticality. The average energy deposited in scintillators from a vertical cosmic ray is approximately 14 MeV.}
+		\label{fig:vertical_cosmics}
+	\end{figure}
+
+If the PMT HVs are all set such that the average cosmic ray creates a 61 RAU strength signal then all of the PMTs will have the same response and should be safe from causing saturation in the electronics. To calibrate the PMT HVs a cosmic run can be taken at a given voltage and the average amplitude of vertical cosmic rays can be calculated. After computing the average cosmic ray signals in RAU (and subtracting the pedestals) for that cosmic run one can calculate the voltages needed to produce a 61 RAU signal from a cosmic using Eq. \ref{eq:hv_calibration}.
+
+	\begin{equation}
+		\frac{A_2}{A_1} = \left( \frac{V_2}{V_1} \right)^{\alpha * N}
+	\end{equation}
+	\label{eq:hv_calibration}
+	
+\noindent Here $A_2$ is the average pedestal subtracted vertical cosmic ray amplitude in RAU. $A_1$ is the target pedestal subtracted fADC amplitude in RAU to calibrate the PMT responses to match. $V_2$ is the voltage setting of the PMT in the initial cosmic run. $V_1$ is the target PMT voltage for getting the target fADC amplitude from an average vertical cosmic ray. $\alpha$ is a constant of around 0.6-0.8 according to the Photonis PMT Basics document \cite{pmt_basics}. $N$ is the number of dynodes in the PMT. In the case of a quick and dirty calibration using a total exponent, so $\alpha \times N$, of 10.5 for the CMU PMTs and 8 for the JLab PMTs should work reasonably well. 
+
 \section{Cosmic Ray Simulations and Tests}
 \label{cosmics}
 The geometry and physics of the three SBS nucleon form factor experiments have been simulated using Geant4 \cite{AGOSTINELLI2003250}. The simulation package, G4SBS \cite{g4sbs}, contains the experiments' fully realized detectors including: HCal, the Cherenkov detectors, the electromagnetic calorimeters, the dipole magnetic fields and their field clamps, beamline shielding and magnetic effects, and the target chamber. Optical photon processes are fully simulated for calculating light yields and backgrounds in the detectors \cite{halla_2014}.

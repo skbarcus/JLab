@@ -16,14 +16,14 @@ using namespace std;
 
 Double_t entry;
 Int_t gCurrentEntry = 0;
-Int_t limit_evts = 1;                  //0-> analyze all events. 1-> only analyze events up until max_evts.
+Int_t limit_evts = 0;                  //0-> analyze all events. 1-> only analyze events up until max_evts.
 Int_t loop_max = 0;                    //Dummy variable set equal to max_evts or nevt for the loop.
-Int_t max_evts = 1;                    //Maximum number of events to analyze if limit_evts = 1.
+Int_t max_evts = 20000;                    //Maximum number of events to analyze if limit_evts = 1.
 Int_t plot_time_walks =0;              //0 = don't plot individual time walk plots. 1 = do plot individual time walk plots for each PMT.
-Int_t calc_corr_time_res = 0;          //0 = Just plots the time walk fadc integral vs threshold crossing time plots. 1 = also use the time walk plot fits to get a corrected timing resolution that `removes' the time walk effect. 
+Int_t calc_corr_time_res = 1;          //0 = Just plots the time walk fadc integral vs threshold crossing time plots. 1 = also use the time walk plot fits to get a corrected timing resolution that `removes' the time walk effect. 
 Int_t ref_trig_plots = 0;              //0 = plot nothing for the ref ch(s). 1 = Plot the individual histos and exp fits to the trigger for the final event analyzed. 2 = Plot the relative timing resolution between two reference channels.
 Int_t ref_fit_type = 1;                //1 = exponential fir of ref ch. 2 = linear fit of ref ch.
-Int_t use_cfd = 2;                     //Use a constant fraction threshold to measure the crossing time defined as 1/4 the current peak height. 2 = Use CFD technique of scaling the signal by a constant and inverting and delaying a copied signal and summing it with the scale signal to get a histo with a zero crossing for time. (See notes from CAEN). 
+Int_t use_cfd = 1;                     //Use a constant fraction threshold to measure the crossing time defined as 1/4 the current peak height. 2 = Use CFD technique of scaling the signal by a constant and inverting and delaying a copied signal and summing it with the scale signal to get a histo with a zero crossing for time. (See notes from CAEN). 
 Double_t cfd_thr = 0.25;              //Threshold setting for constant threshold fraction operation. 
 Int_t cfd_delay = 2;                //Number of fADC units (4ns each) to delay the inverted fADC signal for CFD timing.
 Int_t plot_ind_landau = 0;             //0 = Don't plot the individual landau fit for mod_row and mod_col. Note this landau function fit only updates when there is a TDC signal so plotting a histo that didn't have a TDC hit will show the last event of that module that did. 1 = plot individual PMT fADC Landau fit for mod_row mod_col PMT of the final event analyzed. 

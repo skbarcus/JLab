@@ -6,12 +6,12 @@
 #include <TSystem.h>
 #include "hcal.h"
 
-const Int_t kNrows = 12;
+const Int_t kNrows = 24;
 const Int_t kNcols = 12;
 
 const Int_t kNumModules = kNrows*kNcols;
 const Int_t DISP_MIN_SAMPLE = 85*0;
-const Int_t DISP_MAX_SAMPLE = 135*0+200*0+150*0+20;
+const Int_t DISP_MAX_SAMPLE = 135*0+200*0+150*0+50;
 //const Int_t DISP_FADC_SAMPLES = 200;
 const Int_t DISP_FADC_SAMPLES = (DISP_MAX_SAMPLE-DISP_MIN_SAMPLE);
 const Int_t numSamples = 50;
@@ -123,6 +123,9 @@ TH1F* MakeHisto(Int_t row, Int_t col, Int_t bins)
       TString::Format("%d-%d",row+1,col+1),bins,DISP_MIN_SAMPLE,DISP_MAX_SAMPLE);
   h->SetStats(0);
   h->SetLineWidth(2);
+  h->GetYaxis()->SetLabelSize(0.1);
+  h->GetYaxis()->SetLabelOffset(-0.17);
+  h->GetYaxis()->SetNdivisions(5);
   return h;
 }
 
@@ -256,8 +259,8 @@ Int_t display(Int_t run = 290, Int_t event = -1)
     T->SetBranchAddress("sbs.hcal.nsamps",hcalt::nsamps);
     T->SetBranchAddress("sbs.hcal.a",hcalt::a);
     T->SetBranchAddress("sbs.hcal.tdc",hcalt::tdc);
-    //T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);
-    //T->SetBranchAddress("sbs.hcal.ledcount",&hcalt::ledcount);
+    T->SetBranchAddress("sbs.hcal.ledbit",&hcalt::ledbit);
+    T->SetBranchAddress("sbs.hcal.ledcount",&hcalt::ledcount);
     T->SetBranchAddress("sbs.hcal.samps",hcalt::samps);
     T->SetBranchAddress("sbs.hcal.samps_idx",hcalt::samps_idx);
     T->SetBranchAddress("sbs.hcal.row",hcalt::row);

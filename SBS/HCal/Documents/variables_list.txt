@@ -1,0 +1,75 @@
+analyzer [3] gHaVars->Print()
+Collection name='THaVarList', class='THaVarList', size=73
+ OBJ: THaVar	g.runnum	Run number
+ OBJ: THaVar	g.runtype	CODA run type
+ OBJ: THaVar	g.runtime	CODA run time
+ OBJ: THaVar	g.evnum	Event number
+ OBJ: THaVar	g.evtyp	Event type
+ OBJ: THaVar	g.evlen	Event Length
+ OBJ: THaVar	g.evtime	Event time
+ OBJ: THaVar	sbs.tr.n	Number of tracks
+ OBJ: THaVar	sbs.tr.x	Track x coordinate (m)
+ OBJ: THaVar	sbs.tr.y	Track x coordinate (m)
+ OBJ: THaVar	sbs.tr.th	Tangent of track theta angle
+ OBJ: THaVar	sbs.tr.ph	Tangent of track phi angle
+ OBJ: THaVar	sbs.tr.p	Track momentum (GeV)
+ OBJ: THaVar	sbs.tr.flag	Track status flag
+ OBJ: THaVar	sbs.tr.chi2	Track's chi2 from hits
+ OBJ: THaVar	sbs.tr.ndof	Track's NDoF
+ OBJ: THaVar	sbs.tr.d_x	Detector x coordinate (m)
+ OBJ: THaVar	sbs.tr.d_y	Detector y coordinate (m)
+ OBJ: THaVar	sbs.tr.d_th	Detector tangent of theta
+ OBJ: THaVar	sbs.tr.d_ph	Detector tangent of phi
+ OBJ: THaVar	sbs.tr.r_x	Rotated x coordinate (m)
+ OBJ: THaVar	sbs.tr.r_y	Rotated y coordinate (m)
+ OBJ: THaVar	sbs.tr.r_th	Rotated tangent of theta
+ OBJ: THaVar	sbs.tr.r_ph	Rotated tangent of phi
+ OBJ: THaVar	sbs.tr.tg_y	Target y coordinate
+ OBJ: THaVar	sbs.tr.tg_th	Tangent of target theta angle
+ OBJ: THaVar	sbs.tr.tg_ph	Tangent of target phi angle
+ OBJ: THaVar	sbs.tr.tg_dp	Target delta
+ OBJ: THaVar	sbs.tr.px	Lab momentum x (GeV)
+ OBJ: THaVar	sbs.tr.py	Lab momentum y (GeV)
+ OBJ: THaVar	sbs.tr.pz	Lab momentum z (GeV)
+ OBJ: THaVar	sbs.tr.vx	Vertex x (m)
+ OBJ: THaVar	sbs.tr.vy	Vertex y (m)
+ OBJ: THaVar	sbs.tr.vz	Vertex z (m)
+ OBJ: THaVar	sbs.tr.pathl	Pathlength from tg to fp (m)
+ OBJ: THaVar	sbs.tr.time	Time of track@Ref Plane (s)
+ OBJ: THaVar	sbs.tr.dtime	uncer of time (s)
+ OBJ: THaVar	sbs.tr.beta	Beta of track
+ OBJ: THaVar	sbs.tr.dbeta	uncertainty of beta
+ OBJ: THaVar	sbs.status	Bits of completed analysis stages
+ OBJ: THaVar	sbs.hcal.row	Row for block in data vectors
+ OBJ: THaVar	sbs.hcal.col	Col for block in data vectors
+ OBJ: THaVar	sbs.hcal.layer	Layer for block in data vectors
+ OBJ: THaVar	sbs.hcal.nhit	Number of hits
+ OBJ: THaVar	sbs.hcal.nclust	Number of clusters meeting threshold
+ OBJ: THaVar	sbs.hcal.e	Energy (MeV) of largest cluster
+ OBJ: THaVar	sbs.hcal.e_c	Corrected Energy (MeV) of largest cluster
+ OBJ: THaVar	sbs.hcal.eblk	Energy (MeV) of highest energy block in the largest cluster
+ OBJ: THaVar	sbs.hcal.eblk_c	Corrected Energy (MeV) of highest energy block in the largest cluster
+ OBJ: THaVar	sbs.hcal.rowblk	Row of block with highest energy in the largest cluster
+ OBJ: THaVar	sbs.hcal.colblk	Col of block with highest energy in the largest cluster
+ OBJ: THaVar	sbs.hcal.x	x-position (mm) of largest cluster
+ OBJ: THaVar	sbs.hcal.y	y-position (mm) of largest cluster
+ OBJ: THaVar	sbs.hcal.nblk	Number of blocks in the largest cluster
+ OBJ: THaVar	sbs.hcal.clus.e	Energy (MeV) of clusters
+ OBJ: THaVar	sbs.hcal.clus.e_c	Energy (MeV) of clusters
+ OBJ: THaVar	sbs.hcal.clus.eblk	Energy (MeV) block with highest E of clusters
+ OBJ: THaVar	sbs.hcal.clus.eblk_c	Energy (MeV) block with highest E of clusters
+ OBJ: THaVar	sbs.hcal.clus.x	x-position (m) of clusters
+ OBJ: THaVar	sbs.hcal.clus.y	x-position (m) of clusters
+ OBJ: THaVar	sbs.hcal.clus.nblk	Number of blocks in the clusters
+ OBJ: THaVar	sbs.hcal.clus.row	Row of block with highest E in the cluster
+ OBJ: THaVar	sbs.hcal.clus.col	Col of block with highest E in the cluster
+ OBJ: THaVar	sbs.hcal.a	Raw ADC amplitudes
+ OBJ: THaVar	sbs.hcal.a_p	Ped-subtracted ADC amplitudes
+ OBJ: THaVar	sbs.hcal.a_c	Calibrated ADC amplitudes
+ OBJ: THaVar	sbs.hcal.tdc	Raw TDC value
+ OBJ: THaVar	sbs.hcal.tdc_c	Calibrated TDC value
+ OBJ: THaVar	sbs.hcal.samps_idx	Index in samples vector for given row-col module
+ OBJ: THaVar	sbs.hcal.nsamps	Number of samples for given row-col
+ OBJ: THaVar	sbs.hcal.samps	RAW ADC samples
+ OBJ: THaVar	sbs.hcal.samps_p	Pedestal-subtracted ADC samples
+ OBJ: THaVar	sbs.hcal.samps_c	Calibrated ADC samples

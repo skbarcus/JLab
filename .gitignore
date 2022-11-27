@@ -25,6 +25,17 @@ vdc*
 *.blg
 *.bst
 *.spl
+*.npy
+*.npy*
+*.pptx
+*.odp
+*SBS4.txt
+*SBS4.txt*
+*.npy_save_pre_4_6_2021
+*.mp4
+*.dat.0
+*.dat.*
+*.deb
 
 #unignore 
 !vdc*.*

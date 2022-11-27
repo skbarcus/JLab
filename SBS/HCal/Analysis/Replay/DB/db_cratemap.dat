@@ -1,0 +1,39 @@
+==== Crate 12 type vme Bank Decoding
+# slot  model   bank
+  0     3561    10
+==== Crate 2 type vme Bank Decoding
+# slot  model  bank
+   2    250     3
+   3    250     3
+   4    250     3
+   5    250     3
+   6    250     3
+   7    250     3
+   8    250     3
+   9    250     3
+  10    250     3
+  13    250     3
+  14    250     3
+  15    250     3
+  16    250     3
+  17    250     3
+  18    250     3
+  19    250     3
+  20    250     3
+  30    4450    6 ## HCal LED
+==== Crate 4 type vme Bank Decoding
+## If operated in "low resolution" (~120 ps) mode we get 64 channels on each
+## F1 TDC --> Only 5 VME modules needed for HCal
+## These are v1 F1TDCs (so require special readout list)
+# slot  model  bank
+   4   6401     7  # HCal F1 TDC on bank 7
+   5   6401     7  # HCal F1 TDC on bank 7
+   6   6401     7  # HCal F1 TDC on bank 7
+   7   6401     7  # HCal F1 TDC on bank 7
+   8   6401     7  # HCal F1 TDC on bank 7
+#   9   6401     7  # HCal F1 TDC on bank 7
+
+# slot  model  bank
+  19    250     3
+  20    250     3
+#  30    4450    6

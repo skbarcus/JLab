@@ -1,0 +1,110 @@
+
+Processing HCAL_sampFrac_plotgen.C...
+Fit for 1GeV incoming hadrons:
+ FCN=56.4441 FROM MIGRAD    STATUS=CONVERGED      67 CALLS          68 TOTAL
+                     EDM=1.02152e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.99435e+00   7.93625e-01   2.21984e-03   2.29657e-04
+   2  Mean         3.93573e-02   1.03751e-03   3.82555e-06  -1.25484e-02
+   3  Sigma        1.52377e-02   1.00484e-03   6.21965e-05   4.03210e-03
+The mean value is: 0.039357
+The error on the mean is: 0.001038
+Fit for 2GeV incoming hadrons:
+ FCN=79.5997 FROM MIGRAD    STATUS=CONVERGED      65 CALLS          66 TOTAL
+                     EDM=2.96514e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.05910e+01   7.43570e-01   2.28813e-03   8.10082e-04
+   2  Mean         9.75410e-02   2.09619e-03   9.16334e-06  -2.67211e-01
+   3  Sigma        3.86688e-02   2.31427e-03   6.19465e-05   3.59773e-02
+The mean value is: 0.097541
+The error on the mean is: 0.002096
+Fit for 3GeV incoming hadrons:
+ FCN=83.4243 FROM MIGRAD    STATUS=CONVERGED      73 CALLS          74 TOTAL
+                     EDM=6.75675e-10    STRATEGY= 1  ERROR MATRIX UNCERTAINTY   1.8 per cent
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.37403e+00   7.38077e-01   1.03574e-03   3.56448e-05
+   2  Mean         1.73374e-01   3.08008e-03  -1.30695e-07  -1.46457e-02
+   3  Sigma        5.45056e-02   3.72881e-03  -2.75148e-05   9.60833e-04
+The mean value is: 0.173374
+The error on the mean is: 0.003080
+Fit for 4GeV incoming hadrons:
+ FCN=120.32 FROM MIGRAD    STATUS=CONVERGED      77 CALLS          78 TOTAL
+                     EDM=3.17983e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     8.43233e+00   6.13724e-01   2.36561e-03   1.27625e-03
+   2  Mean         2.42303e-01   5.86168e-03   2.89331e-05  -3.11008e-02
+   3  Sigma        9.00404e-02   6.10771e-03   8.82115e-05   4.17648e-02
+The mean value is: 0.242303
+The error on the mean is: 0.005862
+Fit for 5GeV incoming hadrons:
+ FCN=74.4742 FROM MIGRAD    STATUS=CONVERGED      75 CALLS          76 TOTAL
+                     EDM=2.42946e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.02902e+01   7.32062e-01   2.19732e-03  -3.04634e-04
+   2  Mean         3.13216e-01   5.84816e-03   2.25992e-05  -2.74467e-02
+   3  Sigma        9.42040e-02   5.97856e-03   6.26301e-05  -7.95266e-03
+The mean value is: 0.313216
+The error on the mean is: 0.005848
+Fit for 6GeV incoming hadrons:
+ FCN=57.7824 FROM MIGRAD    STATUS=CONVERGED      76 CALLS          77 TOTAL
+                     EDM=4.39683e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.07880e+01   7.51979e-01   2.05936e-03  -9.45869e-04
+   2  Mean         3.74218e-01   6.78699e-03   2.36652e-05  -4.25256e-02
+   3  Sigma        1.05434e-01   7.12195e-03   6.23539e-05   6.72951e-03
+The mean value is: 0.374218
+The error on the mean is: 0.006787
+Fit for 7GeV incoming hadrons:
+ FCN=56.7993 FROM MIGRAD    STATUS=CONVERGED      71 CALLS          72 TOTAL
+                     EDM=7.32383e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     9.98807e+00   7.67833e-01   2.05684e-03  -1.42419e-04
+   2  Mean         4.76499e-01   8.97260e-03   2.88912e-05  -7.91649e-02
+   3  Sigma        1.13275e-01   9.63135e-03   7.66375e-05  -4.66356e-02
+The mean value is: 0.476499
+The error on the mean is: 0.008973
+Fit for 8GeV incoming hadrons:
+ FCN=29.3463 FROM MIGRAD    STATUS=CONVERGED      76 CALLS          77 TOTAL
+                     EDM=1.93353e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.10634e+01   8.00741e-01   1.55397e-03   2.12903e-04
+   2  Mean         5.48268e-01   8.41897e-03   2.18631e-05   7.87781e-03
+   3  Sigma        1.28563e-01   9.61169e-03   5.17831e-05   1.01463e-02
+The mean value is: 0.548268
+The error on the mean is: 0.008419
+Fit for 9GeV incoming hadrons:
+ FCN=46.0376 FROM MIGRAD    STATUS=CONVERGED      76 CALLS          77 TOTAL
+                     EDM=2.0729e-08    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.10802e+01   8.09297e-01   1.95272e-03  -1.82136e-04
+   2  Mean         6.22570e-01   9.09657e-03   2.79073e-05  -1.31257e-02
+   3  Sigma        1.37104e-01   9.57790e-03   5.62476e-05  -2.79661e-04
+The mean value is: 0.622570
+The error on the mean is: 0.009097
+Fit for 10GeV incoming hadrons:
+ FCN=53.8652 FROM MIGRAD    STATUS=CONVERGED      76 CALLS          77 TOTAL
+                     EDM=4.88971e-07    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  Constant     1.14559e+01   8.54250e-01   2.26208e-03  -8.91557e-04
+   2  Mean         7.16906e-01   9.49716e-03   3.18220e-05  -5.01177e-02
+   3  Sigma        1.37077e-01   9.95234e-03   6.52323e-05   1.14579e-03
+The mean value is: 0.716906
+The error on the mean is: 0.009497
+
+****************************************
+Minimizer is Linear / Migrad
+Chi2                      =      70.2654
+NDf                       =            8
+p0                        =   -0.0351703   +/-   0.00125294  
+p1                        =    0.0714149   +/-   0.000511056 
+The Centroid is at x = 2.45167, y = 0.13992

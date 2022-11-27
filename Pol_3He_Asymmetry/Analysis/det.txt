@@ -1,0 +1,90 @@
+[108467] [THcDC] [debug] THcDC constructor
+[108467] [det] [info] Created Cherenkov detector P.ngcer with 4 PMTs
+[108467] [det] [info] Plane Name List: 1u1 1u2 1x1 1x2 1v1 1v2 2v2 2v1 2x2 2x1 2u2 2u1
+[108467] [det] [info] Drift Chambers: 12 planes in 2 chambers
+[108467] [det] [info] Created Drift Chamber 1, Ch1
+[108467] [det] [info] Created Drift Chamber 2, Ch2
+[108467] [det] [info] DC tdc ref time cut = -14000 
+[108467] [det] [info] Plane counts:  107 107 79 79 107 107 107 107 79 79 107 107
+[108467] [det] [info] Plane Name List : 1x 1y 2x 2y
+[108467] [det] [info] Hodo TDC and ADC ref time cut = -3600 -4400
+[108467] [det] [info] THcHodoscope: Using 10.0 nsec window for fp no_track calculations.
+[108467] [det] [info] Created Cherenkov detector P.hgcer with 4 PMTs
+[108467] [det] [info] Created aerogel detector P.aero with 7 PMT pairs.
+[108467] [det] [info] Number of Triggers : 4 
+[108467] [det] [info] pTRIG1_ROC1  -1 
+[108467] [det] [info] pTRIG4_ROC1  -1 
+[108467] [det] [info] pTRIG1_ROC2  -1 
+[108467] [det] [info] pTRIG4_ROC2  -1 
+[109619] [THcDC] [debug] THcDC constructor
+[109619] [det] [info] Created Cherenkov detector P.ngcer with 4 PMTs
+[109619] [det] [info] Plane Name List: 1u1 1u2 1x1 1x2 1v1 1v2 2v2 2v1 2x2 2x1 2u2 2u1
+[109619] [det] [info] Drift Chambers: 12 planes in 2 chambers
+[109619] [det] [info] Created Drift Chamber 1, Ch1
+[109619] [det] [info] Created Drift Chamber 2, Ch2
+[109619] [det] [info] DC tdc ref time cut = -14000 
+[109619] [det] [info] Plane counts:  107 107 79 79 107 107 107 107 79 79 107 107
+[109619] [det] [info] Plane Name List : 1x 1y 2x 2y
+[109619] [det] [info] Hodo TDC and ADC ref time cut = -3600 -4400
+[109619] [det] [info] THcHodoscope: Using 10.0 nsec window for fp no_track calculations.
+[109619] [det] [info] Created Cherenkov detector P.hgcer with 4 PMTs
+[109619] [det] [info] Created aerogel detector P.aero with 7 PMT pairs.
+[109619] [det] [info] Number of Triggers : 4 
+[109619] [det] [info] pTRIG1_ROC1  -1 
+[109619] [det] [info] pTRIG4_ROC1  -1 
+[109619] [det] [info] pTRIG1_ROC2  -1 
+[109619] [det] [info] pTRIG4_ROC2  -1 
+[117398] [THcDC] [debug] THcDC constructor
+[117398] [det] [info] Created Cherenkov detector P.ngcer with 4 PMTs
+[117398] [det] [info] Plane Name List: 1u1 1u2 1x1 1x2 1v1 1v2 2v2 2v1 2x2 2x1 2u2 2u1
+[117398] [det] [info] Drift Chambers: 12 planes in 2 chambers
+[117398] [det] [info] Created Drift Chamber 1, Ch1
+[117398] [det] [info] Created Drift Chamber 2, Ch2
+[117398] [det] [info] DC tdc ref time cut = -14000 
+[117398] [det] [info] Plane counts:  107 107 79 79 107 107 107 107 79 79 107 107
+[117398] [det] [info] Plane Name List : 1x 1y 2x 2y
+[117398] [det] [info] Hodo TDC and ADC ref time cut = -3600 -4400
+[117398] [det] [info] THcHodoscope: Using 10.0 nsec window for fp no_track calculations.
+[117398] [det] [info] Created Cherenkov detector P.hgcer with 4 PMTs
+[117398] [det] [info] Created aerogel detector P.aero with 7 PMT pairs.
+[117398] [det] [info] Number of Triggers : 4 
+[117398] [det] [info] pTRIG1_ROC1  -1 
+[117398] [det] [info] pTRIG4_ROC1  -1 
+[117398] [det] [info] pTRIG1_ROC2  -1 
+[117398] [det] [info] pTRIG4_ROC2  -1 
+[118688] [THcDC] [debug] THcDC constructor
+[118688] [det] [info] Created Cherenkov detector P.ngcer with 4 PMTs
+[118688] [det] [info] Plane Name List: 1u1 1u2 1x1 1x2 1v1 1v2 2v2 2v1 2x2 2x1 2u2 2u1
+[118688] [det] [info] Drift Chambers: 12 planes in 2 chambers
+[118688] [det] [info] Created Drift Chamber 1, Ch1
+[118688] [det] [info] Created Drift Chamber 2, Ch2
+[118688] [det] [info] DC tdc ref time cut = -14000 
+[118688] [det] [info] Plane counts:  107 107 79 79 107 107 107 107 79 79 107 107
+[118688] [det] [info] Plane Name List : 1x 1y 2x 2y
+[118688] [det] [info] Hodo TDC and ADC ref time cut = -3600 -4400
+[118688] [det] [info] THcHodoscope: Using 10.0 nsec window for fp no_track calculations.
+[118688] [det] [info] Created Cherenkov detector P.hgcer with 4 PMTs
+[118688] [det] [info] Created aerogel detector P.aero with 7 PMT pairs.
+[118688] [det] [info] Number of Triggers : 4 
+[118688] [det] [info] pTRIG1_ROC1  -1 
+[118688] [det] [info] pTRIG4_ROC1  -1 
+[118688] [det] [info] pTRIG1_ROC2  -1 
+[118688] [det] [info] pTRIG4_ROC2  -1 
+[85223] [THcDC] [debug] THcDC constructor
+[85223] [det] [info] Created Cherenkov detector P.ngcer with 4 PMTs
+[85223] [det] [info] Plane Name List: 1u1 1u2 1x1 1x2 1v1 1v2 2v2 2v1 2x2 2x1 2u2 2u1
+[85223] [det] [info] Drift Chambers: 12 planes in 2 chambers
+[85223] [det] [info] Created Drift Chamber 1, Ch1
+[85223] [det] [info] Created Drift Chamber 2, Ch2
+[85223] [det] [info] DC tdc ref time cut = -14000 
+[85223] [det] [info] Plane counts:  107 107 79 79 107 107 107 107 79 79 107 107
+[85223] [det] [info] Plane Name List : 1x 1y 2x 2y
+[85223] [det] [info] Hodo TDC and ADC ref time cut = -3600 -4400
+[85223] [det] [info] THcHodoscope: Using 10.0 nsec window for fp no_track calculations.
+[85223] [det] [info] Created Cherenkov detector P.hgcer with 4 PMTs
+[85223] [det] [info] Created aerogel detector P.aero with 7 PMT pairs.
+[85223] [det] [info] Number of Triggers : 4 
+[85223] [det] [info] pTRIG1_ROC1  -1 
+[85223] [det] [info] pTRIG4_ROC1  -1 
+[85223] [det] [info] pTRIG1_ROC2  -1 
+[85223] [det] [info] pTRIG4_ROC2  -1 
